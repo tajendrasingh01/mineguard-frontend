@@ -3,1213 +3,293 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MineGuard Portal</title>
+<title>MineGuard — Sign In</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --white: #ffffff;
-  --bg: #f4f6f9;
-  --bg2: #eef0f5;
-  --panel: #ffffff;
-  --border: #e2e6ed;
-  --border2: #d0d5de;
-  --text: #1a1f2e;
-  --text2: #4a5568;
-  --muted: #8a93a6;
-  --orange: #e85d04;
-  --orange-light: #fff3ec;
-  --orange-mid: #ffd4b8;
-  --red: #dc2626;
-  --red-light: #fef2f2;
-  --green: #059669;
-  --green-light: #ecfdf5;
-  --blue: #2563eb;
-  --blue-light: #eff6ff;
-  --yellow: #d97706;
-  --yellow-light: #fffbeb;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow: 0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
-  --shadow-lg: 0 20px 48px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.06);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --font: 'DM Sans', sans-serif;
-  --head: 'Fraunces', serif;
+  --orange:#e85d04; --red:#dc2626; --green:#059669;
+  --text:#1a1f2e; --text2:#4a5568; --muted:#8a93a6;
+  --bg:#f4f6f9; --white:#ffffff; --border:#e2e6ed;
+  --font:'DM Sans',sans-serif; --head:'Fraunces',serif;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;display:flex}
 
-/* ── LOADING SCREEN ─────────────────────────────────────────── */
-#loadingScreen {
-  position: fixed; inset: 0; background: var(--white);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9999; transition: opacity .5s ease;
+/* ── LAYOUT ── */
+.login-left{
+  flex:1;background:var(--orange);padding:60px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
 }
-#loadingScreen.hide { opacity: 0; pointer-events: none; }
-.loading-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
-.loading-icon {
-  width: 52px; height: 52px; background: var(--orange); border-radius: 14px;
-  display: flex; align-items: center; justify-content: center; font-size: 24px;
-  box-shadow: 0 8px 24px rgba(232,93,4,.3);
+.login-left::before{
+  content:'';position:absolute;top:-120px;right:-120px;
+  width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.07);
 }
-.loading-title { font-family: var(--head); font-size: 32px; color: var(--text); }
-.loading-title span { color: var(--orange); }
-.loading-bar-wrap { width: 220px; height: 4px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
-.loading-bar { height: 100%; background: var(--orange); border-radius: 4px; animation: loadBar 1.8s ease forwards; }
-@keyframes loadBar { from { width: 0 } to { width: 100% } }
-.loading-text { font-size: 13px; color: var(--muted); margin-top: 14px; letter-spacing: .5px; }
-
-/* ── VIEWS ──────────────────────────────────────────────────── */
-.view { display: none; }
-.view.active { display: block; }
-
-/* ── LOGIN PAGE ─────────────────────────────────────────────── */
-#loginView {
-  min-height: 100vh; display: flex;
-  background: linear-gradient(135deg, #fff8f4 0%, #f4f6f9 50%, #eef2ff 100%);
+.login-left::after{
+  content:'';position:absolute;bottom:-80px;left:-80px;
+  width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.05);
 }
-.login-left {
-  flex: 1; background: var(--orange); padding: 60px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  position: relative; overflow: hidden;
+.brand{position:relative;z-index:1}
+.brand-logo{display:flex;align-items:center;gap:14px;margin-bottom:52px}
+.brand-icon{
+  width:48px;height:48px;background:rgba(255,255,255,.2);
+  border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;
 }
-.login-left::before {
-  content: ''; position: absolute; top: -100px; right: -100px;
-  width: 400px; height: 400px; border-radius: 50%;
-  background: rgba(255,255,255,.08);
+.brand-name{font-family:var(--head);font-size:28px;color:white;letter-spacing:.5px}
+.tagline{font-family:var(--head);font-size:42px;color:white;line-height:1.15;margin-bottom:18px}
+.tagline em{color:rgba(255,255,255,.5);font-style:normal}
+.desc{color:rgba(255,255,255,.75);font-size:15px;line-height:1.8;max-width:360px}
+.features{position:relative;z-index:1}
+.feature{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0;border-top:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.85);font-size:14px;
 }
-.login-left::after {
-  content: ''; position: absolute; bottom: -60px; left: -60px;
-  width: 280px; height: 280px; border-radius: 50%;
-  background: rgba(255,255,255,.06);
+.feature-icon{
+  width:36px;height:36px;background:rgba(255,255,255,.15);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
 }
-.login-brand { position: relative; z-index: 1; }
-.login-brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
-.login-brand-icon {
-  width: 44px; height: 44px; background: rgba(255,255,255,.2);
-  border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;
+
+/* ── FORM SIDE ── */
+.login-right{
+  width:500px;display:flex;align-items:center;
+  justify-content:center;padding:48px 60px;background:var(--white);
 }
-.login-brand h1 { font-family: var(--head); font-size: 26px; color: white; letter-spacing: 1px; }
-.login-tagline { font-size: 38px; font-family: var(--head); color: white; line-height: 1.2; margin-bottom: 20px; }
-.login-tagline span { color: rgba(255,255,255,.6); }
-.login-desc { color: rgba(255,255,255,.75); font-size: 15px; line-height: 1.7; max-width: 340px; }
-.login-features { position: relative; z-index: 1; }
-.login-feature { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.85); font-size: 14px; }
-.login-feature-icon { width: 32px; height: 32px; background: rgba(255,255,255,.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.form-box{width:100%}
+.form-title{font-family:var(--head);font-size:32px;color:var(--text);margin-bottom:6px}
+.form-sub{color:var(--muted);font-size:14px;margin-bottom:36px}
 
-.login-right {
-  width: 480px; display: flex; align-items: center; justify-content: center; padding: 48px 56px;
+/* tabs */
+.auth-tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:2px solid var(--border)}
+.auth-tab{
+  padding:12px 24px;background:none;border:none;
+  font-family:var(--font);font-size:14px;font-weight:600;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
+  margin-bottom:-2px;transition:all .2s;
 }
-.login-box { width: 100%; }
-.login-box-title { font-family: var(--head); font-size: 30px; color: var(--text); margin-bottom: 6px; }
-.login-box-sub { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
-.form-group { margin-bottom: 20px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 8px; letter-spacing: .3px; }
-.form-input {
-  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
-  color: var(--text); padding: 13px 16px; font-family: var(--font); font-size: 15px;
-  outline: none; transition: all .2s; border-radius: var(--radius-sm);
+.auth-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+.form-panel{display:none}.form-panel.active{display:block}
+
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.form-input{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  color:var(--text);padding:13px 16px;font-family:var(--font);font-size:15px;
+  outline:none;transition:all .2s;border-radius:10px;
 }
-.form-input:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(232,93,4,.1); }
-select.form-input option { background: var(--white); }
-textarea.form-input { resize: vertical; min-height: 96px; }
+.form-input:focus{border-color:var(--orange);background:var(--white);box-shadow:0 0 0 3px rgba(232,93,4,.1)}
+select.form-input option{background:var(--white)}
 
-.btn-primary {
-  width: 100%; background: var(--orange); color: white; border: none;
-  padding: 14px; font-family: var(--font); font-size: 15px; font-weight: 700;
-  cursor: pointer; transition: all .2s; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 4px 12px rgba(232,93,4,.3);
+.btn-submit{
+  width:100%;background:var(--orange);color:white;border:none;
+  padding:14px;font-family:var(--font);font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .2s;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 4px 14px rgba(232,93,4,.3);
 }
-.btn-primary:hover { background: #c94e00; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(232,93,4,.35); }
-.btn-primary:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
-.btn-secondary {
-  width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border);
-  padding: 13px; font-family: var(--font); font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: all .2s; border-radius: var(--radius-sm);
+.btn-submit:hover{background:#c94e00;transform:translateY(-1px);box-shadow:0 8px 20px rgba(232,93,4,.35)}
+.btn-submit:disabled{background:#ccc;color:#888;cursor:not-allowed;transform:none;box-shadow:none}
+
+.spinner{
+  width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:white;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
 }
-.btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+.spinner.show{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.login-toggle { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
-.login-toggle a { color: var(--orange); cursor: pointer; font-weight: 600; text-decoration: none; }
-.err-msg { background: var(--red-light); border: 1px solid #fca5a5; color: var(--red); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 14px; display: none; }
-.err-msg.show { display: block; }
-
-/* ── BTN SPINNER ────────────────────────────────────────────── */
-.btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
-.btn-spinner.show { display: block; }
-@keyframes spin { to { transform: rotate(360deg) } }
-
-/* ── APP SHELL ──────────────────────────────────────────────── */
-#appView { min-height: 100vh; display: flex; flex-direction: column; }
-
-header {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 0 32px; display: flex; align-items: center; justify-content: space-between;
-  height: 64px; position: sticky; top: 0; z-index: 100;
-  box-shadow: var(--shadow-sm);
+.err-box{
+  background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;
+  padding:12px 16px;border-radius:8px;font-size:13px;
+  margin-top:14px;display:none;
 }
-.hdr-brand { display: flex; align-items: center; gap: 12px; }
-.hdr-icon { width: 36px; height: 36px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
-.hdr-brand h1 { font-family: var(--head); font-size: 22px; color: var(--text); }
-.hdr-brand h1 span { color: var(--orange); }
-.hdr-right { display: flex; align-items: center; gap: 12px; }
-.hdr-user { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--bg); border-radius: var(--radius-sm); }
-.hdr-avatar { width: 30px; height: 30px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
-.hdr-user-info { display: flex; flex-direction: column; }
-.hdr-user-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2; }
-.hdr-user-role { font-size: 11px; color: var(--muted); }
-.role-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
-.role-pill.worker { background: var(--blue-light); color: var(--blue); }
-.role-pill.admin { background: var(--orange-light); color: var(--orange); }
-.emr-btn { background: var(--red); color: white; border: none; padding: 9px 16px; font-family: var(--font); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: var(--radius-sm); transition: all .2s; display: flex; align-items: center; gap: 6px; }
-.emr-btn:hover { background: #b91c1c; }
-.logout-btn { background: none; border: 1.5px solid var(--border); color: var(--text2); padding: 8px 14px; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; transition: all .2s; border-radius: var(--radius-sm); }
-.logout-btn:hover { border-color: var(--red); color: var(--red); }
+.err-box.show{display:block}
 
-/* ── NAV ────────────────────────────────────────────────────── */
-nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 32px; gap: 4px; overflow-x: auto; }
-.nav-tab { padding: 16px 18px; font-family: var(--font); font-weight: 600; font-size: 13px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
-.nav-tab:hover { color: var(--text); }
-.nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
-
-/* ── MAIN ───────────────────────────────────────────────────── */
-main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
-.section { display: none; animation: fadeIn .3s ease; }
-.section.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
-
-/* ── PAGE HEADER ────────────────────────────────────────────── */
-.page-header { margin-bottom: 28px; }
-.page-title { font-family: var(--head); font-size: 32px; color: var(--text); margin-bottom: 4px; }
-.page-sub { color: var(--muted); font-size: 14px; }
-
-/* ── STATS GRID ─────────────────────────────────────────────── */
-.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
-.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
-.stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; border-radius: 50%; opacity: .06; transform: translate(20px, -20px); }
-.stat-card.c-orange::before { background: var(--orange); }
-.stat-card.c-red::before { background: var(--red); }
-.stat-card.c-yellow::before { background: var(--yellow); }
-.stat-card.c-green::before { background: var(--green); }
-.stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
-.stat-card.c-orange .stat-icon { background: var(--orange-light); }
-.stat-card.c-red .stat-icon { background: var(--red-light); }
-.stat-card.c-yellow .stat-icon { background: var(--yellow-light); }
-.stat-card.c-green .stat-icon { background: var(--green-light); }
-.stat-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-.stat-value { font-family: var(--head); font-size: 36px; color: var(--text); line-height: 1; margin-bottom: 4px; }
-.stat-sub { font-size: 12px; color: var(--muted); }
-
-/* ── CARDS ──────────────────────────────────────────────────── */
-.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
-.card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-.card-title-icon { width: 28px; height: 28px; background: var(--orange-light); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-/* ── FORM STYLES ────────────────────────────────────────────── */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.form-full { grid-column: 1 / -1; }
-.form-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
-.form-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-.form-section-num { width: 28px; height: 28px; background: var(--orange); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-.form-section-title { font-size: 15px; font-weight: 700; color: var(--text); }
-
-/* ── SEVERITY SELECTOR ──────────────────────────────────────── */
-.sev-grid { display: flex; gap: 10px; flex-wrap: wrap; }
-.sev-btn { padding: 10px 18px; border: 2px solid var(--border); cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 700; background: var(--white); transition: all .2s; border-radius: var(--radius-sm); color: var(--text2); }
-.sev-btn:hover { border-color: currentColor; }
-.sev-btn.nm { color: var(--blue); } .sev-btn.nm.sel { background: var(--blue-light); border-color: var(--blue); }
-.sev-btn.mi { color: var(--yellow); } .sev-btn.mi.sel { background: var(--yellow-light); border-color: var(--yellow); }
-.sev-btn.se { color: var(--orange); } .sev-btn.se.sel { background: var(--orange-light); border-color: var(--orange); }
-.sev-btn.cr { color: var(--red); } .sev-btn.cr.sel { background: var(--red-light); border-color: var(--red); }
-.sev-btn.fa { color: #7f1d1d; animation: flash 1.5s infinite; } .sev-btn.fa.sel { background: #fef2f2; border-color: #7f1d1d; }
-@keyframes flash { 0%,100% { opacity:1 } 50% { opacity:.5 } }
-
-/* ── LOCATION GRID ──────────────────────────────────────────── */
-.loc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-.loc-btn { padding: 14px 10px; border: 2px solid var(--border); background: var(--bg); color: var(--text2); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 12px; text-align: center; transition: all .2s; border-radius: var(--radius-sm); }
-.loc-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
-.loc-btn.sel { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
-.loc-icon { font-size: 20px; display: block; margin-bottom: 6px; }
-
-/* ── TOGGLE GROUP ───────────────────────────────────────────── */
-.tgl-group { display: flex; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; width: fit-content; }
-.tgl-btn { padding: 9px 18px; background: var(--white); border: none; color: var(--muted); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 13px; transition: all .2s; border-right: 1px solid var(--border); }
-.tgl-btn:last-child { border-right: none; }
-.tgl-btn.active { background: var(--orange); color: white; }
-
-/* ── SUBMIT BTN ─────────────────────────────────────────────── */
-.submit-btn { background: var(--orange); color: white; border: none; padding: 14px 36px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(232,93,4,.25); }
-.submit-btn:hover { background: #c94e00; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(232,93,4,.3); }
-.submit-btn:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* ── TABLE ──────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
-.data-table { width: 100%; border-collapse: collapse; background: var(--white); }
-.data-table th { background: var(--bg); font-size: 11px; font-weight: 700; color: var(--muted); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .5px; }
-.data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text); }
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: var(--bg); }
-
-/* ── BADGES ─────────────────────────────────────────────────── */
-.badge { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 20px; white-space: nowrap; display: inline-block; }
-.b-nm { background: var(--blue-light); color: var(--blue); }
-.b-mi { background: var(--yellow-light); color: var(--yellow); }
-.b-se { background: var(--orange-light); color: var(--orange); }
-.b-cr { background: var(--red-light); color: var(--red); }
-.b-fa { background: #fef2f2; color: #7f1d1d; animation: flash 1.5s infinite; }
-.b-open { background: var(--blue-light); color: var(--blue); }
-.b-review { background: var(--yellow-light); color: var(--yellow); }
-.b-closed { background: var(--green-light); color: var(--green); }
-.b-admin { background: var(--orange-light); color: var(--orange); }
-.b-worker { background: var(--blue-light); color: var(--blue); }
-
-/* ── ACTION BUTTONS ─────────────────────────────────────────── */
-.act-btn { padding: 5px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; cursor: pointer; border-radius: 6px; border: none; transition: all .2s; margin-right: 4px; }
-.act-review { background: var(--yellow-light); color: var(--yellow); } .act-review:hover { background: #fde68a; }
-.act-close { background: var(--green-light); color: var(--green); } .act-close:hover { background: #a7f3d0; }
-.act-delete { background: var(--red-light); color: var(--red); } .act-delete:hover { background: #fca5a5; }
-
-/* ── FILTER BAR ─────────────────────────────────────────────── */
-.filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-.filter-sel { background: var(--white); border: 1.5px solid var(--border); color: var(--text); padding: 9px 14px; font-family: var(--font); font-size: 13px; cursor: pointer; outline: none; border-radius: var(--radius-sm); font-weight: 500; }
-.filter-sel:focus { border-color: var(--orange); }
-.filter-cat-btn { padding: 8px 16px; background: var(--white); border: 1.5px solid var(--border); color: var(--text2); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 13px; transition: all .2s; border-radius: var(--radius-sm); }
-.filter-cat-btn:hover { border-color: var(--orange); color: var(--orange); }
-.filter-cat-btn.active { background: var(--orange); color: white; border-color: var(--orange); }
-
-/* ── SOP GRID ───────────────────────────────────────────────── */
-.sop-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
-.sop-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; cursor: pointer; transition: all .25s; box-shadow: var(--shadow-sm); }
-.sop-card:hover { border-color: var(--orange); box-shadow: var(--shadow); transform: translateY(-3px); }
-.sop-card-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--orange-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
-.sop-card-id { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-.sop-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.sop-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
-.sop-card-meta { margin-top: 14px; display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--border); }
-.sop-file-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; background: var(--green-light); color: var(--green); border-radius: 6px; font-size: 11px; font-weight: 700; margin-top: 8px; }
-
-/* ── SOP UPLOAD CARD ────────────────────────────────────────── */
-.upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius); padding: 32px; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); }
-.upload-zone:hover { border-color: var(--orange); background: var(--orange-light); }
-.upload-zone input { display: none; }
-.upload-icon { font-size: 36px; margin-bottom: 10px; }
-.upload-text { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
-.upload-sub { font-size: 12px; color: var(--muted); }
-.uploaded-files { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-.uploaded-file { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--green-light); border-radius: var(--radius-sm); font-size: 13px; color: var(--green); font-weight: 600; }
-
-/* ── ADMIN SOP FORM ─────────────────────────────────────────── */
-.admin-sop-form { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
-.admin-sop-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-.admin-sop-title-icon { width: 28px; height: 28px; background: var(--orange-light); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-/* ── MODAL ──────────────────────────────────────────────────── */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--white); border-radius: var(--radius); width: 700px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
-.modal-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white); z-index: 1; border-radius: var(--radius) var(--radius) 0 0; }
-.modal-title { font-family: var(--head); font-size: 22px; color: var(--text); }
-.modal-close { background: var(--bg); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--muted); display: flex; align-items: center; justify-content: center; transition: all .2s; }
-.modal-close:hover { background: var(--red-light); color: var(--red); }
-.modal-body { padding: 24px 28px; }
-.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-.step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.step-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; background: var(--bg); border-radius: var(--radius-sm); border-left: 3px solid var(--orange); }
-.step-num { font-family: var(--head); font-size: 20px; color: var(--orange); min-width: 28px; line-height: 1.4; }
-.step-text { font-size: 14px; line-height: 1.7; color: var(--text2); }
-.warn-box { background: var(--red-light); border: 1px solid #fca5a5; border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #991b1b; display: flex; gap: 10px; }
-.info-box { background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #1e40af; display: flex; gap: 10px; }
-
-/* ── WORKER INFO BANNER ─────────────────────────────────────── */
-.info-banner { background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 22px; font-size: 13px; color: #1e40af; line-height: 1.6; display: flex; gap: 10px; }
-
-/* ── DASH GRID ──────────────────────────────────────────────── */
-.dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-.activity-feed { display: flex; flex-direction: column; gap: 8px; }
-.feed-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--white); font-size: 13px; line-height: 1.5; }
-.feed-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-.feed-time { font-size: 11px; color: var(--muted); white-space: nowrap; margin-top: 2px; }
-
-/* ── PROGRESS BAR ───────────────────────────────────────────── */
-.progress-bar { height: 6px; background: var(--bg2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
-.progress-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
-
-/* ── TOAST ──────────────────────────────────────────────────── */
-.toast { position: fixed; bottom: 28px; right: 28px; padding: 14px 20px; font-size: 14px; font-weight: 600; transform: translateY(80px); opacity: 0; transition: all .4s cubic-bezier(.34,1.56,.64,1); z-index: 500; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); max-width: 360px; }
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast.success { background: var(--green); color: white; }
-.toast.error { background: var(--red); color: white; }
-
-/* ── LOADER ─────────────────────────────────────────────────── */
-.loader { display: none; text-align: center; padding: 48px 20px; }
-.loader.show { display: block; }
-.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px; }
-.empty-state { text-align: center; padding: 56px 20px; color: var(--muted); }
-.empty-icon { font-size: 40px; margin-bottom: 12px; }
-.empty-text { font-size: 14px; }
-
-/* ── MONO TEXT ──────────────────────────────────────────────── */
-.mono { font-family: 'Courier New', monospace; font-size: 12px; }
-
-@media (max-width: 900px) {
-  .login-left { display: none; }
-  .login-right { width: 100%; }
-  .form-grid { grid-template-columns: 1fr; }
-  .form-full { grid-column: 1; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .sop-grid { grid-template-columns: 1fr; }
-  .dash-grid { grid-template-columns: 1fr; }
-  nav { padding: 0 16px; }
-  main { padding: 20px 16px; }
-  header { padding: 0 16px; }
+@media(max-width:860px){
+  .login-left{display:none}
+  .login-right{width:100%;padding:40px 28px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── LOADING SCREEN ────────────────────────────────────────── -->
-<div id="loadingScreen">
-  <div class="loading-logo">
-    <div class="loading-icon">⛏</div>
-    <div>
-      <div class="loading-title">Mine<span>Guard</span></div>
+<div class="login-left">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-icon">⛏</div>
+      <div class="brand-name">MineGuard</div>
     </div>
+    <div class="tagline">Safety starts <em>here.</em></div>
+    <div class="desc">A unified portal for incident reporting and standard operating procedures across all underground and surface mining operations.</div>
   </div>
-  <div class="loading-bar-wrap">
-    <div class="loading-bar"></div>
-  </div>
-  <div class="loading-text">Initializing safety portal...</div>
-</div>
-
-<!-- ── LOGIN VIEW ────────────────────────────────────────────── -->
-<div id="loginView" class="view">
-  <div class="login-left">
-    <div class="login-brand">
-      <div class="login-brand-logo">
-        <div class="login-brand-icon">⛏</div>
-        <h1>MineGuard</h1>
-      </div>
-      <div class="login-tagline">Safety starts <span>here.</span></div>
-      <div class="login-desc">A unified portal for incident reporting and standard operating procedures across all underground and surface mining operations.</div>
-    </div>
-    <div class="login-features">
-      <div class="login-feature"><div class="login-feature-icon">⚠️</div> Report incidents instantly from any device</div>
-      <div class="login-feature"><div class="login-feature-icon">📋</div> Access all SOPs anytime, underground or surface</div>
-      <div class="login-feature"><div class="login-feature-icon">📊</div> Real-time safety analytics for management</div>
-      <div class="login-feature"><div class="login-feature-icon">🔒</div> Role-based access — worker privacy protected</div>
-    </div>
-  </div>
-  <div class="login-right">
-    <div class="login-box">
-
-      <!-- LOGIN FORM -->
-      <div id="loginForm">
-        <div class="login-box-title">Welcome back</div>
-        <div class="login-box-sub">Sign in with your Worker ID to continue</div>
-        <div class="form-group">
-          <label class="form-label">Worker ID / Badge No</label>
-          <input type="text" id="loginId" class="form-input" placeholder="e.g. UG-4471" autocomplete="username"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" id="loginPass" class="form-input" placeholder="Your password" autocomplete="current-password"/>
-        </div>
-        <button class="btn-primary" id="loginBtn" onclick="doLogin()">
-          <div class="btn-spinner" id="loginSpinner"></div>
-          <span id="loginBtnText">Sign In →</span>
-        </button>
-        <div class="err-msg" id="loginErr"></div>
-        <div class="login-toggle">New worker? <a onclick="showRegister()">Register here</a></div>
-      </div>
-
-      <!-- REGISTER FORM -->
-      <div id="registerForm" style="display:none">
-        <div class="login-box-title">Create Account</div>
-        <div class="login-box-sub">Register with your mine-issued Worker ID</div>
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="regName" class="form-input" placeholder="Your full name"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Worker ID / Badge No</label>
-          <input type="text" id="regId" class="form-input" placeholder="e.g. UG-4471"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Department</label>
-          <select id="regDept" class="form-input">
-            <option value="">Select Department</option>
-            <option>Drilling & Blasting</option>
-            <option>Loading & Hauling</option>
-            <option>Ground Support</option>
-            <option>Ventilation</option>
-            <option>Maintenance</option>
-            <option>Surface Operations</option>
-            <option>Ore Processing</option>
-            <option>Safety & Security</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" id="regPass" class="form-input" placeholder="Create a password (min 6 chars)"/>
-        </div>
-        <button class="btn-primary" id="regBtn" onclick="doRegister()">
-          <div class="btn-spinner" id="regSpinner"></div>
-          <span id="regBtnText">Create Account →</span>
-        </button>
-        <div class="err-msg" id="regErr"></div>
-        <div class="login-toggle">Already registered? <a onclick="showLogin()">Sign in here</a></div>
-      </div>
-
-    </div>
+  <div class="features">
+    <div class="feature"><div class="feature-icon">⚠️</div>Report incidents instantly from any device</div>
+    <div class="feature"><div class="feature-icon">📋</div>Access all SOPs — underground or surface</div>
+    <div class="feature"><div class="feature-icon">📊</div>Real-time safety analytics for management</div>
+    <div class="feature"><div class="feature-icon">🔒</div>Role-based access — worker privacy protected</div>
   </div>
 </div>
 
-<!-- ── APP VIEW ──────────────────────────────────────────────── -->
-<div id="appView" class="view">
-  <header>
-    <div class="hdr-brand">
-      <div class="hdr-icon">⛏</div>
-      <h1>Mine<span>Guard</span></h1>
-    </div>
-    <div class="hdr-right">
-      <div class="hdr-user">
-        <div class="hdr-avatar" id="hdrAvatar">?</div>
-        <div class="hdr-user-info">
-          <div class="hdr-user-name" id="hdrName">—</div>
-          <div class="hdr-user-role" id="hdrWorkerId">—</div>
-        </div>
-      </div>
-      <span class="role-pill" id="hdrRoleBadge"></span>
-      <button class="emr-btn" onclick="triggerEmergency()">🚨 Emergency</button>
-      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
-    </div>
-  </header>
+<div class="login-right">
+  <div class="form-box">
+    <div class="form-title">Welcome back</div>
+    <div class="form-sub">Sign in or create your account to continue</div>
 
-  <nav id="appNav"></nav>
-
-  <main>
-
-    <!-- ── REPORT INCIDENT ── -->
-    <div id="sec-report" class="section">
-      <div class="page-header">
-        <div class="page-title">Report an Incident</div>
-        <div class="page-sub">Submit immediately after any incident — all fields marked * are required</div>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-header"><div class="form-section-num">1</div><div class="form-section-title">Your Details</div></div>
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Full Name *</label><input type="text" id="rName" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
-          <div class="form-group"><label class="form-label">Worker ID *</label><input type="text" id="rId" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
-          <div class="form-group"><label class="form-label">Supervisor on Duty</label><input type="text" id="rSupervisor" class="form-input" placeholder="Supervisor name"/></div>
-          <div class="form-group"><label class="form-label">Department</label><input type="text" id="rDept" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-header"><div class="form-section-num">2</div><div class="form-section-title">Incident Details</div></div>
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Date *</label><input type="date" id="rDate" class="form-input"/></div>
-          <div class="form-group"><label class="form-label">Time *</label><input type="time" id="rTime" class="form-input"/></div>
-          <div class="form-group form-full">
-            <label class="form-label">Incident Type *</label>
-            <select id="rType" class="form-input">
-              <option value="">— Select incident type —</option>
-              <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
-              <option>Equipment / Machinery Accident</option><option>Electrical Incident</option>
-              <option>Fire / Explosion</option><option>Gas / Fume Exposure</option>
-              <option>Fall from Height</option><option>Slip, Trip or Fall</option>
-              <option>Flooding / Inrush</option><option>Entrapment / Entanglement</option>
-              <option>Chemical Exposure / Spill</option><option>Vehicle Collision</option>
-              <option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option>
-            </select>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Location *</label>
-            <div class="loc-grid">
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🏗️</span>Surface – General</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">⚙️</span>Surface – Crusher</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🔧</span>Surface – Workshop</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🚪</span>Portal / Adit Entry</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🪨</span>UG – Stope</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">⛏️</span>UG – Development Drive</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🚛</span>UG – Haulage Level</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🌬️</span>UG – Ventilation Shaft</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">📦</span>UG – Ore Pass</button>
-            </div>
-          </div>
-          <div class="form-group"><label class="form-label">Level / Zone Detail</label><input type="text" id="rLocDetail" class="form-input" placeholder="e.g. Level 4 – Block 2A"/></div>
-          <div class="form-group"><label class="form-label">Persons Injured</label><input type="number" id="rInjured" class="form-input" min="0" value="0"/></div>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-header"><div class="form-section-num">3</div><div class="form-section-title">Severity Level *</div></div>
-        <div class="sev-grid">
-          <button class="sev-btn nm" onclick="selSev(this,'nearMiss')">🔵 Near Miss</button>
-          <button class="sev-btn mi" onclick="selSev(this,'minor')">🟡 Minor Injury</button>
-          <button class="sev-btn se" onclick="selSev(this,'serious')">🟠 Serious Injury</button>
-          <button class="sev-btn cr" onclick="selSev(this,'critical')">🔴 Critical</button>
-          <button class="sev-btn fa" onclick="selSev(this,'fatality')">☠️ Fatality</button>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-header"><div class="form-section-num">4</div><div class="form-section-title">Description</div></div>
-        <div class="form-grid">
-          <div class="form-group form-full"><label class="form-label">What Happened? *</label><textarea id="rDesc" class="form-input" placeholder="Describe the full sequence of events — what was being done, what went wrong, contributing factors..."></textarea></div>
-          <div class="form-group form-full"><label class="form-label">Immediate Actions Taken</label><textarea id="rActions" class="form-input" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea></div>
-          <div class="form-group">
-            <label class="form-label">PPE Worn?</label>
-            <div class="tgl-group" id="tglPPE">
-              <button class="tgl-btn active" onclick="selTgl(this,'tglPPE')">Yes</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">No</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">Partial</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">SOPs Followed?</label>
-            <div class="tgl-group" id="tglSOP">
-              <button class="tgl-btn active" onclick="selTgl(this,'tglSOP')">Yes</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">No</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">Unknown</button>
-            </div>
-          </div>
-          <div class="form-group form-full"><label class="form-label">Witness Names (optional)</label><input type="text" id="rWitness" class="form-input" placeholder="Names of any witnesses"/></div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:16px">
-        <button class="submit-btn" id="submitBtn" onclick="submitIncident()">
-          <div class="btn-spinner" id="submitSpinner"></div>
-          <span id="submitBtnText">Submit Report →</span>
-        </button>
-      </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login',this)">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register',this)">Register</button>
     </div>
 
-    <!-- ── MY REPORTS ── -->
-    <div id="sec-mine" class="section">
-      <div class="page-header">
-        <div class="page-title">My Reports</div>
-        <div class="page-sub">Incidents you have submitted</div>
+    <!-- LOGIN -->
+    <div class="form-panel active" id="loginPanel">
+      <div class="form-group">
+        <label class="form-label">Worker ID / Badge No</label>
+        <input id="loginId" class="form-input" type="text" placeholder="e.g. UG-4471" autocomplete="username"/>
       </div>
-      <div class="info-banner">ℹ️ You can only view your own submitted reports. Other workers' details are kept private.</div>
-      <div class="loader" id="mineLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading your reports...</div></div>
-      <div class="table-wrap">
-        <table class="data-table" id="mineTable">
-          <thead><tr><th>Ref</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Status</th></tr></thead>
-          <tbody id="mineTbody"></tbody>
-        </table>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input id="loginPass" class="form-input" type="password" placeholder="Your password" autocomplete="current-password"/>
       </div>
-      <div class="empty-state" id="mineEmpty" style="display:none"><div class="empty-icon">📋</div><div class="empty-text">No incidents reported yet.</div></div>
+      <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+        <div class="spinner" id="loginSpin"></div>
+        <span id="loginBtnTxt">Sign In →</span>
+      </button>
+      <div class="err-box" id="loginErr"></div>
     </div>
 
-    <!-- ── SOP LIBRARY ── -->
-    <div id="sec-sop" class="section">
-      <div class="page-header">
-        <div class="page-title">SOP Library</div>
-        <div class="page-sub">Standard Operating Procedures — surface & underground operations</div>
+    <!-- REGISTER -->
+    <div class="form-panel" id="registerPanel">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input id="regName" class="form-input" type="text" placeholder="Your full name"/>
       </div>
-
-      <!-- Admin SOP Upload (admin only) -->
-      <div id="adminSopUpload" style="display:none">
-        <div class="admin-sop-form">
-          <div class="admin-sop-title"><div class="admin-sop-title-icon">➕</div> Upload New SOP</div>
-          <div class="form-grid">
-            <div class="form-group"><label class="form-label">SOP Title *</label><input type="text" id="sopTitle" class="form-input" placeholder="e.g. Confined Space Entry"/></div>
-            <div class="form-group">
-              <label class="form-label">Category *</label>
-              <select id="sopCat" class="form-input">
-                <option value="">Select category</option>
-                <option value="drilling">Drilling</option>
-                <option value="blasting">Blasting</option>
-                <option value="ground">Ground Support</option>
-                <option value="surface">Surface</option>
-                <option value="emergency">Emergency</option>
-                <option value="general">General</option>
-              </select>
-            </div>
-            <div class="form-group form-full"><label class="form-label">Description</label><input type="text" id="sopDesc" class="form-input" placeholder="Brief description of what this SOP covers"/></div>
-            <div class="form-group form-full">
-              <label class="form-label">Attach File (PDF or Image)</label>
-              <div class="upload-zone" onclick="document.getElementById('sopFileInput').click()">
-                <input type="file" id="sopFileInput" accept=".pdf,image/*" onchange="handleSopFile(this)"/>
-                <div class="upload-icon">📎</div>
-                <div class="upload-text">Click to attach PDF or image</div>
-                <div class="upload-sub">PDF, JPG, PNG — max 10MB</div>
-              </div>
-              <div id="sopFilePreview"></div>
-            </div>
-          </div>
-          <div style="margin-top:4px">
-            <button class="submit-btn" id="sopUploadBtn" onclick="uploadSOP()">
-              <div class="btn-spinner" id="sopUploadSpinner"></div>
-              <span id="sopUploadBtnText">Upload SOP →</span>
-            </button>
-          </div>
-        </div>
+      <div class="form-group">
+        <label class="form-label">Worker ID / Badge No</label>
+        <input id="regId" class="form-input" type="text" placeholder="e.g. UG-4471"/>
       </div>
-
-      <div class="filter-bar">
-        <button class="filter-cat-btn active" onclick="filterSOPs('all',this)">All</button>
-        <button class="filter-cat-btn" onclick="filterSOPs('drilling',this)">Drilling</button>
-        <button class="filter-cat-btn" onclick="filterSOPs('blasting',this)">Blasting</button>
-        <button class="filter-cat-btn" onclick="filterSOPs('ground',this)">Ground Support</button>
-        <button class="filter-cat-btn" onclick="filterSOPs('surface',this)">Surface</button>
-        <button class="filter-cat-btn" onclick="filterSOPs('emergency',this)">Emergency</button>
-      </div>
-      <div class="sop-grid" id="sopGrid"></div>
-    </div>
-
-    <!-- ── ADMIN DASHBOARD ── -->
-    <div id="sec-dashboard" class="section">
-      <div class="page-header">
-        <div class="page-title">Safety Dashboard</div>
-        <div class="page-sub">Real incident data submitted by workers — no synthetic data</div>
-      </div>
-      <div class="loader" id="dashLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading dashboard...</div></div>
-      <div id="dashContent" style="display:none">
-        <div class="stats-grid">
-          <div class="stat-card c-orange"><div class="stat-icon">📊</div><div class="stat-label">Total Incidents (30d)</div><div class="stat-value" id="st-total">—</div><div class="stat-sub">Real submitted reports</div></div>
-          <div class="stat-card c-red"><div class="stat-icon">🚨</div><div class="stat-label">Critical / Fatality</div><div class="stat-value" id="st-critical">—</div><div class="stat-sub">Requires immediate review</div></div>
-          <div class="stat-card c-yellow"><div class="stat-icon">📋</div><div class="stat-label">Open Incidents</div><div class="stat-value" id="st-open">—</div><div class="stat-sub">Pending investigation</div></div>
-          <div class="stat-card c-green"><div class="stat-icon">✅</div><div class="stat-label">Safe Days Streak</div><div class="stat-value" id="st-safe">—</div><div class="stat-sub">Since last serious incident</div></div>
-        </div>
-        <div class="dash-grid">
-          <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>Severity Breakdown</div><div id="sevBreakdown" style="display:flex;flex-direction:column;gap:12px"></div></div>
-          <div class="card"><div class="card-title"><div class="card-title-icon">📍</div>Zone Split</div><div id="zoneSplit"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ALL INCIDENTS ── -->
-    <div id="sec-incidents" class="section">
-      <div class="page-header">
-        <div class="page-title">All Incidents</div>
-        <div class="page-sub">Full log of all worker-submitted reports</div>
-      </div>
-      <div class="filter-bar">
-        <select class="filter-sel" id="fSeverity" onchange="loadAdminIncidents()">
-          <option value="all">All Severities</option>
-          <option value="nearMiss">Near Miss</option><option value="minor">Minor</option>
-          <option value="serious">Serious</option><option value="critical">Critical</option><option value="fatality">Fatality</option>
-        </select>
-        <select class="filter-sel" id="fLocation" onchange="loadAdminIncidents()">
-          <option value="all">All Locations</option>
-          <option value="surface">Surface</option><option value="underground">Underground</option>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select id="regDept" class="form-input">
+          <option value="">Select Department</option>
+          <option>Drilling & Blasting</option>
+          <option>Loading & Hauling</option>
+          <option>Ground Support</option>
+          <option>Ventilation</option>
+          <option>Maintenance</option>
+          <option>Surface Operations</option>
+          <option>Ore Processing</option>
+          <option>Safety & Security</option>
         </select>
       </div>
-      <div class="loader" id="incLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading incidents...</div></div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr><th>Ref</th><th>Worker</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Injured</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="incTbody"></tbody>
-        </table>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input id="regPass" class="form-input" type="password" placeholder="Create a password (min 6 chars)"/>
       </div>
-      <div class="empty-state" id="incEmpty" style="display:none"><div class="empty-icon">📋</div><div class="empty-text">No incidents found.</div></div>
+      <button class="btn-submit" id="regBtn" onclick="doRegister()">
+        <div class="spinner" id="regSpin"></div>
+        <span id="regBtnTxt">Create Account →</span>
+      </button>
+      <div class="err-box" id="regErr"></div>
     </div>
 
-    <!-- ── WORKERS ── -->
-    <div id="sec-workers" class="section">
-      <div class="page-header">
-        <div class="page-title">Registered Workers</div>
-        <div class="page-sub">All mine workers registered on the portal</div>
-      </div>
-      <div class="loader" id="workersLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading workers...</div></div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr><th>Worker ID</th><th>Name</th><th>Department</th><th>Role</th><th>Registered</th></tr></thead>
-          <tbody id="workersTbody"></tbody>
-        </table>
-      </div>
-      <div class="empty-state" id="workersEmpty" style="display:none"><div class="empty-icon">👷</div><div class="empty-text">No workers registered yet.</div></div>
-    </div>
-
-  </main>
-</div>
-
-<!-- SOP MODAL -->
-<div class="modal-overlay" id="sopModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="mTitle"></div>
-      <button class="modal-close" onclick="closeSOP()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-sub" id="mSub"></div>
-      <div id="mBody"></div>
-    </div>
   </div>
 </div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// ⚙️  UPDATE THIS with your Render URL:
-// ══════════════════════════════════════════════════════════════
 const API_BASE = 'https://mineguard-api.onrender.com';
-// ══════════════════════════════════════════════════════════════
 
-let token = localStorage.getItem('mg_token');
-let currentUser = null;
-let selectedSeverity = null;
-let selectedLocation = null;
-let uploadedSopFile = null;
-let adminSOPs = [];
-
-// ── INIT ─────────────────────────────────────────────────────
+// If already logged in — go straight to app
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('hide');
-    setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 500);
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.exp * 1000 > Date.now()) {
-          currentUser = payload;
-          showApp();
-          return;
-        }
-      } catch {}
-    }
-    showLoginView();
-  }, 2000);
+  const token = localStorage.getItem('mg_token');
+  if (token) {
+    try {
+      const p = JSON.parse(atob(token.split('.')[1]));
+      if (p.exp * 1000 > Date.now()) {
+        window.location.href = 'app.html';
+        return;
+      }
+    } catch {}
+    localStorage.removeItem('mg_token');
+  }
 });
 
-// ── API ───────────────────────────────────────────────────────
-async function api(method, path, body, auth = true) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (auth && token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(API_BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Request failed');
-  return data;
-}
-
-// ── LOGIN / REGISTER ──────────────────────────────────────────
-function showLoginView() {
-  document.getElementById('loginView').classList.add('active');
-  document.getElementById('appView').classList.remove('active');
-}
-function showRegister() {
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('registerForm').style.display = 'block';
-}
-function showLogin() {
-  document.getElementById('registerForm').style.display = 'none';
-  document.getElementById('loginForm').style.display = 'block';
+function switchTab(tab, btn) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tab + 'Panel').classList.add('active');
 }
 
 async function doLogin() {
   const worker_id = document.getElementById('loginId').value.trim();
-  const password = document.getElementById('loginPass').value;
-  const errEl = document.getElementById('loginErr');
-  errEl.classList.remove('show');
-  if (!worker_id || !password) { errEl.textContent = '⚠️ Please enter your Worker ID and password.'; errEl.classList.add('show'); return; }
+  const password  = document.getElementById('loginPass').value;
+  const err       = document.getElementById('loginErr');
+  err.classList.remove('show');
+  if (!worker_id || !password) { err.textContent = '⚠️ Please enter your Worker ID and password.'; err.classList.add('show'); return; }
 
-  const btn = document.getElementById('loginBtn');
-  const spinner = document.getElementById('loginSpinner');
-  const btnText = document.getElementById('loginBtnText');
-  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Signing in...';
-
+  setBusy('loginBtn','loginSpin','loginBtnTxt','Signing in...');
   try {
-    const data = await api('POST', '/api/auth/login', { worker_id, password }, false);
-    token = data.token; currentUser = data.user;
-    localStorage.setItem('mg_token', token);
-    showApp();
-  } catch (e) {
-    errEl.textContent = '⚠️ ' + e.message;
-    errEl.classList.add('show');
-  } finally {
-    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Sign In →';
+    const res  = await fetch(API_BASE + '/api/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ worker_id, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    localStorage.setItem('mg_token', data.token);
+    window.location.href = 'app.html';
+  } catch(e) {
+    err.textContent = '⚠️ ' + e.message;
+    err.classList.add('show');
+    setIdle('loginBtn','loginSpin','loginBtnTxt','Sign In →');
   }
 }
 
 async function doRegister() {
-  const name = document.getElementById('regName').value.trim();
+  const name      = document.getElementById('regName').value.trim();
   const worker_id = document.getElementById('regId').value.trim();
-  const department = document.getElementById('regDept').value;
-  const password = document.getElementById('regPass').value;
-  const errEl = document.getElementById('regErr');
-  errEl.classList.remove('show');
-  if (!name || !worker_id || !password) { errEl.textContent = '⚠️ All fields are required.'; errEl.classList.add('show'); return; }
-  if (password.length < 6) { errEl.textContent = '⚠️ Password must be at least 6 characters.'; errEl.classList.add('show'); return; }
+  const department= document.getElementById('regDept').value;
+  const password  = document.getElementById('regPass').value;
+  const err       = document.getElementById('regErr');
+  err.classList.remove('show');
+  if (!name || !worker_id || !password) { err.textContent = '⚠️ Name, Worker ID and password are required.'; err.classList.add('show'); return; }
+  if (password.length < 6) { err.textContent = '⚠️ Password must be at least 6 characters.'; err.classList.add('show'); return; }
 
-  const btn = document.getElementById('regBtn');
-  const spinner = document.getElementById('regSpinner');
-  const btnText = document.getElementById('regBtnText');
-  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Creating account...';
-
+  setBusy('regBtn','regSpin','regBtnTxt','Creating account...');
   try {
-    const data = await api('POST', '/api/auth/register', { name, worker_id, department, password }, false);
-    token = data.token; currentUser = data.user;
-    localStorage.setItem('mg_token', token);
-    showApp();
-  } catch (e) {
-    errEl.textContent = '⚠️ ' + e.message;
-    errEl.classList.add('show');
-  } finally {
-    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Create Account →';
-  }
-}
-
-function doLogout() {
-  token = null; currentUser = null;
-  localStorage.removeItem('mg_token');
-  location.reload();
-}
-
-// ── SHOW APP ──────────────────────────────────────────────────
-function showApp() {
-  document.getElementById('loginView').classList.remove('active');
-  document.getElementById('appView').classList.add('active');
-
-  const initials = (currentUser.name || 'U').split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
-  document.getElementById('hdrAvatar').textContent = initials;
-  document.getElementById('hdrName').textContent = currentUser.name || currentUser.worker_id;
-  document.getElementById('hdrWorkerId').textContent = currentUser.worker_id;
-  const rb = document.getElementById('hdrRoleBadge');
-  rb.textContent = currentUser.role.toUpperCase();
-  rb.className = 'role-pill ' + currentUser.role;
-
-  buildNav();
-  renderSOPs();
-
-  if (currentUser.role === 'admin') {
-    document.getElementById('adminSopUpload').style.display = 'block';
-    switchSection('sec-dashboard');
-    loadAdminStats();
-  } else {
-    switchSection('sec-report');
-    prefillWorker();
-  }
-}
-
-// ── NAV ───────────────────────────────────────────────────────
-function buildNav() {
-  const workerTabs = [
-    { id: 'sec-report', label: '⚠️ Report Incident' },
-    { id: 'sec-mine',   label: '📋 My Reports' },
-    { id: 'sec-sop',    label: '📁 SOPs' },
-  ];
-  const adminTabs = [
-    { id: 'sec-dashboard', label: '📊 Dashboard' },
-    { id: 'sec-incidents', label: '📋 All Incidents' },
-    { id: 'sec-workers',   label: '👷 Workers' },
-    { id: 'sec-sop',       label: '📁 SOPs' },
-  ];
-  const tabs = currentUser.role === 'admin' ? adminTabs : workerTabs;
-  document.getElementById('appNav').innerHTML = tabs.map(t =>
-    `<button class="nav-tab" onclick="switchSection('${t.id}',this)">${t.label}</button>`
-  ).join('');
-}
-
-function switchSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id)?.classList.add('active');
-  if (btn) btn.classList.add('active');
-  else document.querySelector(`[onclick*="'${id}'"]`)?.classList.add('active');
-  if (id === 'sec-mine') loadMyIncidents();
-  if (id === 'sec-incidents') loadAdminIncidents();
-  if (id === 'sec-workers') loadWorkers();
-  if (id === 'sec-dashboard') loadAdminStats();
-}
-
-// ── FORM ──────────────────────────────────────────────────────
-function prefillWorker() {
-  document.getElementById('rName').value = currentUser.name || '';
-  document.getElementById('rId').value = currentUser.worker_id || '';
-  document.getElementById('rDept').value = currentUser.department || '';
-  const now = new Date();
-  document.getElementById('rDate').value = now.toISOString().split('T')[0];
-  document.getElementById('rTime').value = now.toTimeString().substring(0,5);
-}
-function selSev(el, val) { document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('sel')); el.classList.add('sel'); selectedSeverity = val; }
-function selLoc(el) { document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('sel')); el.classList.add('sel'); selectedLocation = el.innerText.trim().split('\n').pop().trim(); }
-function selTgl(el, gid) { document.getElementById(gid).querySelectorAll('.tgl-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
-function getTgl(gid) { return document.getElementById(gid).querySelector('.tgl-btn.active')?.textContent.toLowerCase() || 'unknown'; }
-
-async function submitIncident() {
-  const type = document.getElementById('rType').value;
-  const date = document.getElementById('rDate').value;
-  const desc = document.getElementById('rDesc').value.trim();
-  if (!type || !date || !desc || !selectedSeverity || !selectedLocation) { showToast('⚠️ Fill in all required fields, select severity and location.', 'error'); return; }
-
-  const btn = document.getElementById('submitBtn');
-  const spinner = document.getElementById('submitSpinner');
-  const btnText = document.getElementById('submitBtnText');
-  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Submitting...';
-
-  try {
-    await api('POST', '/api/incidents', {
-      incident_type: type, date_of_incident: date,
-      time_of_incident: document.getElementById('rTime').value,
-      location_zone: selectedLocation,
-      location_detail: document.getElementById('rLocDetail').value.trim(),
-      severity: selectedSeverity,
-      persons_injured: parseInt(document.getElementById('rInjured').value) || 0,
-      description: desc,
-      immediate_actions: document.getElementById('rActions').value.trim(),
-      ppe_worn: getTgl('tglPPE'), sop_followed: getTgl('tglSOP'),
-      witnesses: document.getElementById('rWitness').value.trim(),
+    const res  = await fetch(API_BASE + '/api/auth/register', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name, worker_id, department, password })
     });
-    showToast('✅ Incident reported successfully!', 'success');
-    ['rType','rDesc','rActions','rWitness','rLocDetail'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('rInjured').value = '0';
-    document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('sel'));
-    document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('sel'));
-    selectedSeverity = null; selectedLocation = null;
-  } catch (e) {
-    showToast('⚠️ ' + e.message, 'error');
-  } finally {
-    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Submit Report →';
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    localStorage.setItem('mg_token', data.token);
+    window.location.href = 'app.html';
+  } catch(e) {
+    err.textContent = '⚠️ ' + e.message;
+    err.classList.add('show');
+    setIdle('regBtn','regSpin','regBtnTxt','Create Account →');
   }
 }
 
-// ── MY INCIDENTS ──────────────────────────────────────────────
-async function loadMyIncidents() {
-  document.getElementById('mineLoader').classList.add('show');
-  document.getElementById('mineEmpty').style.display = 'none';
-  document.getElementById('mineTbody').innerHTML = '';
-  try {
-    const data = await api('GET', '/api/incidents/mine');
-    document.getElementById('mineLoader').classList.remove('show');
-    if (!data.incidents.length) { document.getElementById('mineEmpty').style.display = 'block'; return; }
-    document.getElementById('mineTbody').innerHTML = data.incidents.map(i => `
-      <tr>
-        <td><span class="mono">${i.incident_ref}</span></td>
-        <td>${i.incident_type}</td>
-        <td>${i.location_zone}</td>
-        <td><span class="mono">${i.date_of_incident}</span></td>
-        <td><span class="badge ${sevBadge(i.severity)}">${sevLabel(i.severity)}</span></td>
-        <td><span class="badge ${statusBadge(i.status)}">${i.status.replace('_',' ')}</span></td>
-      </tr>`).join('');
-  } catch(e) { document.getElementById('mineLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
+function setBusy(btnId, spinId, txtId, msg) {
+  document.getElementById(btnId).disabled = true;
+  document.getElementById(spinId).classList.add('show');
+  document.getElementById(txtId).textContent = msg;
 }
-
-// ── ADMIN INCIDENTS ───────────────────────────────────────────
-async function loadAdminIncidents() {
-  document.getElementById('incLoader').classList.add('show');
-  document.getElementById('incEmpty').style.display = 'none';
-  document.getElementById('incTbody').innerHTML = '';
-  const sev = document.getElementById('fSeverity')?.value || 'all';
-  const loc = document.getElementById('fLocation')?.value || 'all';
-  try {
-    const data = await api('GET', `/api/admin/incidents?severity=${sev}&location_type=${loc}`);
-    document.getElementById('incLoader').classList.remove('show');
-    if (!data.incidents.length) { document.getElementById('incEmpty').style.display = 'block'; return; }
-    document.getElementById('incTbody').innerHTML = data.incidents.map(i => `
-      <tr>
-        <td><span class="mono">${i.incident_ref}</span></td>
-        <td><div style="font-weight:600">${i.reporter_name}</div><div class="mono" style="color:var(--muted)">${i.reporter_worker_id}</div></td>
-        <td style="font-size:13px">${i.incident_type}</td>
-        <td style="font-size:13px">${i.location_zone}</td>
-        <td><span class="mono">${i.date_of_incident}</span></td>
-        <td><span class="badge ${sevBadge(i.severity)}">${sevLabel(i.severity)}</span></td>
-        <td style="text-align:center">${i.persons_injured}</td>
-        <td><span class="badge ${statusBadge(i.status)}">${i.status.replace('_',' ')}</span></td>
-        <td>
-          ${i.status!=='under_review'?`<button class="act-btn act-review" onclick="updateInc('${i.id}','under_review')">Review</button>`:''}
-          ${i.status!=='closed'?`<button class="act-btn act-close" onclick="updateInc('${i.id}','closed')">Close</button>`:''}
-          <button class="act-btn act-delete" onclick="deleteInc('${i.id}')">Delete</button>
-        </td>
-      </tr>`).join('');
-  } catch(e) { document.getElementById('incLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
-}
-
-async function updateInc(id, status) {
-  try { await api('PATCH', `/api/admin/incidents/${id}`, { status }); showToast('✅ Status updated', 'success'); loadAdminIncidents(); }
-  catch(e) { showToast('⚠️ '+e.message,'error'); }
-}
-async function deleteInc(id) {
-  if (!confirm('Delete this incident permanently?')) return;
-  try { await api('DELETE', `/api/admin/incidents/${id}`); showToast('✅ Deleted', 'success'); loadAdminIncidents(); }
-  catch(e) { showToast('⚠️ '+e.message,'error'); }
-}
-
-// ── ADMIN STATS ───────────────────────────────────────────────
-async function loadAdminStats() {
-  document.getElementById('dashLoader').classList.add('show');
-  document.getElementById('dashContent').style.display = 'none';
-  try {
-    const d = await api('GET', '/api/admin/stats');
-    document.getElementById('dashLoader').classList.remove('show');
-    document.getElementById('dashContent').style.display = 'block';
-    const critical = (d.by_severity?.critical||0)+(d.by_severity?.fatality||0);
-    document.getElementById('st-total').textContent = d.total_last_30_days;
-    document.getElementById('st-critical').textContent = String(critical).padStart(2,'0');
-    document.getElementById('st-open').textContent = d.open_incidents;
-    document.getElementById('st-safe').textContent = d.safe_days !== null ? d.safe_days : 'N/A';
-    const total = d.total_last_30_days || 1;
-    const sevs = [{key:'nearMiss',label:'Near Miss',color:'var(--blue)'},{key:'minor',label:'Minor',color:'var(--yellow)'},{key:'serious',label:'Serious',color:'var(--orange)'},{key:'critical',label:'Critical',color:'var(--red)'},{key:'fatality',label:'Fatality',color:'#7f1d1d'}];
-    document.getElementById('sevBreakdown').innerHTML = sevs.map(s => {
-      const n = d.by_severity?.[s.key]||0;
-      const pct = Math.round((n/total)*100);
-      return `<div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">${s.label}</span><span style="color:${s.color};font-weight:700">${n}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s.color}"></div></div></div>`;
-    }).join('');
-    const surf = d.by_zone?.surface||0, ug = d.by_zone?.underground||0, tot2 = surf+ug||1;
-    document.getElementById('zoneSplit').innerHTML = `
-      <div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">🏗️ Surface</span><span style="color:var(--blue);font-weight:700">${surf}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${Math.round((surf/tot2)*100)}%;background:var(--blue)"></div></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">⛏️ Underground</span><span style="color:var(--orange);font-weight:700">${ug}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${Math.round((ug/tot2)*100)}%;background:var(--orange)"></div></div></div>`;
-  } catch(e) { document.getElementById('dashLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
-}
-
-// ── WORKERS ───────────────────────────────────────────────────
-async function loadWorkers() {
-  document.getElementById('workersLoader').classList.add('show');
-  try {
-    const data = await api('GET', '/api/admin/users');
-    document.getElementById('workersLoader').classList.remove('show');
-    if (!data.users.length) { document.getElementById('workersEmpty').style.display='block'; return; }
-    document.getElementById('workersTbody').innerHTML = data.users.map(u => `
-      <tr>
-        <td><span class="mono">${u.worker_id}</span></td>
-        <td style="font-weight:600">${u.name}</td>
-        <td style="color:var(--muted);font-size:13px">${u.department||'—'}</td>
-        <td><span class="badge ${u.role==='admin'?'b-admin':'b-worker'}">${u.role.toUpperCase()}</span></td>
-        <td><span class="mono">${new Date(u.created_at).toLocaleDateString()}</span></td>
-      </tr>`).join('');
-  } catch(e) { document.getElementById('workersLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
-}
-
-// ── SOP FILE UPLOAD ───────────────────────────────────────────
-function handleSopFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  uploadedSopFile = file;
-  const preview = document.getElementById('sopFilePreview');
-  const icon = file.type === 'application/pdf' ? '📄' : '🖼️';
-  preview.innerHTML = `<div class="uploaded-file">${icon} ${file.name} (${(file.size/1024).toFixed(1)} KB)</div>`;
-}
-
-async function uploadSOP() {
-  const title = document.getElementById('sopTitle').value.trim();
-  const cat = document.getElementById('sopCat').value;
-  const desc = document.getElementById('sopDesc').value.trim();
-
-  if (!title || !cat) { showToast('⚠️ Title and category are required.', 'error'); return; }
-
-  const btn = document.getElementById('sopUploadBtn');
-  const spinner = document.getElementById('sopUploadSpinner');
-  const btnText = document.getElementById('sopUploadBtnText');
-  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Uploading...';
-
-  // Store SOP in local adminSOPs list (with file as object URL if attached)
-  const newSOP = {
-    id: 'SOP-' + String(adminSOPs.length + 100),
-    cat, icon: catIcon(cat), title: title.toUpperCase(),
-    desc: desc || 'Uploaded by administrator.',
-    rev: 'Rev 1.0', date: new Date().toLocaleDateString('en-GB', {month:'short',year:'numeric'}),
-    steps: [], warnings: [], info: null,
-    fileUrl: uploadedSopFile ? URL.createObjectURL(uploadedSopFile) : null,
-    fileName: uploadedSopFile ? uploadedSopFile.name : null,
-    fileType: uploadedSopFile ? uploadedSopFile.type : null,
-    isUploaded: true
-  };
-
-  adminSOPs.push(newSOP);
-  renderSOPs(document.querySelector('.filter-cat-btn.active')?.dataset.cat || 'all');
-
-  showToast('✅ SOP uploaded successfully!', 'success');
-  document.getElementById('sopTitle').value = '';
-  document.getElementById('sopCat').value = '';
-  document.getElementById('sopDesc').value = '';
-  document.getElementById('sopFilePreview').innerHTML = '';
-  document.getElementById('sopFileInput').value = '';
-  uploadedSopFile = null;
-
-  btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Upload SOP →';
-}
-
-function catIcon(cat) {
-  return {drilling:'⛏️',blasting:'💥',ground:'🪨',surface:'🏗️',emergency:'🚨',general:'📋'}[cat]||'📋';
-}
-
-// ── SOP DATA ──────────────────────────────────────────────────
-const BUILT_IN_SOPS = [
-  {id:'SOP-01',cat:'drilling',icon:'⛏️',title:'DRILLING OPERATIONS',desc:'Face drilling, long-hole drilling, and raise boring procedures for underground workings.',rev:'Rev 4.2',date:'Jan 2026',steps:[{t:'Pre-drill inspection',d:'Inspect drill rig, steels and bits for damage. Check hydraulic hoses and rotation motor. Log defects.'},{t:'Collar setup',d:'Set up drill pattern per approved drilling plan. Mark collar positions with survey marks. Clear all personnel.'},{t:'Ventilation check',d:'Confirm adequate ventilation at face (min 0.5 m/s). Evacuate if air quality is below standard.'},{t:'Drilling execution',d:'Advance drill at controlled feed rate. Monitor for ground conditions and water inflow. Use water flushing throughout.'},{t:'Post-drill inspection',d:'Count holes vs plan. Check for broken steels. Log all drilling parameters on drill log sheet.'}],warnings:['Never drill within 0.5m of a charged or misfired hole.','Wear hearing protection (Class 4+), dust mask (P2), and full face shield.'],info:'If drilling intersects unexpected water, stop immediately and notify supervisor.'},
-  {id:'SOP-02',cat:'blasting',icon:'💥',title:'BLASTING PROCEDURES',desc:'Safe handling, loading, charging, firing, and post-blast inspection of explosives.',rev:'Rev 5.0',date:'Feb 2026',steps:[{t:'Explosive requisition',d:'Request explosives from magazine per daily blast schedule signed by shotfirer.'},{t:'Pre-blast area clearance',d:'Minimum 200m exclusion zone. Issue blasting siren (3 short blasts). Confirm all workers tagged out.'},{t:'Charging the holes',d:'Prime and load holes per blast design. Use approved detonators only. Document all used.'},{t:'Fire the blast',d:'Fire from safe position. All personnel at refuge bay or surface. Sound firing signal.'},{t:'Post-blast inspection',d:'Check for misfires, bootlegs, and unfired explosives before any work continues.'}],warnings:['ALL explosives must be handled only by licensed shotfirers.','NEVER cut detonator leg wires or use open flame near explosives.'],info:'Misfire — DO NOT RE-ENTER for minimum 2 hours. Follow SOP-07.'},
-  {id:'SOP-03',cat:'ground',icon:'🪨',title:'GROUND SUPPORT & SCALING',desc:'Barring down, rock bolting, mesh installation, and shotcrete for excavation stability.',rev:'Rev 3.1',date:'Dec 2025',steps:[{t:'Initial ground assessment',d:'Before any work, inspect backs and walls using scaling bar. Record in Ground Assessment Log.'},{t:'Barring down',d:'Use long scaling bar (min 2m). Dislodge all loose rock from solid ground outward.'},{t:'Rock bolt installation',d:'Install pattern bolts per design. Check hole depth and apply correct torque.'},{t:'Mesh installation',d:'Overlap mesh panels minimum 150mm. Secure with bolts at all four corners.'},{t:'Sign-off',d:'Supervising engineer signs Ground Support Completion form.'}],warnings:['NEVER work under unsupported backs.','Scaling must be completed BEFORE installing any services.'],info:'In geologically complex zones, a geotechnician must assess backs before work commences.'},
-  {id:'SOP-04',cat:'surface',icon:'🏗️',title:'CRUSHER OPERATIONS',desc:'Safe startup, running, and shutdown for jaw, gyratory and cone crushers.',rev:'Rev 2.8',date:'Nov 2025',steps:[{t:'Pre-start inspection',d:'Check crusher cavity for bridging or tramp metal. Inspect liners and check lube oil levels.'},{t:'LOTO check',d:'Confirm all locks removed and isolation complete. Check all guards are secured.'},{t:'Startup sequence',d:'Start lube system first. 5-minute warm up. Start crusher motor. Start feed conveyor last.'},{t:'Shutdown',d:'Stop feed first. Run empty 5 minutes. Stop motor. Stop lube after 15-min cooldown. Apply LOTO.'}],warnings:['NEVER clear a blocked crusher without full Lockout/Tagout applied.','No entry into crusher chamber unless isolated and buddy system in place.'],info:'Tramp metal detected – stop feed immediately and notify supervisor.'},
-  {id:'SOP-05',cat:'emergency',icon:'🚨',title:'UNDERGROUND EVACUATION',desc:'Emergency evacuation for fire, gas, explosion, or flooding events.',rev:'Rev 6.0',date:'Mar 2026',steps:[{t:'Trigger alarm',d:'On detecting emergency, activate nearest refuge station alarm. Radio control room immediately.'},{t:'Initiate evacuation',d:'ALL workers travel toward surface via designated escapeway. Do not use cages during fire.'},{t:'Tag-in at refuge bays',d:'Use physical tag board. Radio control room with count.'},{t:'Don self-rescuers',d:'If smoke or toxic gas detected, immediately don self-contained self-rescuer (SCSR).'},{t:'Muster point',d:'Report to designated surface muster point. DO NOT leave until roll call is complete.'}],warnings:['NEVER use a lift/cage/skip during a fire.','Missing person – DO NOT re-enter. Notify mine rescue team immediately.'],info:'Refuge bays at Level 2, Level 4, Level 6, and Portal Access.'},
-  {id:'SOP-06',cat:'emergency',icon:'🩺',title:'FIRST AID RESPONSE',desc:'Administering first aid and managing injured persons underground and surface.',rev:'Rev 3.5',date:'Jan 2026',steps:[{t:'Scene assessment',d:'Ensure scene is safe. Do not move casualty unless in immediate danger.'},{t:'Call for help',d:'Radio: "Medical Emergency – [Location] – [Injury] – [Number of Persons]".'},{t:'Primary survey',d:'Assess Airway, Breathing, Circulation. Begin CPR if required (30:2).'},{t:'Secondary survey',d:'Check for bleeding, fractures, burns. Apply pressure dressings.'},{t:'Handover',d:'Give clear handover to medic. Document on Injury Report Form.'}],warnings:['DO NOT move a casualty with suspected spinal injury.','DO NOT give food or water to an injured person who may require surgery.'],info:'AED and first aid kits at: Surface First Aid Room, Level 2 Refuge Bay, Level 5 Refuge Bay.'},
-];
-
-function renderSOPs(filter='all') {
-  const grid = document.getElementById('sopGrid');
-  if (!grid) return;
-  const allSOPs = [...BUILT_IN_SOPS, ...adminSOPs];
-  const list = filter==='all' ? allSOPs : allSOPs.filter(s => s.cat===filter);
-  grid.innerHTML = list.map(s => `
-    <div class="sop-card" onclick="openSOP('${s.id}')">
-      <div class="sop-card-icon">${s.icon}</div>
-      <div class="sop-card-id">${s.id} · ${s.cat.toUpperCase()}</div>
-      <div class="sop-card-title">${s.title}</div>
-      <div class="sop-card-desc">${s.desc}</div>
-      ${s.isUploaded && s.fileName ? `<div class="sop-file-badge">📎 ${s.fileName}</div>` : ''}
-      <div class="sop-card-meta"><span>${s.rev}</span><span>${s.date}</span></div>
-    </div>`).join('');
-}
-
-function filterSOPs(cat, btn) {
-  document.querySelectorAll('.filter-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  btn.dataset.cat = cat;
-  renderSOPs(cat);
-}
-
-function openSOP(id) {
-  const allSOPs = [...BUILT_IN_SOPS, ...adminSOPs];
-  const s = allSOPs.find(x => x.id===id);
-  if (!s) return;
-  document.getElementById('mTitle').textContent = s.icon + ' ' + s.title;
-  document.getElementById('mSub').textContent = s.id + ' — ' + s.rev + ' — ' + s.date;
-
-  let body = '';
-
-  if (s.isUploaded) {
-    body += `<div class="info-box">📎 This SOP was uploaded by an administrator.</div>`;
-    if (s.fileUrl) {
-      if (s.fileType === 'application/pdf') {
-        body += `<div style="margin-bottom:16px"><a href="${s.fileUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 18px;background:var(--orange);color:white;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">📄 Open PDF Document</a></div>`;
-      } else {
-        body += `<div style="margin-bottom:16px"><img src="${s.fileUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="SOP Document"/></div>`;
-      }
-    }
-    body += `<p style="color:var(--muted);font-size:13px">${s.desc}</p>`;
-  } else {
-    if (s.steps.length) {
-      body += `<ol class="step-list">${s.steps.map((st,i) => `<li class="step-item"><span class="step-num">${String(i+1).padStart(2,'0')}</span><div><strong>${st.t}</strong><br><span style="color:var(--text2)">${st.d}</span></div></li>`).join('')}</ol>`;
-    }
-    s.warnings?.forEach(w => { body += `<div class="warn-box">⚠️ <span>${w}</span></div>`; });
-    if (s.info) body += `<div class="info-box">ℹ️ <span>${s.info}</span></div>`;
-  }
-  document.getElementById('mBody').innerHTML = body;
-  document.getElementById('sopModal').classList.add('open');
-}
-function closeSOP() { document.getElementById('sopModal').classList.remove('open'); }
-
-// ── HELPERS ───────────────────────────────────────────────────
-function sevBadge(s){return{nearMiss:'b-nm',minor:'b-mi',serious:'b-se',critical:'b-cr',fatality:'b-fa'}[s]||'b-nm'}
-function sevLabel(s){return{nearMiss:'Near Miss',minor:'Minor',serious:'Serious',critical:'Critical',fatality:'Fatality'}[s]||s}
-function statusBadge(s){return{open:'b-open',under_review:'b-review',closed:'b-closed'}[s]||'b-open'}
-
-function triggerEmergency() {
-  if (confirm('🚨 ACTIVATE EMERGENCY ALERT?\n\nThis will immediately notify the control room and emergency response team.'))
-    alert('🚨 EMERGENCY ALERT ACTIVATED\n\nControl room notified.\nEvacuate immediately.\nProceed to nearest refuge bay or muster point.\nSee SOP-05 for evacuation procedures.');
-}
-
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3500);
+function setIdle(btnId, spinId, txtId, msg) {
+  document.getElementById(btnId).disabled = false;
+  document.getElementById(spinId).classList.remove('show');
+  document.getElementById(txtId).textContent = msg;
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginForm').style.display !== 'none' && document.getElementById('loginView').classList.contains('active')) doLogin();
+  if (e.key === 'Enter') {
+    if (document.getElementById('loginPanel').classList.contains('active')) doLogin();
+    else doRegister();
+  }
 });
 </script>
 </body>
