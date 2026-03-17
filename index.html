@@ -4,563 +4,741 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MineGuard Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
-/* ── CONFIGURE YOUR BACKEND URL HERE ────────────────────────── */
-/* After deploying backend on Render, update API_BASE in the    */
-/* <script> section at the bottom of this file.                 */
-
 :root {
-  --black:#0a0a0a;--dark:#111318;--panel:#181c24;--card:#1e2330;
-  --border:#2a3040;--orange:#ff6b1a;--yellow:#f5c518;--red:#e03333;
-  --green:#1faa55;--blue:#2a7fff;--text:#d4dae8;--muted:#7a8499;
-  --mono:'Share Tech Mono',monospace;--head:'Bebas Neue',cursive;
-  --body:'Rajdhani',sans-serif;
+  --white: #ffffff;
+  --bg: #f4f6f9;
+  --bg2: #eef0f5;
+  --panel: #ffffff;
+  --border: #e2e6ed;
+  --border2: #d0d5de;
+  --text: #1a1f2e;
+  --text2: #4a5568;
+  --muted: #8a93a6;
+  --orange: #e85d04;
+  --orange-light: #fff3ec;
+  --orange-mid: #ffd4b8;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --yellow: #d97706;
+  --yellow-light: #fffbeb;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow: 0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 20px 48px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'DM Sans', sans-serif;
+  --head: 'Fraunces', serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--black);color:var(--text);font-family:var(--body);font-size:16px;min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:9999}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; min-height: 100vh; }
+
+/* ── LOADING SCREEN ─────────────────────────────────────────── */
+#loadingScreen {
+  position: fixed; inset: 0; background: var(--white);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; transition: opacity .5s ease;
+}
+#loadingScreen.hide { opacity: 0; pointer-events: none; }
+.loading-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+.loading-icon {
+  width: 52px; height: 52px; background: var(--orange); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  box-shadow: 0 8px 24px rgba(232,93,4,.3);
+}
+.loading-title { font-family: var(--head); font-size: 32px; color: var(--text); }
+.loading-title span { color: var(--orange); }
+.loading-bar-wrap { width: 220px; height: 4px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
+.loading-bar { height: 100%; background: var(--orange); border-radius: 4px; animation: loadBar 1.8s ease forwards; }
+@keyframes loadBar { from { width: 0 } to { width: 100% } }
+.loading-text { font-size: 13px; color: var(--muted); margin-top: 14px; letter-spacing: .5px; }
 
 /* ── VIEWS ──────────────────────────────────────────────────── */
-.view{display:none}.view.active{display:block}
+.view { display: none; }
+.view.active { display: block; }
 
-/* ── LOGIN ──────────────────────────────────────────────────── */
-#loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,rgba(255,107,26,.08) 0%,transparent 70%)}
-.login-box{width:420px;background:var(--panel);border:1px solid var(--border);padding:44px 40px}
-.login-logo{display:flex;align-items:center;gap:14px;margin-bottom:8px}
-.login-hex{width:44px;height:44px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:20px;animation:pulse 3s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,26,.4)}50%{box-shadow:0 0 0 12px rgba(255,107,26,0)}}
-.login-box h1{font-family:var(--head);font-size:32px;letter-spacing:3px}
-.login-box h1 span{color:var(--orange)}
-.login-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:32px;letter-spacing:1px}
-.form-group{margin-bottom:18px}
-label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
-input,select,textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 16px;font-family:var(--body);font-size:15px;outline:none;transition:border-color .2s;border-radius:2px}
-input:focus,select:focus,textarea:focus{border-color:var(--orange)}
-select option{background:var(--card)}
-textarea{resize:vertical;min-height:90px}
-.btn-primary{width:100%;background:var(--orange);color:#000;border:none;padding:14px;font-family:var(--head);font-size:20px;letter-spacing:3px;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.btn-primary:hover{background:#ff8844}
-.btn-primary:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
-.login-toggle{text-align:center;margin-top:20px;font-size:13px;color:var(--muted)}
-.login-toggle a{color:var(--orange);cursor:pointer;text-decoration:none}
-.err{color:var(--red);font-family:var(--mono);font-size:12px;margin-top:14px;padding:10px;background:rgba(224,51,51,.08);border-left:3px solid var(--red);display:none}
-.err.show{display:block}
+/* ── LOGIN PAGE ─────────────────────────────────────────────── */
+#loginView {
+  min-height: 100vh; display: flex;
+  background: linear-gradient(135deg, #fff8f4 0%, #f4f6f9 50%, #eef2ff 100%);
+}
+.login-left {
+  flex: 1; background: var(--orange); padding: 60px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.login-left::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.login-left::after {
+  content: ''; position: absolute; bottom: -60px; left: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.login-brand { position: relative; z-index: 1; }
+.login-brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+.login-brand-icon {
+  width: 44px; height: 44px; background: rgba(255,255,255,.2);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.login-brand h1 { font-family: var(--head); font-size: 26px; color: white; letter-spacing: 1px; }
+.login-tagline { font-size: 38px; font-family: var(--head); color: white; line-height: 1.2; margin-bottom: 20px; }
+.login-tagline span { color: rgba(255,255,255,.6); }
+.login-desc { color: rgba(255,255,255,.75); font-size: 15px; line-height: 1.7; max-width: 340px; }
+.login-features { position: relative; z-index: 1; }
+.login-feature { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.85); font-size: 14px; }
+.login-feature-icon { width: 32px; height: 32px; background: rgba(255,255,255,.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+
+.login-right {
+  width: 480px; display: flex; align-items: center; justify-content: center; padding: 48px 56px;
+}
+.login-box { width: 100%; }
+.login-box-title { font-family: var(--head); font-size: 30px; color: var(--text); margin-bottom: 6px; }
+.login-box-sub { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 8px; letter-spacing: .3px; }
+.form-input {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--text); padding: 13px 16px; font-family: var(--font); font-size: 15px;
+  outline: none; transition: all .2s; border-radius: var(--radius-sm);
+}
+.form-input:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(232,93,4,.1); }
+select.form-input option { background: var(--white); }
+textarea.form-input { resize: vertical; min-height: 96px; }
+
+.btn-primary {
+  width: 100%; background: var(--orange); color: white; border: none;
+  padding: 14px; font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all .2s; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 12px rgba(232,93,4,.3);
+}
+.btn-primary:hover { background: #c94e00; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(232,93,4,.35); }
+.btn-primary:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary {
+  width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border);
+  padding: 13px; font-family: var(--font); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all .2s; border-radius: var(--radius-sm);
+}
+.btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+
+.login-toggle { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
+.login-toggle a { color: var(--orange); cursor: pointer; font-weight: 600; text-decoration: none; }
+.err-msg { background: var(--red-light); border: 1px solid #fca5a5; color: var(--red); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 14px; display: none; }
+.err-msg.show { display: block; }
+
+/* ── BTN SPINNER ────────────────────────────────────────────── */
+.btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+.btn-spinner.show { display: block; }
+@keyframes spin { to { transform: rotate(360deg) } }
 
 /* ── APP SHELL ──────────────────────────────────────────────── */
-header{background:var(--dark);border-bottom:2px solid var(--orange);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
-.hdr-logo{display:flex;align-items:center;gap:12px}
-.hdr-hex{width:32px;height:32px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:15px}
-.hdr-logo h1{font-family:var(--head);font-size:24px;letter-spacing:3px}
-.hdr-logo h1 span{color:var(--orange)}
-.hdr-right{display:flex;align-items:center;gap:16px}
-.role-badge{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:2px;letter-spacing:1px}
-.role-badge.worker{background:rgba(42,127,255,.15);color:var(--blue);border:1px solid var(--blue)}
-.role-badge.admin{background:rgba(255,107,26,.15);color:var(--orange);border:1px solid var(--orange)}
-.worker-id-badge{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:5px 12px}
-.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 14px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .2s;letter-spacing:1px}
-.logout-btn:hover{border-color:var(--red);color:var(--red)}
-.emr-btn{background:var(--red);color:#fff;border:none;padding:8px 16px;font-family:var(--head);font-size:16px;letter-spacing:2px;cursor:pointer;clip-path:polygon(0 0,calc(100%-6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100%-6px));transition:all .2s}
-.emr-btn:hover{background:#ff4444}
+#appView { min-height: 100vh; display: flex; flex-direction: column; }
 
-nav{background:var(--panel);border-bottom:1px solid var(--border);display:flex;padding:0 28px;gap:2px;overflow-x:auto}
-.nav-tab{padding:13px 20px;font-family:var(--body);font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
-.nav-tab:hover{color:var(--text)}
-.nav-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 32px; display: flex; align-items: center; justify-content: space-between;
+  height: 64px; position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.hdr-brand { display: flex; align-items: center; gap: 12px; }
+.hdr-icon { width: 36px; height: 36px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+.hdr-brand h1 { font-family: var(--head); font-size: 22px; color: var(--text); }
+.hdr-brand h1 span { color: var(--orange); }
+.hdr-right { display: flex; align-items: center; gap: 12px; }
+.hdr-user { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--bg); border-radius: var(--radius-sm); }
+.hdr-avatar { width: 30px; height: 30px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
+.hdr-user-info { display: flex; flex-direction: column; }
+.hdr-user-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.hdr-user-role { font-size: 11px; color: var(--muted); }
+.role-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+.role-pill.worker { background: var(--blue-light); color: var(--blue); }
+.role-pill.admin { background: var(--orange-light); color: var(--orange); }
+.emr-btn { background: var(--red); color: white; border: none; padding: 9px 16px; font-family: var(--font); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: var(--radius-sm); transition: all .2s; display: flex; align-items: center; gap: 6px; }
+.emr-btn:hover { background: #b91c1c; }
+.logout-btn { background: none; border: 1.5px solid var(--border); color: var(--text2); padding: 8px 14px; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; transition: all .2s; border-radius: var(--radius-sm); }
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
 
-main{padding:24px 28px;max-width:1400px;margin:0 auto}
-.section{display:none;animation:fadeIn .3s ease}.section.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ── NAV ────────────────────────────────────────────────────── */
+nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 32px; gap: 4px; overflow-x: auto; }
+.nav-tab { padding: 16px 18px; font-family: var(--font); font-weight: 600; font-size: 13px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
 
-/* ── PAGE TITLES ────────────────────────────────────────────── */
-.page-title{font-family:var(--head);font-size:38px;letter-spacing:4px;color:#fff;margin-bottom:2px}
-.page-sub{color:var(--muted);font-size:12px;letter-spacing:1px;margin-bottom:24px;font-family:var(--mono)}
+/* ── MAIN ───────────────────────────────────────────────────── */
+main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+.section { display: none; animation: fadeIn .3s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
 
-/* ── STATS ──────────────────────────────────────────────────── */
-.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-.stat-card{background:var(--panel);border:1px solid var(--border);padding:16px 20px;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
-.stat-card.c-orange::before{background:var(--orange)}.stat-card.c-red::before{background:var(--red)}
-.stat-card.c-yellow::before{background:var(--yellow)}.stat-card.c-green::before{background:var(--green)}
-.stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-family:var(--mono)}
-.stat-value{font-family:var(--head);font-size:36px;color:#fff}
-.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
-.progress-bar{height:4px;background:var(--border);margin-top:8px;border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;transition:width .8s ease}
+/* ── PAGE HEADER ────────────────────────────────────────────── */
+.page-header { margin-bottom: 28px; }
+.page-title { font-family: var(--head); font-size: 32px; color: var(--text); margin-bottom: 4px; }
+.page-sub { color: var(--muted); font-size: 14px; }
 
-/* ── FORM CARDS ─────────────────────────────────────────────── */
-.form-card{background:var(--panel);border:1px solid var(--border);padding:24px;margin-bottom:18px}
-.form-card-title{font-family:var(--head);font-size:20px;letter-spacing:2px;color:var(--orange);margin-bottom:18px;display:flex;align-items:center;gap:10px}
-.sec-tag{font-family:var(--mono);font-size:10px;background:var(--orange);color:#000;padding:2px 8px;border-radius:2px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-full{grid-column:1/-1}
+/* ── STATS GRID ─────────────────────────────────────────────── */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; border-radius: 50%; opacity: .06; transform: translate(20px, -20px); }
+.stat-card.c-orange::before { background: var(--orange); }
+.stat-card.c-red::before { background: var(--red); }
+.stat-card.c-yellow::before { background: var(--yellow); }
+.stat-card.c-green::before { background: var(--green); }
+.stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
+.stat-card.c-orange .stat-icon { background: var(--orange-light); }
+.stat-card.c-red .stat-icon { background: var(--red-light); }
+.stat-card.c-yellow .stat-icon { background: var(--yellow-light); }
+.stat-card.c-green .stat-icon { background: var(--green-light); }
+.stat-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.stat-value { font-family: var(--head); font-size: 36px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+.stat-sub { font-size: 12px; color: var(--muted); }
 
-/* ── SEVERITY ───────────────────────────────────────────────── */
-.sev-row{display:flex;gap:10px;flex-wrap:wrap}
-.sev-opt{padding:9px 16px;border:2px solid var(--border);cursor:pointer;font-family:var(--head);font-size:15px;letter-spacing:2px;background:transparent;transition:all .2s}
-.sev-opt.nm{color:#4dc4ff}.sev-opt.nm.sel{background:rgba(77,196,255,.12);border-color:#4dc4ff}
-.sev-opt.mi{color:var(--yellow)}.sev-opt.mi.sel{background:rgba(245,197,24,.08);border-color:var(--yellow)}
-.sev-opt.se{color:var(--orange)}.sev-opt.se.sel{background:rgba(255,107,26,.08);border-color:var(--orange)}
-.sev-opt.cr{color:var(--red)}.sev-opt.cr.sel{background:rgba(224,51,51,.08);border-color:var(--red)}
-.sev-opt.fa{color:#ff0000;animation:flash 1.5s infinite}.sev-opt.fa.sel{background:rgba(255,0,0,.12);border-color:#ff0000}
-@keyframes flash{0%,100%{opacity:1}50%{opacity:.5}}
+/* ── CARDS ──────────────────────────────────────────────────── */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+.card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.card-title-icon { width: 28px; height: 28px; background: var(--orange-light); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 
-/* ── LOC GRID ───────────────────────────────────────────────── */
-.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.loc-btn{padding:10px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-family:var(--body);font-weight:600;font-size:12px;text-align:center;transition:all .2s}
-.loc-btn:hover,.loc-btn.sel{border-color:var(--orange);color:var(--orange);background:rgba(255,107,26,.06)}
-.loc-btn .li{font-size:18px;display:block;margin-bottom:4px}
+/* ── FORM STYLES ────────────────────────────────────────────── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.form-full { grid-column: 1 / -1; }
+.form-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
+.form-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.form-section-num { width: 28px; height: 28px; background: var(--orange); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.form-section-title { font-size: 15px; font-weight: 700; color: var(--text); }
 
-/* ── TOGGLE ─────────────────────────────────────────────────── */
-.tgl-group{display:flex}
-.tgl-btn{padding:9px 18px;background:var(--card);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:1px;transition:all .2s}
-.tgl-btn:not(:last-child){border-right:none}
-.tgl-btn.active{background:var(--orange);color:#000;border-color:var(--orange)}
+/* ── SEVERITY SELECTOR ──────────────────────────────────────── */
+.sev-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.sev-btn { padding: 10px 18px; border: 2px solid var(--border); cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 700; background: var(--white); transition: all .2s; border-radius: var(--radius-sm); color: var(--text2); }
+.sev-btn:hover { border-color: currentColor; }
+.sev-btn.nm { color: var(--blue); } .sev-btn.nm.sel { background: var(--blue-light); border-color: var(--blue); }
+.sev-btn.mi { color: var(--yellow); } .sev-btn.mi.sel { background: var(--yellow-light); border-color: var(--yellow); }
+.sev-btn.se { color: var(--orange); } .sev-btn.se.sel { background: var(--orange-light); border-color: var(--orange); }
+.sev-btn.cr { color: var(--red); } .sev-btn.cr.sel { background: var(--red-light); border-color: var(--red); }
+.sev-btn.fa { color: #7f1d1d; animation: flash 1.5s infinite; } .sev-btn.fa.sel { background: #fef2f2; border-color: #7f1d1d; }
+@keyframes flash { 0%,100% { opacity:1 } 50% { opacity:.5 } }
 
-/* ── SUBMIT ─────────────────────────────────────────────────── */
-.submit-btn{background:var(--orange);color:#000;border:none;padding:14px 36px;font-family:var(--head);font-size:20px;letter-spacing:3px;cursor:pointer;transition:all .2s;margin-top:6px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.submit-btn:hover{background:#ff8844;transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,26,.25)}
-.submit-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+/* ── LOCATION GRID ──────────────────────────────────────────── */
+.loc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.loc-btn { padding: 14px 10px; border: 2px solid var(--border); background: var(--bg); color: var(--text2); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 12px; text-align: center; transition: all .2s; border-radius: var(--radius-sm); }
+.loc-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+.loc-btn.sel { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+.loc-icon { font-size: 20px; display: block; margin-bottom: 6px; }
 
-/* ── INCIDENT TABLE ─────────────────────────────────────────── */
-.inc-table{width:100%;border-collapse:collapse}
-.inc-table th{background:var(--card);font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
-.inc-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;background:var(--panel)}
-.inc-table tr:hover td{background:var(--card)}
-.badge{padding:4px 10px;font-size:10px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;border-radius:2px;white-space:nowrap}
-.b-nm{background:rgba(77,196,255,.12);color:#4dc4ff;border:1px solid #4dc4ff}
-.b-mi{background:rgba(245,197,24,.08);color:var(--yellow);border:1px solid var(--yellow)}
-.b-se{background:rgba(255,107,26,.08);color:var(--orange);border:1px solid var(--orange)}
-.b-cr{background:rgba(224,51,51,.08);color:var(--red);border:1px solid var(--red)}
-.b-fa{background:rgba(255,0,0,.15);color:#ff4444;border:1px solid #f00;animation:flash 1.5s infinite}
-.b-open{background:rgba(42,127,255,.1);color:var(--blue);border:1px solid var(--blue)}
-.b-review{background:rgba(245,197,24,.08);color:var(--yellow);border:1px solid var(--yellow)}
-.b-closed{background:rgba(31,170,85,.1);color:var(--green);border:1px solid var(--green)}
-.mono-sm{font-family:var(--mono);font-size:11px;color:var(--muted)}
+/* ── TOGGLE GROUP ───────────────────────────────────────────── */
+.tgl-group { display: flex; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; width: fit-content; }
+.tgl-btn { padding: 9px 18px; background: var(--white); border: none; color: var(--muted); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 13px; transition: all .2s; border-right: 1px solid var(--border); }
+.tgl-btn:last-child { border-right: none; }
+.tgl-btn.active { background: var(--orange); color: white; }
+
+/* ── SUBMIT BTN ─────────────────────────────────────────────── */
+.submit-btn { background: var(--orange); color: white; border: none; padding: 14px 36px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(232,93,4,.25); }
+.submit-btn:hover { background: #c94e00; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(232,93,4,.3); }
+.submit-btn:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── TABLE ──────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+.data-table { width: 100%; border-collapse: collapse; background: var(--white); }
+.data-table th { background: var(--bg); font-size: 11px; font-weight: 700; color: var(--muted); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .5px; }
+.data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg); }
+
+/* ── BADGES ─────────────────────────────────────────────────── */
+.badge { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 20px; white-space: nowrap; display: inline-block; }
+.b-nm { background: var(--blue-light); color: var(--blue); }
+.b-mi { background: var(--yellow-light); color: var(--yellow); }
+.b-se { background: var(--orange-light); color: var(--orange); }
+.b-cr { background: var(--red-light); color: var(--red); }
+.b-fa { background: #fef2f2; color: #7f1d1d; animation: flash 1.5s infinite; }
+.b-open { background: var(--blue-light); color: var(--blue); }
+.b-review { background: var(--yellow-light); color: var(--yellow); }
+.b-closed { background: var(--green-light); color: var(--green); }
+.b-admin { background: var(--orange-light); color: var(--orange); }
+.b-worker { background: var(--blue-light); color: var(--blue); }
+
+/* ── ACTION BUTTONS ─────────────────────────────────────────── */
+.act-btn { padding: 5px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; cursor: pointer; border-radius: 6px; border: none; transition: all .2s; margin-right: 4px; }
+.act-review { background: var(--yellow-light); color: var(--yellow); } .act-review:hover { background: #fde68a; }
+.act-close { background: var(--green-light); color: var(--green); } .act-close:hover { background: #a7f3d0; }
+.act-delete { background: var(--red-light); color: var(--red); } .act-delete:hover { background: #fca5a5; }
 
 /* ── FILTER BAR ─────────────────────────────────────────────── */
-.filter-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
-.filter-sel{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:1px;outline:none}
-.filter-sel:focus{border-color:var(--orange)}
-.filter-lbl{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px}
+.filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.filter-sel { background: var(--white); border: 1.5px solid var(--border); color: var(--text); padding: 9px 14px; font-family: var(--font); font-size: 13px; cursor: pointer; outline: none; border-radius: var(--radius-sm); font-weight: 500; }
+.filter-sel:focus { border-color: var(--orange); }
+.filter-cat-btn { padding: 8px 16px; background: var(--white); border: 1.5px solid var(--border); color: var(--text2); cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 13px; transition: all .2s; border-radius: var(--radius-sm); }
+.filter-cat-btn:hover { border-color: var(--orange); color: var(--orange); }
+.filter-cat-btn.active { background: var(--orange); color: white; border-color: var(--orange); }
 
-/* ── ADMIN ACTION BTNS ──────────────────────────────────────── */
-.act-btn{padding:5px 10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:2px;border:1px solid;transition:all .2s;margin-right:4px}
-.act-review{border-color:var(--yellow);color:var(--yellow);background:transparent}.act-review:hover{background:rgba(245,197,24,.1)}
-.act-close{border-color:var(--green);color:var(--green);background:transparent}.act-close:hover{background:rgba(31,170,85,.1)}
-.act-delete{border-color:var(--red);color:var(--red);background:transparent}.act-delete:hover{background:rgba(224,51,51,.1)}
+/* ── SOP GRID ───────────────────────────────────────────────── */
+.sop-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.sop-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; cursor: pointer; transition: all .25s; box-shadow: var(--shadow-sm); }
+.sop-card:hover { border-color: var(--orange); box-shadow: var(--shadow); transform: translateY(-3px); }
+.sop-card-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--orange-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+.sop-card-id { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.sop-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.sop-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.sop-card-meta { margin-top: 14px; display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--border); }
+.sop-file-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; background: var(--green-light); color: var(--green); border-radius: 6px; font-size: 11px; font-weight: 700; margin-top: 8px; }
 
-/* ── SOP CARDS ──────────────────────────────────────────────── */
-.sop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.sop-card{background:var(--panel);border:1px solid var(--border);padding:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.sop-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--orange);transition:width .3s}
-.sop-card:hover{border-color:var(--orange);transform:translateY(-2px)}.sop-card:hover::after{width:100%}
-.sop-icon{font-size:32px;margin-bottom:12px}
-.sop-title{font-family:var(--head);font-size:18px;letter-spacing:2px;margin-bottom:8px}
-.sop-desc{font-size:12px;color:var(--muted);line-height:1.6}
-.sop-meta{margin-top:12px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted)}
-.sop-tag{padding:2px 7px;border:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
+/* ── SOP UPLOAD CARD ────────────────────────────────────────── */
+.upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius); padding: 32px; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); }
+.upload-zone:hover { border-color: var(--orange); background: var(--orange-light); }
+.upload-zone input { display: none; }
+.upload-icon { font-size: 36px; margin-bottom: 10px; }
+.upload-text { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+.uploaded-files { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.uploaded-file { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--green-light); border-radius: var(--radius-sm); font-size: 13px; color: var(--green); font-weight: 600; }
+
+/* ── ADMIN SOP FORM ─────────────────────────────────────────── */
+.admin-sop-form { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+.admin-sop-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.admin-sop-title-icon { width: 28px; height: 28px; background: var(--orange-light); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 
 /* ── MODAL ──────────────────────────────────────────────────── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:var(--dark);border:1px solid var(--orange);width:740px;max-width:95vw;max-height:88vh;overflow-y:auto;padding:32px;position:relative}
-.modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;transition:color .2s}.modal-close:hover{color:var(--orange)}
-.modal-title{font-family:var(--head);font-size:28px;letter-spacing:3px;color:var(--orange);margin-bottom:4px}
-.modal-sub{color:var(--muted);font-family:var(--mono);font-size:11px;margin-bottom:22px}
-.step-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-.step-item{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;background:var(--card);border-left:3px solid var(--orange)}
-.step-num{font-family:var(--head);font-size:22px;color:var(--orange);min-width:28px}
-.step-text{font-size:14px;line-height:1.6}
-.warn-box{background:rgba(224,51,51,.07);border:1px solid rgba(224,51,51,.35);padding:12px 16px;margin:12px 0;font-size:13px;line-height:1.6}
-.info-box{background:rgba(42,127,255,.07);border:1px solid rgba(42,127,255,.35);padding:12px 16px;margin:12px 0;font-size:13px;line-height:1.6}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius); width: 700px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+.modal-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white); z-index: 1; border-radius: var(--radius) var(--radius) 0 0; }
+.modal-title { font-family: var(--head); font-size: 22px; color: var(--text); }
+.modal-close { background: var(--bg); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--muted); display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.modal-close:hover { background: var(--red-light); color: var(--red); }
+.modal-body { padding: 24px 28px; }
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.step-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; background: var(--bg); border-radius: var(--radius-sm); border-left: 3px solid var(--orange); }
+.step-num { font-family: var(--head); font-size: 20px; color: var(--orange); min-width: 28px; line-height: 1.4; }
+.step-text { font-size: 14px; line-height: 1.7; color: var(--text2); }
+.warn-box { background: var(--red-light); border: 1px solid #fca5a5; border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #991b1b; display: flex; gap: 10px; }
+.info-box { background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; font-size: 13px; line-height: 1.6; color: #1e40af; display: flex; gap: 10px; }
 
-/* ── TOAST ──────────────────────────────────────────────────── */
-.toast{position:fixed;bottom:26px;right:26px;padding:14px 22px;font-family:var(--head);font-size:17px;letter-spacing:2px;transform:translateY(80px);opacity:0;transition:all .4s;z-index:500;clip-path:polygon(0 0,calc(100%-7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100%-7px))}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.success{background:var(--green);color:#fff}
-.toast.error{background:var(--red);color:#fff}
-
-/* ── LOADER ─────────────────────────────────────────────────── */
-.loader{display:none;text-align:center;padding:40px;font-family:var(--mono);font-size:13px;color:var(--muted)}
-.loader.show{display:block}
-.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.empty-state{text-align:center;padding:48px 20px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+/* ── WORKER INFO BANNER ─────────────────────────────────────── */
+.info-banner { background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 22px; font-size: 13px; color: #1e40af; line-height: 1.6; display: flex; gap: 10px; }
 
 /* ── DASH GRID ──────────────────────────────────────────────── */
-.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
-.panel-title{font-family:var(--head);font-size:18px;letter-spacing:2px;color:var(--orange);margin-bottom:14px}
-.activity-feed{display:flex;flex-direction:column;gap:8px}
-.feed-item{background:var(--panel);border:1px solid var(--border);padding:12px 16px;display:flex;gap:12px;align-items:flex-start;border-left:3px solid var(--orange);font-size:13px;line-height:1.5}
-.feed-time{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;padding-top:2px}
+.dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.activity-feed { display: flex; flex-direction: column; gap: 8px; }
+.feed-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--white); font-size: 13px; line-height: 1.5; }
+.feed-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.feed-time { font-size: 11px; color: var(--muted); white-space: nowrap; margin-top: 2px; }
 
-/* ── ADMIN USERS TABLE ──────────────────────────────────────── */
-.table-wrap{overflow-x:auto}
+/* ── PROGRESS BAR ───────────────────────────────────────────── */
+.progress-bar { height: 6px; background: var(--bg2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
 
-/* ── WORKER MY REPORTS ──────────────────────────────────────── */
-.my-reports-info{background:rgba(42,127,255,.07);border:1px solid rgba(42,127,255,.3);padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.6;color:var(--text)}
+/* ── TOAST ──────────────────────────────────────────────────── */
+.toast { position: fixed; bottom: 28px; right: 28px; padding: 14px 20px; font-size: 14px; font-weight: 600; transform: translateY(80px); opacity: 0; transition: all .4s cubic-bezier(.34,1.56,.64,1); z-index: 500; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); max-width: 360px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--green); color: white; }
+.toast.error { background: var(--red); color: white; }
 
-@media(max-width:768px){
-  .form-grid{grid-template-columns:1fr}.form-full{grid-column:1}
-  .stats-bar{grid-template-columns:1fr 1fr}
-  .sop-grid{grid-template-columns:1fr}
-  .dash-grid{grid-template-columns:1fr}
-  nav{padding:0 12px}
-  main{padding:16px 14px}
-  header{padding:0 14px}
-  .login-box{padding:32px 24px}
+/* ── LOADER ─────────────────────────────────────────────────── */
+.loader { display: none; text-align: center; padding: 48px 20px; }
+.loader.show { display: block; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px; }
+.empty-state { text-align: center; padding: 56px 20px; color: var(--muted); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+
+/* ── MONO TEXT ──────────────────────────────────────────────── */
+.mono { font-family: 'Courier New', monospace; font-size: 12px; }
+
+@media (max-width: 900px) {
+  .login-left { display: none; }
+  .login-right { width: 100%; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-full { grid-column: 1; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .sop-grid { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 16px; }
+  main { padding: 20px 16px; }
+  header { padding: 0 16px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════════ LOGIN VIEW ════════════════ -->
-<div id="loginView" class="view active">
-  <div id="loginBox" class="login-box">
-    <div class="login-logo">
-      <div class="login-hex">⛏</div>
-      <div>
-        <h1>MINE<span>GUARD</span></h1>
-      </div>
+<!-- ── LOADING SCREEN ────────────────────────────────────────── -->
+<div id="loadingScreen">
+  <div class="loading-logo">
+    <div class="loading-icon">⛏</div>
+    <div>
+      <div class="loading-title">Mine<span>Guard</span></div>
     </div>
-    <div class="login-sub">// UNDERGROUND & SURFACE SAFETY PORTAL</div>
+  </div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar"></div>
+  </div>
+  <div class="loading-text">Initializing safety portal...</div>
+</div>
 
-    <div id="loginForm">
-      <div class="form-group">
-        <label>Worker ID / Badge No</label>
-        <input type="text" id="loginId" placeholder="e.g. UG-4471" autocomplete="username"/>
+<!-- ── LOGIN VIEW ────────────────────────────────────────────── -->
+<div id="loginView" class="view">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-brand-logo">
+        <div class="login-brand-icon">⛏</div>
+        <h1>MineGuard</h1>
       </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPass" placeholder="Your password" autocomplete="current-password"/>
-      </div>
-      <button class="btn-primary" onclick="doLogin()">LOGIN →</button>
-      <div class="err" id="loginErr"></div>
-      <div class="login-toggle">New worker? <a onclick="showRegister()">Register here</a></div>
+      <div class="login-tagline">Safety starts <span>here.</span></div>
+      <div class="login-desc">A unified portal for incident reporting and standard operating procedures across all underground and surface mining operations.</div>
     </div>
+    <div class="login-features">
+      <div class="login-feature"><div class="login-feature-icon">⚠️</div> Report incidents instantly from any device</div>
+      <div class="login-feature"><div class="login-feature-icon">📋</div> Access all SOPs anytime, underground or surface</div>
+      <div class="login-feature"><div class="login-feature-icon">📊</div> Real-time safety analytics for management</div>
+      <div class="login-feature"><div class="login-feature-icon">🔒</div> Role-based access — worker privacy protected</div>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-box">
 
-    <div id="registerForm" style="display:none">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="regName" placeholder="Your full name"/>
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div class="login-box-title">Welcome back</div>
+        <div class="login-box-sub">Sign in with your Worker ID to continue</div>
+        <div class="form-group">
+          <label class="form-label">Worker ID / Badge No</label>
+          <input type="text" id="loginId" class="form-input" placeholder="e.g. UG-4471" autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPass" class="form-input" placeholder="Your password" autocomplete="current-password"/>
+        </div>
+        <button class="btn-primary" id="loginBtn" onclick="doLogin()">
+          <div class="btn-spinner" id="loginSpinner"></div>
+          <span id="loginBtnText">Sign In →</span>
+        </button>
+        <div class="err-msg" id="loginErr"></div>
+        <div class="login-toggle">New worker? <a onclick="showRegister()">Register here</a></div>
       </div>
-      <div class="form-group">
-        <label>Worker ID / Badge No</label>
-        <input type="text" id="regId" placeholder="e.g. UG-4471"/>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none">
+        <div class="login-box-title">Create Account</div>
+        <div class="login-box-sub">Register with your mine-issued Worker ID</div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="regName" class="form-input" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Worker ID / Badge No</label>
+          <input type="text" id="regId" class="form-input" placeholder="e.g. UG-4471"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select id="regDept" class="form-input">
+            <option value="">Select Department</option>
+            <option>Drilling & Blasting</option>
+            <option>Loading & Hauling</option>
+            <option>Ground Support</option>
+            <option>Ventilation</option>
+            <option>Maintenance</option>
+            <option>Surface Operations</option>
+            <option>Ore Processing</option>
+            <option>Safety & Security</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="regPass" class="form-input" placeholder="Create a password (min 6 chars)"/>
+        </div>
+        <button class="btn-primary" id="regBtn" onclick="doRegister()">
+          <div class="btn-spinner" id="regSpinner"></div>
+          <span id="regBtnText">Create Account →</span>
+        </button>
+        <div class="err-msg" id="regErr"></div>
+        <div class="login-toggle">Already registered? <a onclick="showLogin()">Sign in here</a></div>
       </div>
-      <div class="form-group">
-        <label>Department</label>
-        <select id="regDept">
-          <option value="">Select Department</option>
-          <option>Drilling & Blasting</option>
-          <option>Loading & Hauling</option>
-          <option>Ground Support</option>
-          <option>Ventilation</option>
-          <option>Maintenance</option>
-          <option>Surface Operations</option>
-          <option>Ore Processing</option>
-          <option>Safety & Security</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="regPass" placeholder="Create a password (min 6 chars)"/>
-      </div>
-      <button class="btn-primary" onclick="doRegister()">REGISTER →</button>
-      <div class="err" id="regErr"></div>
-      <div class="login-toggle">Already registered? <a onclick="showLogin()">Login here</a></div>
+
     </div>
   </div>
 </div>
 
-<!-- ════════════════ APP VIEW ════════════════ -->
+<!-- ── APP VIEW ──────────────────────────────────────────────── -->
 <div id="appView" class="view">
   <header>
-    <div class="hdr-logo">
-      <div class="hdr-hex">⛏</div>
-      <h1>MINE<span>GUARD</span></h1>
+    <div class="hdr-brand">
+      <div class="hdr-icon">⛏</div>
+      <h1>Mine<span>Guard</span></h1>
     </div>
     <div class="hdr-right">
-      <span class="worker-id-badge" id="hdrWorkerId"></span>
-      <span class="role-badge" id="hdrRoleBadge"></span>
-      <button class="emr-btn" onclick="triggerEmergency()">🚨 EMERGENCY</button>
-      <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+      <div class="hdr-user">
+        <div class="hdr-avatar" id="hdrAvatar">?</div>
+        <div class="hdr-user-info">
+          <div class="hdr-user-name" id="hdrName">—</div>
+          <div class="hdr-user-role" id="hdrWorkerId">—</div>
+        </div>
+      </div>
+      <span class="role-pill" id="hdrRoleBadge"></span>
+      <button class="emr-btn" onclick="triggerEmergency()">🚨 Emergency</button>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
     </div>
   </header>
 
   <nav id="appNav"></nav>
 
   <main>
-    <!-- ── WORKER SECTIONS ── -->
-    <div id="sec-report" class="section">
-      <div class="page-title">REPORT AN INCIDENT</div>
-      <div class="page-sub">// SUBMIT IMMEDIATELY AFTER ANY INCIDENT — ALL FIELDS MARKED * REQUIRED</div>
 
-      <div class="form-card">
-        <div class="form-card-title"><span class="sec-tag">01</span> YOUR DETAILS</div>
+    <!-- ── REPORT INCIDENT ── -->
+    <div id="sec-report" class="section">
+      <div class="page-header">
+        <div class="page-title">Report an Incident</div>
+        <div class="page-sub">Submit immediately after any incident — all fields marked * are required</div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header"><div class="form-section-num">1</div><div class="form-section-title">Your Details</div></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Full Name *</label>
-            <input type="text" id="rName" placeholder="Auto-filled from login" readonly style="opacity:.6"/>
-          </div>
-          <div class="form-group">
-            <label>Worker ID *</label>
-            <input type="text" id="rId" placeholder="Auto-filled from login" readonly style="opacity:.6"/>
-          </div>
-          <div class="form-group">
-            <label>Supervisor on Duty</label>
-            <input type="text" id="rSupervisor" placeholder="Supervisor name"/>
-          </div>
-          <div class="form-group">
-            <label>Department</label>
-            <input type="text" id="rDept" placeholder="Your department" readonly style="opacity:.6"/>
-          </div>
+          <div class="form-group"><label class="form-label">Full Name *</label><input type="text" id="rName" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
+          <div class="form-group"><label class="form-label">Worker ID *</label><input type="text" id="rId" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
+          <div class="form-group"><label class="form-label">Supervisor on Duty</label><input type="text" id="rSupervisor" class="form-input" placeholder="Supervisor name"/></div>
+          <div class="form-group"><label class="form-label">Department</label><input type="text" id="rDept" class="form-input" readonly style="background:var(--bg);opacity:.7"/></div>
         </div>
       </div>
 
-      <div class="form-card">
-        <div class="form-card-title"><span class="sec-tag">02</span> INCIDENT DETAILS</div>
+      <div class="form-section">
+        <div class="form-section-header"><div class="form-section-num">2</div><div class="form-section-title">Incident Details</div></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Date of Incident *</label>
-            <input type="date" id="rDate"/>
-          </div>
-          <div class="form-group">
-            <label>Time of Incident *</label>
-            <input type="time" id="rTime"/>
-          </div>
+          <div class="form-group"><label class="form-label">Date *</label><input type="date" id="rDate" class="form-input"/></div>
+          <div class="form-group"><label class="form-label">Time *</label><input type="time" id="rTime" class="form-input"/></div>
           <div class="form-group form-full">
-            <label>Incident Type *</label>
-            <select id="rType">
+            <label class="form-label">Incident Type *</label>
+            <select id="rType" class="form-input">
               <option value="">— Select incident type —</option>
-              <option>Rock Fall / Ground Failure</option>
-              <option>Blasting Accident</option>
-              <option>Equipment / Machinery Accident</option>
-              <option>Electrical Incident</option>
-              <option>Fire / Explosion</option>
-              <option>Gas / Fume Exposure</option>
-              <option>Fall from Height</option>
-              <option>Slip, Trip or Fall</option>
-              <option>Flooding / Inrush</option>
-              <option>Entrapment / Entanglement</option>
-              <option>Chemical Exposure / Spill</option>
-              <option>Vehicle Collision</option>
-              <option>Lifting / Manual Handling Injury</option>
-              <option>Near Miss</option>
-              <option>Other</option>
+              <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
+              <option>Equipment / Machinery Accident</option><option>Electrical Incident</option>
+              <option>Fire / Explosion</option><option>Gas / Fume Exposure</option>
+              <option>Fall from Height</option><option>Slip, Trip or Fall</option>
+              <option>Flooding / Inrush</option><option>Entrapment / Entanglement</option>
+              <option>Chemical Exposure / Spill</option><option>Vehicle Collision</option>
+              <option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option>
             </select>
           </div>
           <div class="form-group form-full">
-            <label>Location *</label>
+            <label class="form-label">Location *</label>
             <div class="loc-grid">
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🏗️</span>Surface – General</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">⚙️</span>Surface – Crusher/Mill</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🔧</span>Surface – Workshop</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🚪</span>Portal / Adit Entry</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🪨</span>UG – Stope</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">⛏️</span>UG – Development Drive</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🚛</span>UG – Haulage Level</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">🌬️</span>UG – Ventilation Shaft</button>
-              <button class="loc-btn" onclick="selLoc(this)"><span class="li">📦</span>UG – Ore Pass</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🏗️</span>Surface – General</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">⚙️</span>Surface – Crusher</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🔧</span>Surface – Workshop</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🚪</span>Portal / Adit Entry</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🪨</span>UG – Stope</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">⛏️</span>UG – Development Drive</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🚛</span>UG – Haulage Level</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">🌬️</span>UG – Ventilation Shaft</button>
+              <button class="loc-btn" onclick="selLoc(this)"><span class="loc-icon">📦</span>UG – Ore Pass</button>
             </div>
           </div>
-          <div class="form-group">
-            <label>Level / Zone Detail</label>
-            <input type="text" id="rLocDetail" placeholder="e.g. Level 4 – Block 2A"/>
-          </div>
-          <div class="form-group">
-            <label>Persons Injured</label>
-            <input type="number" id="rInjured" min="0" value="0"/>
-          </div>
+          <div class="form-group"><label class="form-label">Level / Zone Detail</label><input type="text" id="rLocDetail" class="form-input" placeholder="e.g. Level 4 – Block 2A"/></div>
+          <div class="form-group"><label class="form-label">Persons Injured</label><input type="number" id="rInjured" class="form-input" min="0" value="0"/></div>
         </div>
       </div>
 
-      <div class="form-card">
-        <div class="form-card-title"><span class="sec-tag">03</span> SEVERITY LEVEL *</div>
-        <div class="sev-row">
-          <button class="sev-opt nm" onclick="selSev(this,'nearMiss')">NEAR MISS</button>
-          <button class="sev-opt mi" onclick="selSev(this,'minor')">MINOR INJURY</button>
-          <button class="sev-opt se" onclick="selSev(this,'serious')">SERIOUS INJURY</button>
-          <button class="sev-opt cr" onclick="selSev(this,'critical')">CRITICAL</button>
-          <button class="sev-opt fa" onclick="selSev(this,'fatality')">☠ FATALITY</button>
+      <div class="form-section">
+        <div class="form-section-header"><div class="form-section-num">3</div><div class="form-section-title">Severity Level *</div></div>
+        <div class="sev-grid">
+          <button class="sev-btn nm" onclick="selSev(this,'nearMiss')">🔵 Near Miss</button>
+          <button class="sev-btn mi" onclick="selSev(this,'minor')">🟡 Minor Injury</button>
+          <button class="sev-btn se" onclick="selSev(this,'serious')">🟠 Serious Injury</button>
+          <button class="sev-btn cr" onclick="selSev(this,'critical')">🔴 Critical</button>
+          <button class="sev-btn fa" onclick="selSev(this,'fatality')">☠️ Fatality</button>
         </div>
       </div>
 
-      <div class="form-card">
-        <div class="form-card-title"><span class="sec-tag">04</span> DESCRIPTION</div>
+      <div class="form-section">
+        <div class="form-section-header"><div class="form-section-num">4</div><div class="form-section-title">Description</div></div>
         <div class="form-grid">
-          <div class="form-group form-full">
-            <label>What Happened? *</label>
-            <textarea id="rDesc" placeholder="Describe the full sequence of events. What was being done, what went wrong, contributing factors..."></textarea>
-          </div>
-          <div class="form-group form-full">
-            <label>Immediate Actions Taken</label>
-            <textarea id="rActions" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea>
-          </div>
+          <div class="form-group form-full"><label class="form-label">What Happened? *</label><textarea id="rDesc" class="form-input" placeholder="Describe the full sequence of events — what was being done, what went wrong, contributing factors..."></textarea></div>
+          <div class="form-group form-full"><label class="form-label">Immediate Actions Taken</label><textarea id="rActions" class="form-input" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea></div>
           <div class="form-group">
-            <label>PPE Worn?</label>
+            <label class="form-label">PPE Worn?</label>
             <div class="tgl-group" id="tglPPE">
-              <button class="tgl-btn active" onclick="selTgl(this,'tglPPE')">YES</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">NO</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">PARTIAL</button>
+              <button class="tgl-btn active" onclick="selTgl(this,'tglPPE')">Yes</button>
+              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">No</button>
+              <button class="tgl-btn" onclick="selTgl(this,'tglPPE')">Partial</button>
             </div>
           </div>
           <div class="form-group">
-            <label>SOPs Followed?</label>
+            <label class="form-label">SOPs Followed?</label>
             <div class="tgl-group" id="tglSOP">
-              <button class="tgl-btn active" onclick="selTgl(this,'tglSOP')">YES</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">NO</button>
-              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">UNKNOWN</button>
+              <button class="tgl-btn active" onclick="selTgl(this,'tglSOP')">Yes</button>
+              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">No</button>
+              <button class="tgl-btn" onclick="selTgl(this,'tglSOP')">Unknown</button>
             </div>
           </div>
-          <div class="form-group form-full">
-            <label>Witness Names (optional)</label>
-            <input type="text" id="rWitness" placeholder="Names of any witnesses"/>
-          </div>
+          <div class="form-group form-full"><label class="form-label">Witness Names (optional)</label><input type="text" id="rWitness" class="form-input" placeholder="Names of any witnesses"/></div>
         </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:16px">
-        <button class="submit-btn" id="submitBtn" onclick="submitIncident()">SUBMIT REPORT →</button>
-        <span id="submitStatus" style="font-family:var(--mono);font-size:12px;color:var(--muted)"></span>
+        <button class="submit-btn" id="submitBtn" onclick="submitIncident()">
+          <div class="btn-spinner" id="submitSpinner"></div>
+          <span id="submitBtnText">Submit Report →</span>
+        </button>
       </div>
     </div>
 
-    <!-- ── MY REPORTS (worker only) ── -->
+    <!-- ── MY REPORTS ── -->
     <div id="sec-mine" class="section">
-      <div class="page-title">MY REPORTS</div>
-      <div class="page-sub">// INCIDENTS YOU HAVE SUBMITTED</div>
-      <div class="my-reports-info">ℹ️ You can only view your own submitted reports. Worker details of others are kept private for safety and privacy.</div>
-      <div class="loader" id="mineLoader"><div class="spinner"></div>Loading your reports...</div>
+      <div class="page-header">
+        <div class="page-title">My Reports</div>
+        <div class="page-sub">Incidents you have submitted</div>
+      </div>
+      <div class="info-banner">ℹ️ You can only view your own submitted reports. Other workers' details are kept private.</div>
+      <div class="loader" id="mineLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading your reports...</div></div>
       <div class="table-wrap">
-        <table class="inc-table" id="mineTable">
-          <thead><tr>
-            <th>REF</th><th>TYPE</th><th>LOCATION</th><th>DATE</th><th>SEVERITY</th><th>STATUS</th>
-          </tr></thead>
+        <table class="data-table" id="mineTable">
+          <thead><tr><th>Ref</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Status</th></tr></thead>
           <tbody id="mineTbody"></tbody>
         </table>
       </div>
-      <div class="empty-state" id="mineEmpty" style="display:none">📋 No incidents reported yet.</div>
+      <div class="empty-state" id="mineEmpty" style="display:none"><div class="empty-icon">📋</div><div class="empty-text">No incidents reported yet.</div></div>
     </div>
 
     <!-- ── SOP LIBRARY ── -->
     <div id="sec-sop" class="section">
-      <div class="page-title">SOP LIBRARY</div>
-      <div class="page-sub">// STANDARD OPERATING PROCEDURES — SURFACE & UNDERGROUND</div>
+      <div class="page-header">
+        <div class="page-title">SOP Library</div>
+        <div class="page-sub">Standard Operating Procedures — surface & underground operations</div>
+      </div>
+
+      <!-- Admin SOP Upload (admin only) -->
+      <div id="adminSopUpload" style="display:none">
+        <div class="admin-sop-form">
+          <div class="admin-sop-title"><div class="admin-sop-title-icon">➕</div> Upload New SOP</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">SOP Title *</label><input type="text" id="sopTitle" class="form-input" placeholder="e.g. Confined Space Entry"/></div>
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="sopCat" class="form-input">
+                <option value="">Select category</option>
+                <option value="drilling">Drilling</option>
+                <option value="blasting">Blasting</option>
+                <option value="ground">Ground Support</option>
+                <option value="surface">Surface</option>
+                <option value="emergency">Emergency</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <div class="form-group form-full"><label class="form-label">Description</label><input type="text" id="sopDesc" class="form-input" placeholder="Brief description of what this SOP covers"/></div>
+            <div class="form-group form-full">
+              <label class="form-label">Attach File (PDF or Image)</label>
+              <div class="upload-zone" onclick="document.getElementById('sopFileInput').click()">
+                <input type="file" id="sopFileInput" accept=".pdf,image/*" onchange="handleSopFile(this)"/>
+                <div class="upload-icon">📎</div>
+                <div class="upload-text">Click to attach PDF or image</div>
+                <div class="upload-sub">PDF, JPG, PNG — max 10MB</div>
+              </div>
+              <div id="sopFilePreview"></div>
+            </div>
+          </div>
+          <div style="margin-top:4px">
+            <button class="submit-btn" id="sopUploadBtn" onclick="uploadSOP()">
+              <div class="btn-spinner" id="sopUploadSpinner"></div>
+              <span id="sopUploadBtnText">Upload SOP →</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="filter-bar">
-        <span class="filter-lbl">CATEGORY:</span>
-        <button class="tgl-btn active" onclick="filterSOPs('all',this)">ALL</button>
-        <button class="tgl-btn" onclick="filterSOPs('drilling',this)">DRILLING</button>
-        <button class="tgl-btn" onclick="filterSOPs('blasting',this)">BLASTING</button>
-        <button class="tgl-btn" onclick="filterSOPs('ground',this)">GROUND SUPPORT</button>
-        <button class="tgl-btn" onclick="filterSOPs('surface',this)">SURFACE</button>
-        <button class="tgl-btn" onclick="filterSOPs('emergency',this)">EMERGENCY</button>
+        <button class="filter-cat-btn active" onclick="filterSOPs('all',this)">All</button>
+        <button class="filter-cat-btn" onclick="filterSOPs('drilling',this)">Drilling</button>
+        <button class="filter-cat-btn" onclick="filterSOPs('blasting',this)">Blasting</button>
+        <button class="filter-cat-btn" onclick="filterSOPs('ground',this)">Ground Support</button>
+        <button class="filter-cat-btn" onclick="filterSOPs('surface',this)">Surface</button>
+        <button class="filter-cat-btn" onclick="filterSOPs('emergency',this)">Emergency</button>
       </div>
       <div class="sop-grid" id="sopGrid"></div>
     </div>
 
     <!-- ── ADMIN DASHBOARD ── -->
     <div id="sec-dashboard" class="section">
-      <div class="page-title">ADMIN DASHBOARD</div>
-      <div class="page-sub">// REAL INCIDENT DATA — SUBMITTED BY WORKERS</div>
-      <div class="loader" id="dashLoader"><div class="spinner"></div>Loading stats...</div>
+      <div class="page-header">
+        <div class="page-title">Safety Dashboard</div>
+        <div class="page-sub">Real incident data submitted by workers — no synthetic data</div>
+      </div>
+      <div class="loader" id="dashLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading dashboard...</div></div>
       <div id="dashContent" style="display:none">
-        <div class="stats-bar">
-          <div class="stat-card c-orange">
-            <div class="stat-label">Total Incidents (30d)</div>
-            <div class="stat-value" id="st-total">—</div>
-            <div class="stat-sub">Real submitted reports</div>
-            <div class="progress-bar"><div class="progress-fill" id="st-total-bar" style="background:var(--orange)"></div></div>
-          </div>
-          <div class="stat-card c-red">
-            <div class="stat-label">Critical / Fatality</div>
-            <div class="stat-value" id="st-critical">—</div>
-            <div class="stat-sub">Requires immediate review</div>
-            <div class="progress-bar"><div class="progress-fill" id="st-crit-bar" style="background:var(--red)"></div></div>
-          </div>
-          <div class="stat-card c-yellow">
-            <div class="stat-label">Open Incidents</div>
-            <div class="stat-value" id="st-open">—</div>
-            <div class="stat-sub">Pending investigation</div>
-            <div class="progress-bar"><div class="progress-fill" id="st-open-bar" style="background:var(--yellow)"></div></div>
-          </div>
-          <div class="stat-card c-green">
-            <div class="stat-label">Safe Days Streak</div>
-            <div class="stat-value" id="st-safe">—</div>
-            <div class="stat-sub">Since last serious incident</div>
-            <div class="progress-bar"><div class="progress-fill" id="st-safe-bar" style="background:var(--green)"></div></div>
-          </div>
+        <div class="stats-grid">
+          <div class="stat-card c-orange"><div class="stat-icon">📊</div><div class="stat-label">Total Incidents (30d)</div><div class="stat-value" id="st-total">—</div><div class="stat-sub">Real submitted reports</div></div>
+          <div class="stat-card c-red"><div class="stat-icon">🚨</div><div class="stat-label">Critical / Fatality</div><div class="stat-value" id="st-critical">—</div><div class="stat-sub">Requires immediate review</div></div>
+          <div class="stat-card c-yellow"><div class="stat-icon">📋</div><div class="stat-label">Open Incidents</div><div class="stat-value" id="st-open">—</div><div class="stat-sub">Pending investigation</div></div>
+          <div class="stat-card c-green"><div class="stat-icon">✅</div><div class="stat-label">Safe Days Streak</div><div class="stat-value" id="st-safe">—</div><div class="stat-sub">Since last serious incident</div></div>
         </div>
         <div class="dash-grid">
-          <div class="form-card">
-            <div class="panel-title">SEVERITY BREAKDOWN</div>
-            <div id="sevBreakdown" style="display:flex;flex-direction:column;gap:10px"></div>
-          </div>
-          <div class="form-card">
-            <div class="panel-title">ZONE SPLIT</div>
-            <div id="zoneSplit"></div>
-          </div>
+          <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>Severity Breakdown</div><div id="sevBreakdown" style="display:flex;flex-direction:column;gap:12px"></div></div>
+          <div class="card"><div class="card-title"><div class="card-title-icon">📍</div>Zone Split</div><div id="zoneSplit"></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ── ADMIN ALL INCIDENTS ── -->
+    <!-- ── ALL INCIDENTS ── -->
     <div id="sec-incidents" class="section">
-      <div class="page-title">ALL INCIDENTS</div>
-      <div class="page-sub">// FULL LOG — ALL SUBMITTED WORKER REPORTS</div>
+      <div class="page-header">
+        <div class="page-title">All Incidents</div>
+        <div class="page-sub">Full log of all worker-submitted reports</div>
+      </div>
       <div class="filter-bar">
-        <span class="filter-lbl">FILTER:</span>
         <select class="filter-sel" id="fSeverity" onchange="loadAdminIncidents()">
           <option value="all">All Severities</option>
-          <option value="nearMiss">Near Miss</option>
-          <option value="minor">Minor</option>
-          <option value="serious">Serious</option>
-          <option value="critical">Critical</option>
-          <option value="fatality">Fatality</option>
+          <option value="nearMiss">Near Miss</option><option value="minor">Minor</option>
+          <option value="serious">Serious</option><option value="critical">Critical</option><option value="fatality">Fatality</option>
         </select>
         <select class="filter-sel" id="fLocation" onchange="loadAdminIncidents()">
           <option value="all">All Locations</option>
-          <option value="surface">Surface</option>
-          <option value="underground">Underground</option>
+          <option value="surface">Surface</option><option value="underground">Underground</option>
         </select>
       </div>
-      <div class="loader" id="incLoader"><div class="spinner"></div>Loading incidents...</div>
+      <div class="loader" id="incLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading incidents...</div></div>
       <div class="table-wrap">
-        <table class="inc-table" id="incTable">
-          <thead><tr>
-            <th>REF</th><th>WORKER</th><th>TYPE</th><th>LOCATION</th><th>DATE</th>
-            <th>SEVERITY</th><th>PERSONS</th><th>STATUS</th><th>ACTIONS</th>
-          </tr></thead>
+        <table class="data-table">
+          <thead><tr><th>Ref</th><th>Worker</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Injured</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="incTbody"></tbody>
         </table>
       </div>
-      <div class="empty-state" id="incEmpty" style="display:none">📋 No incidents found.</div>
+      <div class="empty-state" id="incEmpty" style="display:none"><div class="empty-icon">📋</div><div class="empty-text">No incidents found.</div></div>
     </div>
 
-    <!-- ── ADMIN WORKERS ── -->
+    <!-- ── WORKERS ── -->
     <div id="sec-workers" class="section">
-      <div class="page-title">REGISTERED WORKERS</div>
-      <div class="page-sub">// ALL REGISTERED MINE WORKERS</div>
-      <div class="loader" id="workersLoader"><div class="spinner"></div>Loading workers...</div>
+      <div class="page-header">
+        <div class="page-title">Registered Workers</div>
+        <div class="page-sub">All mine workers registered on the portal</div>
+      </div>
+      <div class="loader" id="workersLoader"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">Loading workers...</div></div>
       <div class="table-wrap">
-        <table class="inc-table" id="workersTable">
-          <thead><tr><th>WORKER ID</th><th>NAME</th><th>DEPARTMENT</th><th>ROLE</th><th>REGISTERED</th></tr></thead>
+        <table class="data-table">
+          <thead><tr><th>Worker ID</th><th>Name</th><th>Department</th><th>Role</th><th>Registered</th></tr></thead>
           <tbody id="workersTbody"></tbody>
         </table>
       </div>
-      <div class="empty-state" id="workersEmpty" style="display:none">No workers registered yet.</div>
+      <div class="empty-state" id="workersEmpty" style="display:none"><div class="empty-icon">👷</div><div class="empty-text">No workers registered yet.</div></div>
     </div>
+
   </main>
 </div>
 
 <!-- SOP MODAL -->
 <div class="modal-overlay" id="sopModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeSOP()">✕</button>
-    <div class="modal-title" id="mTitle"></div>
-    <div class="modal-sub" id="mSub"></div>
-    <div id="mBody"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="mTitle"></div>
+      <button class="modal-close" onclick="closeSOP()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sub" id="mSub"></div>
+      <div id="mBody"></div>
+    </div>
   </div>
 </div>
 
@@ -569,79 +747,83 @@ main{padding:24px 28px;max-width:1400px;margin:0 auto}
 
 <script>
 // ══════════════════════════════════════════════════════════════
-// ⚙️  CONFIGURE THIS after deploying backend on Render:
+// ⚙️  UPDATE THIS with your Render URL:
 // ══════════════════════════════════════════════════════════════
 const API_BASE = 'https://mineguard-api.onrender.com';
-// e.g.  const API_BASE = 'https://mineguard-api.onrender.com';
 // ══════════════════════════════════════════════════════════════
 
-// ── STATE ────────────────────────────────────────────────────
 let token = localStorage.getItem('mg_token');
 let currentUser = null;
 let selectedSeverity = null;
 let selectedLocation = null;
+let uploadedSopFile = null;
+let adminSOPs = [];
 
 // ── INIT ─────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      if (payload.exp * 1000 > Date.now()) {
-        currentUser = payload;
-        showApp();
-        return;
-      }
-    } catch {}
-  }
-  showLogin();
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hide');
+    setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 500);
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 > Date.now()) {
+          currentUser = payload;
+          showApp();
+          return;
+        }
+      } catch {}
+    }
+    showLoginView();
+  }, 2000);
 });
 
-// ── API HELPER ────────────────────────────────────────────────
+// ── API ───────────────────────────────────────────────────────
 async function api(method, path, body, auth = true) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(API_BASE + path, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined
-  });
+  const res = await fetch(API_BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Request failed');
   return data;
 }
 
-// ── AUTH ──────────────────────────────────────────────────────
-function showLogin() {
+// ── LOGIN / REGISTER ──────────────────────────────────────────
+function showLoginView() {
   document.getElementById('loginView').classList.add('active');
   document.getElementById('appView').classList.remove('active');
-  document.getElementById('loginForm').style.display = 'block';
-  document.getElementById('registerForm').style.display = 'none';
 }
 function showRegister() {
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('registerForm').style.display = 'block';
 }
-function showLogin_form() {
+function showLogin() {
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'block';
 }
-function showLogin() { showLogin_form(); }
 
 async function doLogin() {
   const worker_id = document.getElementById('loginId').value.trim();
   const password = document.getElementById('loginPass').value;
   const errEl = document.getElementById('loginErr');
   errEl.classList.remove('show');
-  if (!worker_id || !password) { errEl.textContent = '⚠️ Enter Worker ID and password.'; errEl.classList.add('show'); return; }
+  if (!worker_id || !password) { errEl.textContent = '⚠️ Please enter your Worker ID and password.'; errEl.classList.add('show'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  const spinner = document.getElementById('loginSpinner');
+  const btnText = document.getElementById('loginBtnText');
+  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Signing in...';
+
   try {
     const data = await api('POST', '/api/auth/login', { worker_id, password }, false);
-    token = data.token;
-    currentUser = data.user;
+    token = data.token; currentUser = data.user;
     localStorage.setItem('mg_token', token);
     showApp();
   } catch (e) {
     errEl.textContent = '⚠️ ' + e.message;
     errEl.classList.add('show');
+  } finally {
+    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Sign In →';
   }
 }
 
@@ -652,23 +834,29 @@ async function doRegister() {
   const password = document.getElementById('regPass').value;
   const errEl = document.getElementById('regErr');
   errEl.classList.remove('show');
-  if (!name || !worker_id || !password) { errEl.textContent = '⚠️ All fields required.'; errEl.classList.add('show'); return; }
+  if (!name || !worker_id || !password) { errEl.textContent = '⚠️ All fields are required.'; errEl.classList.add('show'); return; }
   if (password.length < 6) { errEl.textContent = '⚠️ Password must be at least 6 characters.'; errEl.classList.add('show'); return; }
+
+  const btn = document.getElementById('regBtn');
+  const spinner = document.getElementById('regSpinner');
+  const btnText = document.getElementById('regBtnText');
+  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Creating account...';
+
   try {
     const data = await api('POST', '/api/auth/register', { name, worker_id, department, password }, false);
-    token = data.token;
-    currentUser = data.user;
+    token = data.token; currentUser = data.user;
     localStorage.setItem('mg_token', token);
     showApp();
   } catch (e) {
     errEl.textContent = '⚠️ ' + e.message;
     errEl.classList.add('show');
+  } finally {
+    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Create Account →';
   }
 }
 
 function doLogout() {
-  token = null;
-  currentUser = null;
+  token = null; currentUser = null;
   localStorage.removeItem('mg_token');
   location.reload();
 }
@@ -678,26 +866,29 @@ function showApp() {
   document.getElementById('loginView').classList.remove('active');
   document.getElementById('appView').classList.add('active');
 
-  document.getElementById('hdrWorkerId').textContent = currentUser.worker_id || currentUser.worker_id;
+  const initials = (currentUser.name || 'U').split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('hdrAvatar').textContent = initials;
+  document.getElementById('hdrName').textContent = currentUser.name || currentUser.worker_id;
+  document.getElementById('hdrWorkerId').textContent = currentUser.worker_id;
   const rb = document.getElementById('hdrRoleBadge');
   rb.textContent = currentUser.role.toUpperCase();
-  rb.className = 'role-badge ' + currentUser.role;
+  rb.className = 'role-pill ' + currentUser.role;
 
   buildNav();
   renderSOPs();
 
   if (currentUser.role === 'admin') {
+    document.getElementById('adminSopUpload').style.display = 'block';
     switchSection('sec-dashboard');
     loadAdminStats();
   } else {
     switchSection('sec-report');
-    prefillWorkerDetails();
+    prefillWorker();
   }
 }
 
-// ── NAV BUILDER ───────────────────────────────────────────────
+// ── NAV ───────────────────────────────────────────────────────
 function buildNav() {
-  const nav = document.getElementById('appNav');
   const workerTabs = [
     { id: 'sec-report', label: '⚠️ Report Incident' },
     { id: 'sec-mine',   label: '📋 My Reports' },
@@ -710,7 +901,7 @@ function buildNav() {
     { id: 'sec-sop',       label: '📁 SOPs' },
   ];
   const tabs = currentUser.role === 'admin' ? adminTabs : workerTabs;
-  nav.innerHTML = tabs.map(t =>
+  document.getElementById('appNav').innerHTML = tabs.map(t =>
     `<button class="nav-tab" onclick="switchSection('${t.id}',this)">${t.label}</button>`
   ).join('');
 }
@@ -720,102 +911,65 @@ function switchSection(id, btn) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id)?.classList.add('active');
   if (btn) btn.classList.add('active');
-  else document.querySelector(`[onclick*="${id}"]`)?.classList.add('active');
-
+  else document.querySelector(`[onclick*="'${id}'"]`)?.classList.add('active');
   if (id === 'sec-mine') loadMyIncidents();
   if (id === 'sec-incidents') loadAdminIncidents();
   if (id === 'sec-workers') loadWorkers();
   if (id === 'sec-dashboard') loadAdminStats();
 }
 
-// ── PREFILL WORKER DETAILS ────────────────────────────────────
-function prefillWorkerDetails() {
+// ── FORM ──────────────────────────────────────────────────────
+function prefillWorker() {
   document.getElementById('rName').value = currentUser.name || '';
-  document.getElementById('rId').value   = currentUser.worker_id || '';
+  document.getElementById('rId').value = currentUser.worker_id || '';
   document.getElementById('rDept').value = currentUser.department || '';
   const now = new Date();
   document.getElementById('rDate').value = now.toISOString().split('T')[0];
   document.getElementById('rTime').value = now.toTimeString().substring(0,5);
 }
+function selSev(el, val) { document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('sel')); el.classList.add('sel'); selectedSeverity = val; }
+function selLoc(el) { document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('sel')); el.classList.add('sel'); selectedLocation = el.innerText.trim().split('\n').pop().trim(); }
+function selTgl(el, gid) { document.getElementById(gid).querySelectorAll('.tgl-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
+function getTgl(gid) { return document.getElementById(gid).querySelector('.tgl-btn.active')?.textContent.toLowerCase() || 'unknown'; }
 
-// ── FORM CONTROLS ─────────────────────────────────────────────
-function selSev(el, val) {
-  document.querySelectorAll('.sev-opt').forEach(b => b.classList.remove('sel'));
-  el.classList.add('sel');
-  selectedSeverity = val;
-}
-function selLoc(el) {
-  document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('sel'));
-  el.classList.add('sel');
-  selectedLocation = el.textContent.trim().replace(/\n.*/,'');
-}
-function selTgl(el, groupId) {
-  document.getElementById(groupId).querySelectorAll('.tgl-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
-function getTgl(groupId) {
-  const active = document.getElementById(groupId).querySelector('.tgl-btn.active');
-  return active ? active.textContent.toLowerCase() : 'unknown';
-}
-
-// ── SUBMIT INCIDENT ───────────────────────────────────────────
 async function submitIncident() {
-  const type   = document.getElementById('rType').value;
-  const date   = document.getElementById('rDate').value;
-  const time   = document.getElementById('rTime').value;
-  const desc   = document.getElementById('rDesc').value.trim();
-
-  if (!type || !date || !desc || !selectedSeverity || !selectedLocation) {
-    showToast('⚠️ Fill in all required fields, select severity and location.', 'error');
-    return;
-  }
+  const type = document.getElementById('rType').value;
+  const date = document.getElementById('rDate').value;
+  const desc = document.getElementById('rDesc').value.trim();
+  if (!type || !date || !desc || !selectedSeverity || !selectedLocation) { showToast('⚠️ Fill in all required fields, select severity and location.', 'error'); return; }
 
   const btn = document.getElementById('submitBtn');
-  const status = document.getElementById('submitStatus');
-  btn.disabled = true;
-  btn.textContent = 'SUBMITTING...';
-  status.textContent = 'Sending to server...';
+  const spinner = document.getElementById('submitSpinner');
+  const btnText = document.getElementById('submitBtnText');
+  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Submitting...';
 
   try {
-    const ppeMap = { 'yes':'yes', 'no':'no', 'partial':'partial', 'unknown':'unknown' };
-    const sopMap = { 'yes':'yes', 'no':'no', 'unknown':'unknown' };
-
     await api('POST', '/api/incidents', {
-      incident_type:      type,
-      date_of_incident:   date,
-      time_of_incident:   time,
-      location_zone:      selectedLocation,
-      location_detail:    document.getElementById('rLocDetail').value.trim(),
-      severity:           selectedSeverity,
-      persons_injured:    parseInt(document.getElementById('rInjured').value) || 0,
-      description:        desc,
-      immediate_actions:  document.getElementById('rActions').value.trim(),
-      ppe_worn:           ppeMap[getTgl('tglPPE')] || 'unknown',
-      sop_followed:       sopMap[getTgl('tglSOP')] || 'unknown',
-      witnesses:          document.getElementById('rWitness').value.trim(),
+      incident_type: type, date_of_incident: date,
+      time_of_incident: document.getElementById('rTime').value,
+      location_zone: selectedLocation,
+      location_detail: document.getElementById('rLocDetail').value.trim(),
+      severity: selectedSeverity,
+      persons_injured: parseInt(document.getElementById('rInjured').value) || 0,
+      description: desc,
+      immediate_actions: document.getElementById('rActions').value.trim(),
+      ppe_worn: getTgl('tglPPE'), sop_followed: getTgl('tglSOP'),
+      witnesses: document.getElementById('rWitness').value.trim(),
     });
-
-    showToast('✓ INCIDENT REPORTED SUCCESSFULLY', 'success');
-    status.textContent = '';
-
-    // Reset form
+    showToast('✅ Incident reported successfully!', 'success');
     ['rType','rDesc','rActions','rWitness','rLocDetail'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('rInjured').value = '0';
-    document.querySelectorAll('.sev-opt').forEach(b => b.classList.remove('sel'));
+    document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('sel'));
     document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('sel'));
-    selectedSeverity = null;
-    selectedLocation = null;
-
+    selectedSeverity = null; selectedLocation = null;
   } catch (e) {
-    showToast('⚠️ Error: ' + e.message, 'error');
-    status.textContent = '';
+    showToast('⚠️ ' + e.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'SUBMIT REPORT →';
+    btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Submit Report →';
   }
 }
 
-// ── LOAD MY INCIDENTS (worker) ────────────────────────────────
+// ── MY INCIDENTS ──────────────────────────────────────────────
 async function loadMyIncidents() {
   document.getElementById('mineLoader').classList.add('show');
   document.getElementById('mineEmpty').style.display = 'none';
@@ -823,26 +977,20 @@ async function loadMyIncidents() {
   try {
     const data = await api('GET', '/api/incidents/mine');
     document.getElementById('mineLoader').classList.remove('show');
-    if (!data.incidents.length) {
-      document.getElementById('mineEmpty').style.display = 'block';
-      return;
-    }
+    if (!data.incidents.length) { document.getElementById('mineEmpty').style.display = 'block'; return; }
     document.getElementById('mineTbody').innerHTML = data.incidents.map(i => `
       <tr>
-        <td><span class="mono-sm">${i.incident_ref}</span></td>
+        <td><span class="mono">${i.incident_ref}</span></td>
         <td>${i.incident_type}</td>
         <td>${i.location_zone}</td>
-        <td><span class="mono-sm">${i.date_of_incident}</span></td>
+        <td><span class="mono">${i.date_of_incident}</span></td>
         <td><span class="badge ${sevBadge(i.severity)}">${sevLabel(i.severity)}</span></td>
         <td><span class="badge ${statusBadge(i.status)}">${i.status.replace('_',' ')}</span></td>
       </tr>`).join('');
-  } catch (e) {
-    document.getElementById('mineLoader').classList.remove('show');
-    showToast('⚠️ ' + e.message, 'error');
-  }
+  } catch(e) { document.getElementById('mineLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
 }
 
-// ── LOAD ADMIN INCIDENTS ──────────────────────────────────────
+// ── ADMIN INCIDENTS ───────────────────────────────────────────
 async function loadAdminIncidents() {
   document.getElementById('incLoader').classList.add('show');
   document.getElementById('incEmpty').style.display = 'none';
@@ -855,43 +1003,34 @@ async function loadAdminIncidents() {
     if (!data.incidents.length) { document.getElementById('incEmpty').style.display = 'block'; return; }
     document.getElementById('incTbody').innerHTML = data.incidents.map(i => `
       <tr>
-        <td><span class="mono-sm">${i.incident_ref}</span></td>
-        <td><div style="font-size:13px;font-weight:600">${i.reporter_name}</div><div class="mono-sm">${i.reporter_worker_id}</div></td>
+        <td><span class="mono">${i.incident_ref}</span></td>
+        <td><div style="font-weight:600">${i.reporter_name}</div><div class="mono" style="color:var(--muted)">${i.reporter_worker_id}</div></td>
         <td style="font-size:13px">${i.incident_type}</td>
         <td style="font-size:13px">${i.location_zone}</td>
-        <td><span class="mono-sm">${i.date_of_incident}</span></td>
+        <td><span class="mono">${i.date_of_incident}</span></td>
         <td><span class="badge ${sevBadge(i.severity)}">${sevLabel(i.severity)}</span></td>
         <td style="text-align:center">${i.persons_injured}</td>
         <td><span class="badge ${statusBadge(i.status)}">${i.status.replace('_',' ')}</span></td>
         <td>
-          ${i.status !== 'under_review' ? `<button class="act-btn act-review" onclick="updateInc('${i.id}','under_review')">REVIEW</button>` : ''}
-          ${i.status !== 'closed' ? `<button class="act-btn act-close" onclick="updateInc('${i.id}','closed')">CLOSE</button>` : ''}
-          <button class="act-btn act-delete" onclick="deleteInc('${i.id}')">DEL</button>
+          ${i.status!=='under_review'?`<button class="act-btn act-review" onclick="updateInc('${i.id}','under_review')">Review</button>`:''}
+          ${i.status!=='closed'?`<button class="act-btn act-close" onclick="updateInc('${i.id}','closed')">Close</button>`:''}
+          <button class="act-btn act-delete" onclick="deleteInc('${i.id}')">Delete</button>
         </td>
       </tr>`).join('');
-  } catch (e) {
-    document.getElementById('incLoader').classList.remove('show');
-    showToast('⚠️ ' + e.message, 'error');
-  }
+  } catch(e) { document.getElementById('incLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
 }
 
 async function updateInc(id, status) {
-  try {
-    await api('PATCH', `/api/admin/incidents/${id}`, { status });
-    showToast(`✓ Status updated to ${status}`, 'success');
-    loadAdminIncidents();
-  } catch (e) { showToast('⚠️ ' + e.message, 'error'); }
+  try { await api('PATCH', `/api/admin/incidents/${id}`, { status }); showToast('✅ Status updated', 'success'); loadAdminIncidents(); }
+  catch(e) { showToast('⚠️ '+e.message,'error'); }
 }
 async function deleteInc(id) {
   if (!confirm('Delete this incident permanently?')) return;
-  try {
-    await api('DELETE', `/api/admin/incidents/${id}`);
-    showToast('✓ Incident deleted', 'success');
-    loadAdminIncidents();
-  } catch (e) { showToast('⚠️ ' + e.message, 'error'); }
+  try { await api('DELETE', `/api/admin/incidents/${id}`); showToast('✅ Deleted', 'success'); loadAdminIncidents(); }
+  catch(e) { showToast('⚠️ '+e.message,'error'); }
 }
 
-// ── LOAD ADMIN STATS ──────────────────────────────────────────
+// ── ADMIN STATS ───────────────────────────────────────────────
 async function loadAdminStats() {
   document.getElementById('dashLoader').classList.add('show');
   document.getElementById('dashContent').style.display = 'none';
@@ -899,56 +1038,26 @@ async function loadAdminStats() {
     const d = await api('GET', '/api/admin/stats');
     document.getElementById('dashLoader').classList.remove('show');
     document.getElementById('dashContent').style.display = 'block';
-
-    document.getElementById('st-total').textContent   = d.total_last_30_days;
-    const critical = (d.by_severity?.critical || 0) + (d.by_severity?.fatality || 0);
+    const critical = (d.by_severity?.critical||0)+(d.by_severity?.fatality||0);
+    document.getElementById('st-total').textContent = d.total_last_30_days;
     document.getElementById('st-critical').textContent = String(critical).padStart(2,'0');
-    document.getElementById('st-open').textContent    = d.open_incidents;
-    document.getElementById('st-safe').textContent    = d.safe_days !== null ? d.safe_days : 'N/A';
-
+    document.getElementById('st-open').textContent = d.open_incidents;
+    document.getElementById('st-safe').textContent = d.safe_days !== null ? d.safe_days : 'N/A';
     const total = d.total_last_30_days || 1;
-    document.getElementById('st-total-bar').style.width  = '80%';
-    document.getElementById('st-crit-bar').style.width   = Math.min(100, (critical/total)*100) + '%';
-    document.getElementById('st-open-bar').style.width   = Math.min(100, (d.open_incidents/total)*100) + '%';
-    document.getElementById('st-safe-bar').style.width   = d.safe_days !== null ? Math.min(100, (d.safe_days/30)*100)+'%' : '0%';
-
-    const sevs = [
-      {key:'nearMiss',label:'Near Miss',color:'#4dc4ff'},
-      {key:'minor',label:'Minor',color:'var(--yellow)'},
-      {key:'serious',label:'Serious',color:'var(--orange)'},
-      {key:'critical',label:'Critical',color:'var(--red)'},
-      {key:'fatality',label:'Fatality',color:'#ff0000'},
-    ];
+    const sevs = [{key:'nearMiss',label:'Near Miss',color:'var(--blue)'},{key:'minor',label:'Minor',color:'var(--yellow)'},{key:'serious',label:'Serious',color:'var(--orange)'},{key:'critical',label:'Critical',color:'var(--red)'},{key:'fatality',label:'Fatality',color:'#7f1d1d'}];
     document.getElementById('sevBreakdown').innerHTML = sevs.map(s => {
-      const n = d.by_severity?.[s.key] || 0;
-      const pct = total > 0 ? Math.round((n/total)*100) : 0;
-      return `<div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
-          <span>${s.label}</span><span style="color:${s.color};font-family:var(--mono)">${n}</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s.color}"></div></div>
-      </div>`;
+      const n = d.by_severity?.[s.key]||0;
+      const pct = Math.round((n/total)*100);
+      return `<div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">${s.label}</span><span style="color:${s.color};font-weight:700">${n}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s.color}"></div></div></div>`;
     }).join('');
-
-    const surf = d.by_zone?.surface || 0;
-    const ug   = d.by_zone?.underground || 0;
-    const tot2 = surf + ug || 1;
+    const surf = d.by_zone?.surface||0, ug = d.by_zone?.underground||0, tot2 = surf+ug||1;
     document.getElementById('zoneSplit').innerHTML = `
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>🏗️ Surface</span><span style="font-family:var(--mono);color:var(--blue)">${surf}</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round((surf/tot2)*100)}%;background:var(--blue)"></div></div>
-      </div>
-      <div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>⛏️ Underground</span><span style="font-family:var(--mono);color:var(--orange)">${ug}</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round((ug/tot2)*100)}%;background:var(--orange)"></div></div>
-      </div>`;
-  } catch (e) {
-    document.getElementById('dashLoader').classList.remove('show');
-    showToast('⚠️ ' + e.message, 'error');
-  }
+      <div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">🏗️ Surface</span><span style="color:var(--blue);font-weight:700">${surf}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${Math.round((surf/tot2)*100)}%;background:var(--blue)"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="font-weight:600">⛏️ Underground</span><span style="color:var(--orange);font-weight:700">${ug}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${Math.round((ug/tot2)*100)}%;background:var(--orange)"></div></div></div>`;
+  } catch(e) { document.getElementById('dashLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
 }
 
-// ── LOAD WORKERS ──────────────────────────────────────────────
+// ── WORKERS ───────────────────────────────────────────────────
 async function loadWorkers() {
   document.getElementById('workersLoader').classList.add('show');
   try {
@@ -957,86 +1066,150 @@ async function loadWorkers() {
     if (!data.users.length) { document.getElementById('workersEmpty').style.display='block'; return; }
     document.getElementById('workersTbody').innerHTML = data.users.map(u => `
       <tr>
-        <td><span class="mono-sm">${u.worker_id}</span></td>
+        <td><span class="mono">${u.worker_id}</span></td>
         <td style="font-weight:600">${u.name}</td>
-        <td style="font-size:13px;color:var(--muted)">${u.department || '—'}</td>
-        <td><span class="badge ${u.role==='admin'?'b-se':'b-open'}">${u.role.toUpperCase()}</span></td>
-        <td><span class="mono-sm">${new Date(u.created_at).toLocaleDateString()}</span></td>
+        <td style="color:var(--muted);font-size:13px">${u.department||'—'}</td>
+        <td><span class="badge ${u.role==='admin'?'b-admin':'b-worker'}">${u.role.toUpperCase()}</span></td>
+        <td><span class="mono">${new Date(u.created_at).toLocaleDateString()}</span></td>
       </tr>`).join('');
-  } catch (e) {
-    document.getElementById('workersLoader').classList.remove('show');
-    showToast('⚠️ ' + e.message, 'error');
-  }
+  } catch(e) { document.getElementById('workersLoader').classList.remove('show'); showToast('⚠️ '+e.message,'error'); }
 }
 
-// ── BADGE HELPERS ─────────────────────────────────────────────
-function sevBadge(s){return{nearMiss:'b-nm',minor:'b-mi',serious:'b-se',critical:'b-cr',fatality:'b-fa'}[s]||'b-nm'}
-function sevLabel(s){return{nearMiss:'NEAR MISS',minor:'MINOR',serious:'SERIOUS',critical:'CRITICAL',fatality:'FATALITY'}[s]||s}
-function statusBadge(s){return{open:'b-open',under_review:'b-review',closed:'b-closed'}[s]||'b-open'}
-
-// ── EMERGENCY ─────────────────────────────────────────────────
-function triggerEmergency(){
-  if(confirm('🚨 ACTIVATE EMERGENCY ALERT?\nThis notifies the control room and response team immediately.'))
-    alert('🚨 EMERGENCY ALERT ACTIVATED\nControl room notified.\nEvacuate immediately.\nProceed to nearest refuge bay or muster point.\nSee SOP-05 for evacuation procedures.');
+// ── SOP FILE UPLOAD ───────────────────────────────────────────
+function handleSopFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  uploadedSopFile = file;
+  const preview = document.getElementById('sopFilePreview');
+  const icon = file.type === 'application/pdf' ? '📄' : '🖼️';
+  preview.innerHTML = `<div class="uploaded-file">${icon} ${file.name} (${(file.size/1024).toFixed(1)} KB)</div>`;
 }
 
-// ── TOAST ─────────────────────────────────────────────────────
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3500);
+async function uploadSOP() {
+  const title = document.getElementById('sopTitle').value.trim();
+  const cat = document.getElementById('sopCat').value;
+  const desc = document.getElementById('sopDesc').value.trim();
+
+  if (!title || !cat) { showToast('⚠️ Title and category are required.', 'error'); return; }
+
+  const btn = document.getElementById('sopUploadBtn');
+  const spinner = document.getElementById('sopUploadSpinner');
+  const btnText = document.getElementById('sopUploadBtnText');
+  btn.disabled = true; spinner.classList.add('show'); btnText.textContent = 'Uploading...';
+
+  // Store SOP in local adminSOPs list (with file as object URL if attached)
+  const newSOP = {
+    id: 'SOP-' + String(adminSOPs.length + 100),
+    cat, icon: catIcon(cat), title: title.toUpperCase(),
+    desc: desc || 'Uploaded by administrator.',
+    rev: 'Rev 1.0', date: new Date().toLocaleDateString('en-GB', {month:'short',year:'numeric'}),
+    steps: [], warnings: [], info: null,
+    fileUrl: uploadedSopFile ? URL.createObjectURL(uploadedSopFile) : null,
+    fileName: uploadedSopFile ? uploadedSopFile.name : null,
+    fileType: uploadedSopFile ? uploadedSopFile.type : null,
+    isUploaded: true
+  };
+
+  adminSOPs.push(newSOP);
+  renderSOPs(document.querySelector('.filter-cat-btn.active')?.dataset.cat || 'all');
+
+  showToast('✅ SOP uploaded successfully!', 'success');
+  document.getElementById('sopTitle').value = '';
+  document.getElementById('sopCat').value = '';
+  document.getElementById('sopDesc').value = '';
+  document.getElementById('sopFilePreview').innerHTML = '';
+  document.getElementById('sopFileInput').value = '';
+  uploadedSopFile = null;
+
+  btn.disabled = false; spinner.classList.remove('show'); btnText.textContent = 'Upload SOP →';
+}
+
+function catIcon(cat) {
+  return {drilling:'⛏️',blasting:'💥',ground:'🪨',surface:'🏗️',emergency:'🚨',general:'📋'}[cat]||'📋';
 }
 
 // ── SOP DATA ──────────────────────────────────────────────────
-const SOPS = [
-  {id:'SOP-01',cat:'drilling',icon:'⛏️',title:'DRILLING OPERATIONS',desc:'Face drilling, long-hole drilling, and raise boring procedures for underground workings.',rev:'Rev 4.2',date:'Jan 2026',steps:[{t:'Pre-drill inspection',d:'Inspect drill rig, steels and bits for damage. Check hydraulic hoses, air-water circuit and rotation motor. Log defects.'},{t:'Collar setup',d:'Set up drill pattern per approved drilling plan. Mark collar positions with survey marks. Clear all personnel from drill zone.'},{t:'Ventilation check',d:'Confirm adequate ventilation at face before commencing (min 0.5 m/s). Evacuate if air quality is below standard.'},{t:'Drilling execution',d:'Advance drill at controlled feed rate. Monitor for ground conditions, intersections, and excessive water inflow. Use water flushing throughout.'},{t:'Post-drill inspection',d:'Count holes vs plan. Check for broken steels. Clear area and log all drilling parameters on drill log sheet.'}],warnings:['Never drill within 0.5m of a charged or misfired hole.','Wear hearing protection (Class 4+), dust mask (P2), and full face shield at all times.'],info:'If drilling intersects unexpected water, stop immediately and notify supervisor. Refer to SOP-11 (Inrush Emergency).'},
-  {id:'SOP-02',cat:'blasting',icon:'💥',title:'BLASTING PROCEDURES',desc:'Safe handling, loading, charging, firing, and post-blast inspection of explosives.',rev:'Rev 5.0',date:'Feb 2026',steps:[{t:'Explosive requisition',d:'Request explosives from magazine per daily blast schedule signed by shotfirer. Log quantity, type, and batch number.'},{t:'Pre-blast area clearance',d:'Minimum 200m exclusion zone underground. Issue blasting siren (3 short blasts). Confirm all workers tagged out at blast clearance board.'},{t:'Charging the holes',d:'Prime and load holes per blast design. Use approved detonators only. Document all primers and detonators used.'},{t:'Connect and test circuit',d:'Connect detonator leg wires per wiring diagram. Test circuit resistance at safe distance. Ensure continuity before firing.'},{t:'Fire the blast',d:'Fire from safe firing position. All personnel must be at refuge bay or surface. Sound firing signal (1 long hooter blast).'},{t:'Re-entry procedure',d:'Wait minimum 30 minutes underground, 15 minutes surface after blast. Check gas levels (CO, NO₂) at face before entry.'},{t:'Post-blast inspection',d:'Check for misfires, bootlegs, and unfired explosives before any work continues. Report all misfires immediately.'}],warnings:['ALL explosives must be handled only by licensed shotfirers.','NEVER cut detonator leg wires. NEVER use open flame near explosives.','Misfire — DO NOT RE-ENTER for minimum 2 hours. Follow SOP-07 (Misfire Procedure).'],info:'Electronic detonators (EDs) must be used where high ground vibration sensitivity is required.'},
-  {id:'SOP-03',cat:'ground',icon:'🪨',title:'GROUND SUPPORT & SCALING',desc:'Barring down, rock bolting, mesh installation, and shotcrete for excavation stability.',rev:'Rev 3.1',date:'Dec 2025',steps:[{t:'Initial ground assessment',d:'Before any work, experienced miner or supervisor inspects backs and walls using scaling bar. Record in Ground Assessment Log.'},{t:'Barring down (scaling)',d:'Use long scaling bar (min 2m). Dislodge all loose rock. Work from solid ground outward. Never stand under scaled areas.'},{t:'Rock bolt installation',d:'Install pattern bolts per design (typically 1.2m × 1.2m). Check hole depth matches bolt length. Apply correct torque and plate seating.'},{t:'Mesh installation',d:'Overlap mesh panels minimum 150mm. Secure with bolts at all four corners and central positions.'},{t:'Shotcrete application',d:'Apply minimum 50mm layer. Remove rebound. Allow 12hr cure time before heavy traffic. Test for adhesion.'},{t:'Sign-off',d:'Supervising engineer signs Ground Support Completion form. Display in work area until cleared by mine geotechnician.'}],warnings:['NEVER work under unsupported backs.','Scaling must be completed BEFORE installing any services or equipment.'],info:'In geologically complex zones, a geotechnician must assess backs before any work commences. No exceptions.'},
-  {id:'SOP-04',cat:'surface',icon:'🏗️',title:'CRUSHER OPERATIONS',desc:'Safe startup, running, and shutdown procedures for jaw, gyratory and cone crushers.',rev:'Rev 2.8',date:'Nov 2025',steps:[{t:'Pre-start inspection',d:'Check crusher cavity for bridging or tramp metal. Inspect liners, mantle, and concave for wear. Check lube oil levels and temperature.'},{t:'Isolation & LOTO check',d:'Confirm all locks removed from correct points and isolation is complete. Check all guards and screens are secured.'},{t:'Startup sequence',d:'Start lube system first. Allow 5-minute warm up. Start crusher motor. Confirm rotation direction. Start feed conveyor last.'},{t:'Running checks',d:'Monitor vibration, bearing temperatures, and power draw every 30 minutes. Log readings.'},{t:'Shutdown procedure',d:'Stop feed first. Run crusher empty for 5 minutes. Stop crusher motor. Stop lube system after 15-minute cooldown. Apply LOTO.'}],warnings:['NEVER clear a blocked crusher without full Lockout/Tagout (LOTO) applied.','No entry into crusher chamber unless isolated, de-energised, and buddy system in place.'],info:'Tramp metal detected – stop feed immediately and notify supervisor before resuming.'},
-  {id:'SOP-05',cat:'emergency',icon:'🚨',title:'UNDERGROUND EVACUATION',desc:'Emergency evacuation procedures for fire, gas, explosion, or flooding events.',rev:'Rev 6.0',date:'Mar 2026',steps:[{t:'Trigger alarm',d:'On detecting emergency (fire, gas, explosion, flooding), activate nearest refuge station alarm. Radio control room immediately.'},{t:'Initiate evacuation',d:'ALL workers travel toward surface via designated escapeway. Do not use cages or skips during fire.'},{t:'Tag-in at refuge bays',d:'Use physical tag board at each refuge bay to confirm workers present. Radio control room with count.'},{t:'Don self-rescuers',d:'If smoke or toxic gas detected, immediately don self-contained self-rescuer (SCSR). Check seal and breathe normally.'},{t:'Proceed to surface',d:'Follow emergency lighting and reflective arrows to shaft or adit. Assist injured colleagues. Move calmly and quickly.'},{t:'Muster point',d:'Report to designated surface muster point. Check in with surface safety officer. DO NOT leave until roll call is complete.'}],warnings:['NEVER use a lift/cage/skip during a fire.','DO NOT attempt to fight a mine fire unless trained and safe to do so.','Missing person – DO NOT re-enter. Notify mine rescue team immediately.'],info:'Refuge bays: Level 2, Level 4, Level 6, and Portal Access. Each bay has 2-hour O₂ supply (20-person capacity).'},
-  {id:'SOP-06',cat:'emergency',icon:'🩺',title:'FIRST AID & INJURY RESPONSE',desc:'Procedures for administering first aid and managing injured persons underground and surface.',rev:'Rev 3.5',date:'Jan 2026',steps:[{t:'Scene assessment',d:'Ensure scene is safe before approaching. Do not move casualty unless in immediate danger. Call for help.'},{t:'Call for help',d:'Radio control room: "Medical Emergency – [Location] – [Nature of Injury] – [Number of Persons]".'},{t:'Primary survey',d:'Assess Airway, Breathing, Circulation (ABC). Begin CPR if required (30:2). Use AED if available and trained.'},{t:'Secondary survey',d:'Check for bleeding, fractures, burns, or crush injuries. Apply pressure dressings, splint fractures.'},{t:'Stabilize and monitor',d:'Keep casualty warm, comfortable, and still. Reassure them. Monitor vital signs every 5 minutes until medic arrives.'},{t:'Handover to medic',d:'Provide clear handover: what happened, injuries found, treatment given, changes in condition. Document on Injury Report Form.'}],warnings:['DO NOT move a casualty with suspected spinal injury unless in immediate danger.','DO NOT give food or water to an injured person who may require surgery.'],info:'AED and first aid kits located at: Surface First Aid Room, Level 2 Refuge Bay, Level 5 Refuge Bay, Portal Control Room.'},
-  {id:'SOP-07',cat:'blasting',icon:'🧨',title:'MISFIRE PROCEDURE',desc:'Strict procedure upon discovery of a misfired or bootleg explosive charge.',rev:'Rev 4.0',date:'Feb 2026',steps:[{t:'Identify misfire',d:'During post-blast inspection, identify unfired holes, bootlegs, or partial detonation. Mark location. Do not approach.'},{t:'Exclusion zone',d:'Establish 50m exclusion zone. All personnel retreat. Notify mine captain and blasting supervisor immediately.'},{t:'Wait period',d:'Minimum 2-hour wait before any re-entry. Post guard at exclusion zone boundary.'},{t:'Re-entry by shotfirer only',d:'Only licensed shotfirer with supervisor may enter. Gently clear stemming from bootleg. Do not use metal tools near charge.'},{t:'Re-fire or water stem',d:'If hole is accessible, re-prime and re-fire per blast plan. If inaccessible, flood bootleg with water through adjacent hole.'},{t:'Documentation',d:'Complete Misfire Register. Report to Safety Department within 24 hours. Incident report must be filed.'}],warnings:['NEVER drill within 3m of a known or suspected misfire.','NEVER use compressed air to clear a bootleg.'],info:'All misfires are legally notifiable incidents. Regulatory authority must be informed per local mining regulations.'},
-  {id:'SOP-08',cat:'drilling',icon:'🌬️',title:'VENTILATION MANAGEMENT',desc:'Maintaining safe air quality in underground workings during all operational phases.',rev:'Rev 2.3',date:'Oct 2025',steps:[{t:'Pre-shift gas check',d:'Use calibrated multi-gas detector (CO, CO₂, O₂, NO₂, CH₄) before entering any working place. Record in gas log.'},{t:'Ventilation checks',d:'Measure airflow velocity at face using anemometer. Minimum 0.5 m/s at working face. Record readings.'},{t:'Fan inspection',d:'Inspect auxiliary fans for correct installation, no short-circuit of airflow. Fans must not be shut off without authorization.'},{t:'Post-blast ventilation',d:'Allow full clearance time after blast per SOP-02. Test gas levels before re-entry. Continue forced ventilation until safe.'},{t:'Diesel equipment management',d:'Limit diesel fleet per approved count for single heading. Use DPF-equipped units. Monitor CO and NO₂ closely.'}],warnings:['NEVER enter an area where O₂ < 19.5% or CO > 25 ppm without SCBA.','If ventilation fan trips, stop all diesel equipment and evacuate the affected area.'],info:'Gas alarm thresholds: O₂ <19.5% = withdraw; CO >25ppm = warning; NO₂ >3ppm = withdraw; CH₄ >1% = evacuate.'},
-  {id:'SOP-09',cat:'surface',icon:'🚛',title:'SURFACE VEHICLE OPERATIONS',desc:'Safe operation of heavy and light vehicles and mobile equipment on surface mine roads.',rev:'Rev 3.0',date:'Sep 2025',steps:[{t:'Pre-operation check',d:'Complete vehicle inspection checklist: brakes, lights, steering, tyres, mirrors, reversing alarm, seatbelt, fire extinguisher, first aid kit.'},{t:'Check road conditions',d:'Review daily road conditions report. Note restricted areas, blasting schedules, or soft ground warnings.'},{t:'Speed limits',d:'Adhere strictly to posted speed limits (25 km/h in mine areas, 10 km/h near active workings).'},{t:'Right-of-way rules',d:'Heavy equipment always has right of way. Wait until haul truck passes. Always make eye contact with operator.'},{t:'Fatigue management',d:'Maximum continuous driving 4 hours. Mandatory 30-min break before resuming. Report fatigue to supervisor.'}],warnings:['NO mobile phones while operating vehicles. Hands-free only.','DO NOT park on active haul roads or within 20m of any excavation edge.'],info:'All vehicle operators must hold current site competency card. Visitors must be accompanied by a competent driver.'},
+const BUILT_IN_SOPS = [
+  {id:'SOP-01',cat:'drilling',icon:'⛏️',title:'DRILLING OPERATIONS',desc:'Face drilling, long-hole drilling, and raise boring procedures for underground workings.',rev:'Rev 4.2',date:'Jan 2026',steps:[{t:'Pre-drill inspection',d:'Inspect drill rig, steels and bits for damage. Check hydraulic hoses and rotation motor. Log defects.'},{t:'Collar setup',d:'Set up drill pattern per approved drilling plan. Mark collar positions with survey marks. Clear all personnel.'},{t:'Ventilation check',d:'Confirm adequate ventilation at face (min 0.5 m/s). Evacuate if air quality is below standard.'},{t:'Drilling execution',d:'Advance drill at controlled feed rate. Monitor for ground conditions and water inflow. Use water flushing throughout.'},{t:'Post-drill inspection',d:'Count holes vs plan. Check for broken steels. Log all drilling parameters on drill log sheet.'}],warnings:['Never drill within 0.5m of a charged or misfired hole.','Wear hearing protection (Class 4+), dust mask (P2), and full face shield.'],info:'If drilling intersects unexpected water, stop immediately and notify supervisor.'},
+  {id:'SOP-02',cat:'blasting',icon:'💥',title:'BLASTING PROCEDURES',desc:'Safe handling, loading, charging, firing, and post-blast inspection of explosives.',rev:'Rev 5.0',date:'Feb 2026',steps:[{t:'Explosive requisition',d:'Request explosives from magazine per daily blast schedule signed by shotfirer.'},{t:'Pre-blast area clearance',d:'Minimum 200m exclusion zone. Issue blasting siren (3 short blasts). Confirm all workers tagged out.'},{t:'Charging the holes',d:'Prime and load holes per blast design. Use approved detonators only. Document all used.'},{t:'Fire the blast',d:'Fire from safe position. All personnel at refuge bay or surface. Sound firing signal.'},{t:'Post-blast inspection',d:'Check for misfires, bootlegs, and unfired explosives before any work continues.'}],warnings:['ALL explosives must be handled only by licensed shotfirers.','NEVER cut detonator leg wires or use open flame near explosives.'],info:'Misfire — DO NOT RE-ENTER for minimum 2 hours. Follow SOP-07.'},
+  {id:'SOP-03',cat:'ground',icon:'🪨',title:'GROUND SUPPORT & SCALING',desc:'Barring down, rock bolting, mesh installation, and shotcrete for excavation stability.',rev:'Rev 3.1',date:'Dec 2025',steps:[{t:'Initial ground assessment',d:'Before any work, inspect backs and walls using scaling bar. Record in Ground Assessment Log.'},{t:'Barring down',d:'Use long scaling bar (min 2m). Dislodge all loose rock from solid ground outward.'},{t:'Rock bolt installation',d:'Install pattern bolts per design. Check hole depth and apply correct torque.'},{t:'Mesh installation',d:'Overlap mesh panels minimum 150mm. Secure with bolts at all four corners.'},{t:'Sign-off',d:'Supervising engineer signs Ground Support Completion form.'}],warnings:['NEVER work under unsupported backs.','Scaling must be completed BEFORE installing any services.'],info:'In geologically complex zones, a geotechnician must assess backs before work commences.'},
+  {id:'SOP-04',cat:'surface',icon:'🏗️',title:'CRUSHER OPERATIONS',desc:'Safe startup, running, and shutdown for jaw, gyratory and cone crushers.',rev:'Rev 2.8',date:'Nov 2025',steps:[{t:'Pre-start inspection',d:'Check crusher cavity for bridging or tramp metal. Inspect liners and check lube oil levels.'},{t:'LOTO check',d:'Confirm all locks removed and isolation complete. Check all guards are secured.'},{t:'Startup sequence',d:'Start lube system first. 5-minute warm up. Start crusher motor. Start feed conveyor last.'},{t:'Shutdown',d:'Stop feed first. Run empty 5 minutes. Stop motor. Stop lube after 15-min cooldown. Apply LOTO.'}],warnings:['NEVER clear a blocked crusher without full Lockout/Tagout applied.','No entry into crusher chamber unless isolated and buddy system in place.'],info:'Tramp metal detected – stop feed immediately and notify supervisor.'},
+  {id:'SOP-05',cat:'emergency',icon:'🚨',title:'UNDERGROUND EVACUATION',desc:'Emergency evacuation for fire, gas, explosion, or flooding events.',rev:'Rev 6.0',date:'Mar 2026',steps:[{t:'Trigger alarm',d:'On detecting emergency, activate nearest refuge station alarm. Radio control room immediately.'},{t:'Initiate evacuation',d:'ALL workers travel toward surface via designated escapeway. Do not use cages during fire.'},{t:'Tag-in at refuge bays',d:'Use physical tag board. Radio control room with count.'},{t:'Don self-rescuers',d:'If smoke or toxic gas detected, immediately don self-contained self-rescuer (SCSR).'},{t:'Muster point',d:'Report to designated surface muster point. DO NOT leave until roll call is complete.'}],warnings:['NEVER use a lift/cage/skip during a fire.','Missing person – DO NOT re-enter. Notify mine rescue team immediately.'],info:'Refuge bays at Level 2, Level 4, Level 6, and Portal Access.'},
+  {id:'SOP-06',cat:'emergency',icon:'🩺',title:'FIRST AID RESPONSE',desc:'Administering first aid and managing injured persons underground and surface.',rev:'Rev 3.5',date:'Jan 2026',steps:[{t:'Scene assessment',d:'Ensure scene is safe. Do not move casualty unless in immediate danger.'},{t:'Call for help',d:'Radio: "Medical Emergency – [Location] – [Injury] – [Number of Persons]".'},{t:'Primary survey',d:'Assess Airway, Breathing, Circulation. Begin CPR if required (30:2).'},{t:'Secondary survey',d:'Check for bleeding, fractures, burns. Apply pressure dressings.'},{t:'Handover',d:'Give clear handover to medic. Document on Injury Report Form.'}],warnings:['DO NOT move a casualty with suspected spinal injury.','DO NOT give food or water to an injured person who may require surgery.'],info:'AED and first aid kits at: Surface First Aid Room, Level 2 Refuge Bay, Level 5 Refuge Bay.'},
 ];
 
-function renderSOPs(filter='all'){
-  const grid=document.getElementById('sopGrid');
-  if(!grid)return;
-  const list=filter==='all'?SOPS:SOPS.filter(s=>s.cat===filter);
-  grid.innerHTML=list.map(s=>`
+function renderSOPs(filter='all') {
+  const grid = document.getElementById('sopGrid');
+  if (!grid) return;
+  const allSOPs = [...BUILT_IN_SOPS, ...adminSOPs];
+  const list = filter==='all' ? allSOPs : allSOPs.filter(s => s.cat===filter);
+  grid.innerHTML = list.map(s => `
     <div class="sop-card" onclick="openSOP('${s.id}')">
-      <div class="sop-icon">${s.icon}</div>
-      <div style="display:flex;gap:6px;margin-bottom:10px">
-        <span class="sop-tag" style="color:var(--orange);border-color:var(--orange)">${s.id}</span>
-        <span class="sop-tag">${s.cat.toUpperCase()}</span>
-      </div>
-      <div class="sop-title">${s.title}</div>
-      <div class="sop-desc">${s.desc}</div>
-      <div class="sop-meta"><span>${s.rev}</span><span>${s.date}</span></div>
+      <div class="sop-card-icon">${s.icon}</div>
+      <div class="sop-card-id">${s.id} · ${s.cat.toUpperCase()}</div>
+      <div class="sop-card-title">${s.title}</div>
+      <div class="sop-card-desc">${s.desc}</div>
+      ${s.isUploaded && s.fileName ? `<div class="sop-file-badge">📎 ${s.fileName}</div>` : ''}
+      <div class="sop-card-meta"><span>${s.rev}</span><span>${s.date}</span></div>
     </div>`).join('');
 }
-function filterSOPs(cat,btn){
-  document.querySelectorAll('.filter-bar .tgl-btn').forEach(b=>b.classList.remove('active'));
+
+function filterSOPs(cat, btn) {
+  document.querySelectorAll('.filter-cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  btn.dataset.cat = cat;
   renderSOPs(cat);
 }
-function openSOP(id){
-  const s=SOPS.find(x=>x.id===id);if(!s)return;
-  document.getElementById('mTitle').textContent=s.icon+' '+s.title;
-  document.getElementById('mSub').textContent=s.id+' — '+s.rev+' — Last Updated: '+s.date;
-  let body=`<ol class="step-list">${s.steps.map((st,i)=>`<li class="step-item"><span class="step-num">${String(i+1).padStart(2,'0')}</span><div><strong>${st.t}</strong><br>${st.d}</div></li>`).join('')}</ol>`;
-  s.warnings?.forEach(w=>{body+=`<div class="warn-box">⚠️ ${w}</div>`;});
-  if(s.info)body+=`<div class="info-box">ℹ️ ${s.info}</div>`;
-  document.getElementById('mBody').innerHTML=body;
+
+function openSOP(id) {
+  const allSOPs = [...BUILT_IN_SOPS, ...adminSOPs];
+  const s = allSOPs.find(x => x.id===id);
+  if (!s) return;
+  document.getElementById('mTitle').textContent = s.icon + ' ' + s.title;
+  document.getElementById('mSub').textContent = s.id + ' — ' + s.rev + ' — ' + s.date;
+
+  let body = '';
+
+  if (s.isUploaded) {
+    body += `<div class="info-box">📎 This SOP was uploaded by an administrator.</div>`;
+    if (s.fileUrl) {
+      if (s.fileType === 'application/pdf') {
+        body += `<div style="margin-bottom:16px"><a href="${s.fileUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 18px;background:var(--orange);color:white;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">📄 Open PDF Document</a></div>`;
+      } else {
+        body += `<div style="margin-bottom:16px"><img src="${s.fileUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="SOP Document"/></div>`;
+      }
+    }
+    body += `<p style="color:var(--muted);font-size:13px">${s.desc}</p>`;
+  } else {
+    if (s.steps.length) {
+      body += `<ol class="step-list">${s.steps.map((st,i) => `<li class="step-item"><span class="step-num">${String(i+1).padStart(2,'0')}</span><div><strong>${st.t}</strong><br><span style="color:var(--text2)">${st.d}</span></div></li>`).join('')}</ol>`;
+    }
+    s.warnings?.forEach(w => { body += `<div class="warn-box">⚠️ <span>${w}</span></div>`; });
+    if (s.info) body += `<div class="info-box">ℹ️ <span>${s.info}</span></div>`;
+  }
+  document.getElementById('mBody').innerHTML = body;
   document.getElementById('sopModal').classList.add('open');
 }
-function closeSOP(){document.getElementById('sopModal').classList.remove('open');}
+function closeSOP() { document.getElementById('sopModal').classList.remove('open'); }
 
-// Enter key on login
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('loginView').classList.contains('active'))doLogin();
+// ── HELPERS ───────────────────────────────────────────────────
+function sevBadge(s){return{nearMiss:'b-nm',minor:'b-mi',serious:'b-se',critical:'b-cr',fatality:'b-fa'}[s]||'b-nm'}
+function sevLabel(s){return{nearMiss:'Near Miss',minor:'Minor',serious:'Serious',critical:'Critical',fatality:'Fatality'}[s]||s}
+function statusBadge(s){return{open:'b-open',under_review:'b-review',closed:'b-closed'}[s]||'b-open'}
+
+function triggerEmergency() {
+  if (confirm('🚨 ACTIVATE EMERGENCY ALERT?\n\nThis will immediately notify the control room and emergency response team.'))
+    alert('🚨 EMERGENCY ALERT ACTIVATED\n\nControl room notified.\nEvacuate immediately.\nProceed to nearest refuge bay or muster point.\nSee SOP-05 for evacuation procedures.');
+}
+
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginForm').style.display !== 'none' && document.getElementById('loginView').classList.contains('active')) doLogin();
 });
 </script>
 </body>
