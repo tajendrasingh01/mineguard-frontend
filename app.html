@@ -494,7 +494,7 @@ textarea.form-input{resize:vertical;min-height:96px}
 const API_BASE = 'https://mineguard-api.onrender.com';
 let token, currentUser;
 let selSeverity = null, selLocation = null;
-let uploadedFile = null, adminSOPs = [];
+let uploadedFile = null, dbSOPs = [];
 
 // ── GUARD: redirect to login if not authenticated ─────────────
 window.addEventListener('DOMContentLoaded', () => {
@@ -541,7 +541,7 @@ function initApp() {
   rp.className = 'role-pill ' + currentUser.role;
 
   buildNav();
-  renderSOPs('all');
+  loadDBSOPs();
 
   if (currentUser.role === 'admin') {
     document.getElementById('adminSopUpload').style.display = 'block';
@@ -659,25 +659,82 @@ async function loadWorkers() {
 
 // ── SOP UPLOAD ────────────────────────────────────────────────
 function handleSopFile(input) {
-  const f=input.files[0]; if(!f)return; uploadedFile=f;
-  const icon=f.type==='application/pdf'?'📄':'🖼️';
-  document.getElementById('sopFilePreview').innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--green-light);border-radius:var(--radius-sm);margin-top:10px;font-size:13px;color:var(--green);font-weight:600">${icon} ${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
+  const f = input.files[0]; if (!f) return; uploadedFile = f;
+  const icon = f.type === 'application/pdf' ? '📄' : '🖼️';
+  document.getElementById('sopFilePreview').innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--green-light);border-radius:var(--radius-sm);margin-top:10px;font-size:13px;color:var(--green);font-weight:600">${icon} ${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
 }
+
 async function uploadSOP() {
-  const title=document.getElementById('sopTitle').value.trim(), cat=document.getElementById('sopCat').value;
-  if(!title||!cat){showToast('⚠️ Title and category required.','error');return;}
+  const title = document.getElementById('sopTitle').value.trim();
+  const cat   = document.getElementById('sopCat').value;
+  const desc  = document.getElementById('sopDesc').value.trim();
+  if (!title || !cat) { showToast('⚠️ Title and category required.', 'error'); return; }
+
   setB('sopUpBtn','sopUpSpin','sopUpTxt','Uploading...');
-  const newSOP={id:'SOP-U'+adminSOPs.length,cat,icon:catIcon(cat),title:title.toUpperCase(),desc:document.getElementById('sopDesc').value.trim()||'Uploaded by administrator.',rev:'Rev 1.0',date:new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'}),steps:[],warnings:[],info:null,fileUrl:uploadedFile?URL.createObjectURL(uploadedFile):null,fileName:uploadedFile?uploadedFile.name:null,fileType:uploadedFile?uploadedFile.type:null,isUploaded:true};
-  adminSOPs.push(newSOP);
-  renderSOPs('all');
-  showToast('✅ SOP uploaded!','success');
-  ['sopTitle','sopDesc'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('sopCat').value='';
-  document.getElementById('sopFilePreview').innerHTML='';
-  document.getElementById('sopFile').value='';
-  uploadedFile=null;
+
+  try {
+    let file_data = null, file_name = null, file_type = null;
+
+    // Convert file to base64 so it can be stored in the database
+    if (uploadedFile) {
+      file_name = uploadedFile.name;
+      file_type = uploadedFile.type;
+      file_data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]); // base64 only
+        reader.onerror = reject;
+        reader.readAsDataURL(uploadedFile);
+      });
+    }
+
+    await api('POST', '/api/sops', { title, category: cat, description: desc, file_name, file_data, file_type });
+    showToast('✅ SOP uploaded and saved!', 'success');
+    ['sopTitle','sopDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('sopCat').value = '';
+    document.getElementById('sopFilePreview').innerHTML = '';
+    document.getElementById('sopFile').value = '';
+    uploadedFile = null;
+    await loadDBSOPs(); // reload from DB
+  } catch(e) {
+    showToast('⚠️ ' + e.message, 'error');
+  }
   setI('sopUpBtn','sopUpSpin','sopUpTxt','Upload SOP →');
 }
+
+async function loadDBSOPs() {
+  try {
+    const data = await api('GET', '/api/sops');
+    dbSOPs = (data.sops || []).map(s => ({
+      id: s.id,
+      cat: s.category,
+      icon: catIcon(s.category),
+      title: s.title,
+      desc: s.description || 'Uploaded by administrator.',
+      rev: s.rev || 'Rev 1.0',
+      date: new Date(s.created_at).toLocaleDateString('en-GB', {month:'short', year:'numeric'}),
+      steps: [], warnings: [], info: null,
+      fileData: s.file_data,
+      fileName: s.file_name,
+      fileType: s.file_type,
+      dbId: s.id,
+      isUploaded: true
+    }));
+    renderSOPs(document.querySelector('.cat-btn.active')?.textContent.toLowerCase().trim() || 'all');
+  } catch(e) {
+    console.error('Could not load SOPs:', e.message);
+  }
+}
+
+async function deleteSOP(dbId, event) {
+  event.stopPropagation();
+  if (!confirm('Delete this SOP permanently?')) return;
+  try {
+    await api('DELETE', `/api/sops/${dbId}`);
+    showToast('✅ SOP deleted', 'success');
+    await loadDBSOPs();
+  } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+}
+
 function catIcon(c){return{drilling:'⛏️',blasting:'💥',ground:'🪨',surface:'🏗️',emergency:'🚨',general:'📋'}[c]||'📋'}
 
 // ── SOP DATA ──────────────────────────────────────────────────
@@ -691,43 +748,62 @@ const SOPS=[
 ];
 
 function renderSOPs(filter) {
-  const all=[...SOPS,...adminSOPs];
-  const list=filter==='all'?all:all.filter(s=>s.cat===filter);
-  document.getElementById('sopGrid').innerHTML=list.map(s=>`
+  const all = [...SOPS, ...dbSOPs];
+  const list = (filter === 'all') ? all : all.filter(s => s.cat === filter);
+  if (!list.length) {
+    document.getElementById('sopGrid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:14px">No SOPs found in this category.</div>`;
+    return;
+  }
+  document.getElementById('sopGrid').innerHTML = list.map(s => `
     <div class="sop-card" onclick="openSOP('${s.id}')">
-      <div class="sop-card-icon">${s.icon}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="sop-card-icon">${s.icon}</div>
+        ${s.isUploaded && currentUser.role === 'admin' ? `<button onclick="deleteSOP('${s.dbId}',event)" style="background:var(--red-light);border:none;color:var(--red);padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700">🗑 Delete</button>` : ''}
+      </div>
       <div class="sop-card-id">${s.id} · ${s.cat.toUpperCase()}</div>
       <div class="sop-card-title">${s.title}</div>
       <div class="sop-card-desc">${s.desc}</div>
-      ${s.isUploaded&&s.fileName?`<div class="sop-file-tag">📎 ${s.fileName}</div>`:''}
+      ${s.isUploaded && s.fileName ? `<div class="sop-file-tag">📎 ${s.fileName}</div>` : ''}
       <div class="sop-card-footer"><span>${s.rev}</span><span>${s.date}</span></div>
     </div>`).join('');
 }
-function filterSOPs(cat,btn){
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active'); renderSOPs(cat);
+
+function filterSOPs(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSOPs(cat);
 }
-function openSOP(id){
-  const all=[...SOPS,...adminSOPs], s=all.find(x=>x.id===id); if(!s)return;
-  document.getElementById('mTitle').textContent=s.icon+' '+s.title;
-  document.getElementById('mSub').textContent=s.id+' — '+s.rev+' — '+s.date;
-  let body='';
-  if(s.isUploaded){
-    body+=`<div class="info-box">📎 This SOP was uploaded by an administrator.</div>`;
-    if(s.fileUrl){
-      if(s.fileType==='application/pdf') body+=`<a href="${s.fileUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 18px;background:var(--orange);color:white;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:16px">📄 Open PDF</a>`;
-      else body+=`<img src="${s.fileUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border);margin-bottom:16px" alt="SOP"/>`;
+
+function openSOP(id) {
+  const all = [...SOPS, ...dbSOPs];
+  const s = all.find(x => x.id === id); if (!s) return;
+  document.getElementById('mTitle').textContent = s.icon + ' ' + s.title;
+  document.getElementById('mSub').textContent = s.id + ' — ' + s.rev + ' — ' + s.date;
+  let body = '';
+  if (s.isUploaded) {
+    body += `<div class="info-box">📎 This SOP was uploaded by an administrator.</div>`;
+    if (s.fileData && s.fileType) {
+      const src = `data:${s.fileType};base64,${s.fileData}`;
+      if (s.fileType === 'application/pdf') {
+        body += `<div style="margin-bottom:16px">
+          <a href="${src}" download="${s.fileName}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--orange);color:white;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">📄 Download PDF — ${s.fileName}</a>
+        </div>
+        <iframe src="${src}" style="width:100%;height:500px;border:1px solid var(--border);border-radius:8px"></iframe>`;
+      } else {
+        body += `<img src="${src}" style="max-width:100%;border-radius:8px;border:1px solid var(--border);margin-bottom:16px" alt="SOP Document"/>`;
+      }
     }
-    body+=`<p style="color:var(--muted);font-size:13px">${s.desc}</p>`;
+    body += `<p style="color:var(--muted);font-size:13px;margin-top:12px">${s.desc}</p>`;
   } else {
-    if(s.steps.length) body+=`<ol class="step-list">${s.steps.map((st,i)=>`<li class="step-item"><span class="step-num">${String(i+1).padStart(2,'0')}</span><div><strong>${st.t}</strong><br><span class="step-text">${st.d}</span></div></li>`).join('')}</ol>`;
-    s.warnings?.forEach(w=>{body+=`<div class="warn-box">⚠️ <span>${w}</span></div>`;});
-    if(s.info) body+=`<div class="info-box">ℹ️ <span>${s.info}</span></div>`;
+    if (s.steps.length) body += `<ol class="step-list">${s.steps.map((st,i) => `<li class="step-item"><span class="step-num">${String(i+1).padStart(2,'0')}</span><div><strong>${st.t}</strong><br><span class="step-text">${st.d}</span></div></li>`).join('')}</ol>`;
+    s.warnings?.forEach(w => { body += `<div class="warn-box">⚠️ <span>${w}</span></div>`; });
+    if (s.info) body += `<div class="info-box">ℹ️ <span>${s.info}</span></div>`;
   }
-  document.getElementById('mBody').innerHTML=body;
+  document.getElementById('mBody').innerHTML = body;
   document.getElementById('sopModal').classList.add('open');
 }
-function closeSOP(){document.getElementById('sopModal').classList.remove('open');}
+
+function closeSOP() { document.getElementById('sopModal').classList.remove('open'); }
 
 // ── HELPERS ───────────────────────────────────────────────────
 function sB(s){return{nearMiss:'b-nm',minor:'b-mi',serious:'b-se',critical:'b-cr',fatality:'b-fa'}[s]||'b-nm'}
