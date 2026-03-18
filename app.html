@@ -256,13 +256,13 @@ textarea.fi2{resize:vertical;min-height:96px}
 
 <!-- REPORT INCIDENT -->
 <div id="sec-report" class="sec">
-  <div class="ph"><div class="pt">Report an Incident</div><div class="ps">Submit immediately after any incident — fields marked * are required</div></div>
+  <div class="ph"><div class="pt">Report an Incident</div><div class="ps">Submit immediately after any incident — fill in as much detail as possible</div></div>
 
   <div class="fs">
     <div class="fsh"><div class="fn">1</div><div class="fst">Your Details</div></div>
     <div class="fg">
-      <div class="fgr"><label class="fl">Full Name *</label><input id="rName" class="fi2" type="text" readonly/></div>
-      <div class="fgr"><label class="fl">Worker ID *</label><input id="rId" class="fi2" type="text" readonly/></div>
+      <div class="fgr"><label class="fl">Full Name</label><input id="rName" class="fi2" type="text" readonly/></div>
+      <div class="fgr"><label class="fl">Worker ID</label><input id="rId" class="fi2" type="text" readonly/></div>
       <div class="fgr"><label class="fl">Supervisor on Duty</label><input id="rSup" class="fi2" type="text" placeholder="Supervisor name"/></div>
       <div class="fgr"><label class="fl">Department</label><input id="rDept" class="fi2" type="text" readonly/></div>
     </div>
@@ -271,10 +271,10 @@ textarea.fi2{resize:vertical;min-height:96px}
   <div class="fs">
     <div class="fsh"><div class="fn">2</div><div class="fst">Incident Details</div></div>
     <div class="fg">
-      <div class="fgr"><label class="fl">Date *</label><input id="rDate" class="fi2" type="date"/></div>
-      <div class="fgr"><label class="fl">Time *</label><input id="rTime" class="fi2" type="time"/></div>
+      <div class="fgr"><label class="fl">Date</label><input id="rDate" class="fi2" type="date"/></div>
+      <div class="fgr"><label class="fl">Time</label><input id="rTime" class="fi2" type="time"/></div>
       <div class="fgr ff">
-        <label class="fl">Incident Type *</label>
+        <label class="fl">Incident Type</label>
         <select id="rType" class="fi2">
           <option value="">— Select incident type —</option>
           <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
@@ -287,7 +287,7 @@ textarea.fi2{resize:vertical;min-height:96px}
         </select>
       </div>
       <div class="fgr ff">
-        <label class="fl">Location *</label>
+        <label class="fl">Location</label>
         <div class="lg">
           <button class="locb" onclick="selLoc(this)"><span class="loci">🏗️</span>Surface – General</button>
           <button class="locb" onclick="selLoc(this)"><span class="loci">⚙️</span>Surface – Crusher</button>
@@ -306,7 +306,7 @@ textarea.fi2{resize:vertical;min-height:96px}
   </div>
 
   <div class="fs">
-    <div class="fsh"><div class="fn">3</div><div class="fst">Severity Level *</div></div>
+    <div class="fsh"><div class="fn">3</div><div class="fst">Severity Level</div></div>
     <div class="sevg">
       <button class="sb2 nm" onclick="selSev(this,'nearMiss')">🔵 Near Miss</button>
       <button class="sb2 mi" onclick="selSev(this,'minor')">🟡 Minor Injury</button>
@@ -319,7 +319,7 @@ textarea.fi2{resize:vertical;min-height:96px}
   <div class="fs">
     <div class="fsh"><div class="fn">4</div><div class="fst">Description</div></div>
     <div class="fg">
-      <div class="fgr ff"><label class="fl">What Happened? *</label><textarea id="rDesc" class="fi2" placeholder="Describe the full sequence of events — what was being done, what went wrong, contributing factors..."></textarea></div>
+      <div class="fgr ff"><label class="fl">What Happened?</label><textarea id="rDesc" class="fi2" placeholder="Describe the full sequence of events — what was being done, what went wrong, contributing factors..."></textarea></div>
       <div class="fgr ff"><label class="fl">Immediate Actions Taken</label><textarea id="rAct" class="fi2" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea></div>
       <div class="fgr">
         <label class="fl">PPE Worn?</label>
@@ -339,6 +339,24 @@ textarea.fi2{resize:vertical;min-height:96px}
       </div>
       <div class="fgr ff"><label class="fl">Witness Names</label><input id="rWit" class="fi2" type="text" placeholder="Names of any witnesses (optional)"/></div>
     </div>
+  </div>
+
+  <div class="fs">
+    <div class="fsh"><div class="fn">5</div><div class="fst">Photos / Evidence (Optional)</div></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <button type="button" onclick="document.getElementById('photoGallery').click()"
+        style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--blue-light);border:1.5px solid var(--blue);color:var(--blue);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:14px;font-weight:700;transition:all .2s">
+        🖼️ Choose from Files
+      </button>
+      <button type="button" onclick="document.getElementById('photoCamera').click()"
+        style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--green-light);border:1.5px solid var(--green);color:var(--green);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:14px;font-weight:700;transition:all .2s">
+        📷 Open Camera
+      </button>
+      <span id="photoCount" style="display:flex;align-items:center;font-size:13px;color:var(--muted)">No photos selected</span>
+    </div>
+    <input type="file" id="photoGallery" accept="image/*" multiple style="display:none" onchange="handlePhotos(this,false)"/>
+    <input type="file" id="photoCamera" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(this,true)"/>
+    <div id="photoPreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px"></div>
   </div>
 
   <button class="sbtn" id="subBtn" onclick="submitInc()">
@@ -462,7 +480,7 @@ const API_BASE = 'https://mineguard-api.onrender.com';
 
 let token, currentUser;
 let selSeverity = null, selLocation = null;
-let uploadedFile = null, dbSOPs = [];
+let uploadedFile = null, dbSOPs = [], incidentPhotos = [];
 
 // GUARD
 window.addEventListener('DOMContentLoaded', () => {
@@ -548,18 +566,69 @@ function selLoc(el){ document.querySelectorAll('.locb').forEach(b=>b.classList.r
 function selT(el,gid){ document.getElementById(gid).querySelectorAll('.tb').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
 function getT(gid){ return document.getElementById(gid).querySelector('.tb.active')?.textContent.toLowerCase()||'unknown'; }
 
+// PHOTO HANDLER
+function handlePhotos(input, fromCamera) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  incidentPhotos = [...incidentPhotos, ...files];
+  const count = incidentPhotos.length;
+  document.getElementById('photoCount').textContent = count + ' photo' + (count>1?'s':'') + ' selected';
+  renderPhotoPreview();
+  input.value = '';
+}
+
+function renderPhotoPreview() {
+  const prev = document.getElementById('photoPreview');
+  prev.innerHTML = incidentPhotos.map((f,i) => {
+    const url = URL.createObjectURL(f);
+    return `<div style="position:relative;width:80px;height:80px;flex-shrink:0">
+      <img src="${url}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border)"/>
+      <button onclick="removePhoto(${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;background:var(--red);border:none;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function removePhoto(idx) {
+  incidentPhotos.splice(idx, 1);
+  const count = incidentPhotos.length;
+  document.getElementById('photoCount').textContent = count > 0 ? count + ' photo' + (count>1?'s':'') + ' selected' : 'No photos selected';
+  renderPhotoPreview();
+}
+
 async function submitInc() {
-  const type=document.getElementById('rType').value, date=document.getElementById('rDate').value, desc=document.getElementById('rDesc').value.trim();
-  if (!type||!date||!desc||!selSeverity||!selLocation) { toast('⚠️ Fill in all required fields, select severity and location.','error'); return; }
   setB('subBtn','subSpin','subTxt','Submitting...');
   try {
-    await api('POST','/api/incidents',{incident_type:type,date_of_incident:date,time_of_incident:document.getElementById('rTime').value,location_zone:selLocation,location_detail:document.getElementById('rLocD').value.trim(),severity:selSeverity,persons_injured:parseInt(document.getElementById('rInj').value)||0,description:desc,immediate_actions:document.getElementById('rAct').value.trim(),ppe_worn:getT('tPPE'),sop_followed:getT('tSOP'),witnesses:document.getElementById('rWit').value.trim()});
+    // Convert photos to base64
+    let photoData = [];
+    for (const file of incidentPhotos) {
+      const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});
+      photoData.push({name:file.name,type:file.type,data:b64});
+    }
+    const now=new Date();
+    await api('POST','/api/incidents',{
+      incident_type:document.getElementById('rType').value||'Not specified',
+      date_of_incident:document.getElementById('rDate').value||now.toISOString().split('T')[0],
+      time_of_incident:document.getElementById('rTime').value||now.toTimeString().substring(0,5),
+      location_zone:selLocation||'Not specified',
+      location_detail:document.getElementById('rLocD').value.trim(),
+      severity:selSeverity||'nearMiss',
+      persons_injured:parseInt(document.getElementById('rInj').value)||0,
+      description:document.getElementById('rDesc').value.trim()||'No description provided',
+      immediate_actions:document.getElementById('rAct').value.trim(),
+      ppe_worn:getT('tPPE'),sop_followed:getT('tSOP'),
+      witnesses:document.getElementById('rWit').value.trim(),
+      photos:photoData.length?JSON.stringify(photoData):null
+    });
     toast('✅ Incident reported successfully!','success');
     ['rType','rDesc','rAct','rWit','rLocD'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('rInj').value='0';
+    document.getElementById('rDate').value=now.toISOString().split('T')[0];
+    document.getElementById('rTime').value=now.toTimeString().substring(0,5);
     document.querySelectorAll('.sb2').forEach(b=>b.classList.remove('sel'));
     document.querySelectorAll('.locb').forEach(b=>b.classList.remove('sel'));
-    selSeverity=null; selLocation=null;
+    selSeverity=null;selLocation=null;incidentPhotos=[];
+    document.getElementById('photoPreview').innerHTML='';
+    document.getElementById('photoCount').textContent='No photos selected';
   } catch(e){ toast('⚠️ '+e.message,'error'); }
   setI('subBtn','subSpin','subTxt','Submit Report →');
 }
