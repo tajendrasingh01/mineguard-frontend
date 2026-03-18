@@ -682,11 +682,16 @@ function removePhoto(idx) {
 async function submitInc() {
   setB('subBtn','subSpin','subTxt','Submitting...');
   try {
-    // Convert photos to base64
+    // Convert photos to base64 data URLs
     let photoData = [];
     for (const file of incidentPhotos) {
-      const b64 = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});
-      photoData.push({name:file.name,type:file.type,data:b64});
+      const dataUrl = await new Promise((res,rej)=>{
+        const r = new FileReader();
+        r.onload = () => res(r.result); // full data URL e.g. data:image/jpeg;base64,...
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      photoData.push({ name: file.name, type: file.type, data: dataUrl });
     }
     const now=new Date();
     await api('POST','/api/incidents',{
@@ -701,7 +706,7 @@ async function submitInc() {
       immediate_actions:document.getElementById('rAct').value.trim(),
       ppe_worn:getT('tPPE'),sop_followed:getT('tSOP'),
       witnesses:document.getElementById('rWit').value.trim(),
-      photos:photoData.length?JSON.stringify(photoData):null
+      photos: photoData.length ? JSON.stringify(photoData) : null
     });
     toast('✅ Incident reported successfully!','success');
     ['rType','rDesc','rAct','rWit','rLocD'].forEach(id=>document.getElementById(id).value='');
@@ -755,7 +760,7 @@ function renderIncCards(incidents) {
     const photoPreview = photos.length ? `
       <div class="inc-card-photos">
         ${photos.slice(0,3).map((p,idx) =>
-          `<img class="inc-thumb" src="${p.data}" alt="Photo ${idx+1}" onclick="openFullscreen('${p.data}')" title="Click to enlarge"/>`
+          `<img class="inc-thumb" src="${p.data}" alt="Photo ${idx+1}" onclick="openFullscreen(this.src)" title="Click to enlarge"/>`
         ).join('')}
         ${photos.length > 3 ? `<div class="inc-photo-count" onclick="openIncModal('${i.id}')"><span style='font-size:20px'>📷</span>+${photos.length-3} more</div>` : ''}
       </div>` : '';
@@ -857,7 +862,7 @@ function openIncModal(id) {
           📷 Photos / Evidence <span style="background:var(--blue-light);color:var(--blue);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px">${photos.length} photo${photos.length>1?'s':''}</span>
         </div>
         <div class="photo-grid">
-          ${photos.map((p,idx) => `<img src="${p.data}" alt="Photo ${idx+1}" title="${p.name}" onclick="openFullscreen('${p.data}')"/>`).join('')}
+          ${photos.map((p,idx) => `<img src="${p.data}" alt="Photo ${idx+1}" title="${p.name}" onclick="openFullscreen(this.src)"/>`).join('')}
         </div>
       </div>` : `
       <div style="border-top:1px solid var(--border);padding-top:16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px">
