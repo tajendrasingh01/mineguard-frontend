@@ -748,11 +748,36 @@ function openSOP(id) {
   let body='';
   if(s.description) body+=`<p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:20px">${s.description}</p>`;
   if(s.file_data&&s.file_type){
-    const src=`data:${s.file_type};base64,${s.file_data}`;
+    // Convert base64 to Blob URL (works in all browsers, unlike data: URLs in iframes)
+    const byteChars = atob(s.file_data);
+    const byteNums = new Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+    const byteArr = new Uint8Array(byteNums);
+    const blob = new Blob([byteArr], {type: s.file_type});
+    const blobUrl = URL.createObjectURL(blob);
+
     if(s.file_type==='application/pdf'){
-      body+=`<div style="margin-bottom:14px"><a href="${src}" download="${s.file_name}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--orange);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">📥 Download PDF</a></div><iframe src="${src}" style="width:100%;height:520px;border:1px solid var(--border);border-radius:8px"></iframe>`;
+      body+=`<div style="margin-bottom:14px">
+        <a href="${blobUrl}" download="${s.file_name}"
+          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
+          background:var(--orange);color:#fff;border-radius:8px;
+          text-decoration:none;font-weight:700;font-size:14px">
+          📥 Download PDF
+        </a>
+        <a href="${blobUrl}" target="_blank"
+          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
+          background:var(--blue-light);color:var(--blue);border-radius:8px;
+          text-decoration:none;font-weight:700;font-size:14px;margin-left:8px;
+          border:1.5px solid var(--blue)">
+          🔗 Open in New Tab
+        </a>
+      </div>
+      <iframe src="${blobUrl}"
+        style="width:100%;height:560px;border:1px solid var(--border);border-radius:8px"
+        type="application/pdf">
+      </iframe>`;
     } else {
-      body+=`<img src="${src}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="${s.title}"/>`;
+      body+=`<img src="${blobUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="${s.title}"/>`;
     }
   } else { body+=`<div class="ib">ℹ️ No file attached to this SOP.</div>`; }
   document.getElementById('mBody').innerHTML=body;
