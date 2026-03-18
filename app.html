@@ -172,6 +172,13 @@ textarea.fi2{resize:vertical;min-height:96px}
 .sopc-foot{margin-top:14px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding-top:12px;border-top:1px solid var(--border)}
 .soptag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:var(--green-light);color:var(--green);border-radius:6px;font-size:11px;font-weight:700;margin-top:8px}
 
+/* SOP CATEGORY TABS */
+.sopcattab{padding:8px 18px;background:#fff;border:1.5px solid var(--border);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:600;font-size:13px;transition:all .2s;border-radius:20px}
+.sopcattab:hover{border-color:var(--orange);color:var(--orange)}
+.sopcattab.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.sop-group-title{font-family:var(--head);font-size:22px;color:var(--text);margin:28px 0 14px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
+.sop-group-title span{background:var(--orange-light);color:var(--orange);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:var(--font)}
+
 /* UPLOAD */
 .uz{border:2px dashed var(--border2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
 .uz:hover{border-color:var(--orange);background:var(--orange-light)}
@@ -378,12 +385,20 @@ textarea.fi2{resize:vertical;min-height:96px}
 <div id="sec-sop" class="sec">
   <div class="ph"><div class="pt">SOP Library</div><div class="ps">Standard Operating Procedures — uploaded by administrator</div></div>
 
+  <!-- Admin upload form -->
   <div id="sopUploadArea" style="display:none">
     <div class="card">
       <div class="ct"><div class="ci">➕</div>Upload New SOP</div>
       <div class="fg">
         <div class="fgr"><label class="fl">SOP Title *</label><input id="sopTitle" class="fi2" type="text" placeholder="e.g. Confined Space Entry Procedure"/></div>
-        <div class="fgr"><label class="fl">Category Name *</label><input id="sopCat" class="fi2" type="text" placeholder="e.g. Drilling, Emergency, Blasting..."/></div>
+        <div class="fgr">
+          <label class="fl">Category Name *</label>
+          <div style="position:relative">
+            <input id="sopCat" class="fi2" type="text" placeholder="Type or select a category..." autocomplete="off"
+              oninput="filterCatDropdown(this.value)" onfocus="showCatDropdown()" onblur="setTimeout(hideCatDropdown,200)"/>
+            <div id="catDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--orange);border-top:none;border-radius:0 0 var(--rs) var(--rs);z-index:50;max-height:180px;overflow-y:auto;box-shadow:var(--shadow)"></div>
+          </div>
+        </div>
         <div class="fgr ff"><label class="fl">Description</label><input id="sopDesc" class="fi2" type="text" placeholder="Brief description of what this SOP covers"/></div>
         <div class="fgr ff">
           <label class="fl">Attach File (PDF or Image) *</label>
@@ -403,8 +418,22 @@ textarea.fi2{resize:vertical;min-height:96px}
     </div>
   </div>
 
+  <!-- Category tabs (dynamic) -->
+  <div id="sopTabsWrap" style="display:none;margin-bottom:20px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="sopcattab active" onclick="filterByCat('__all__',this)">All SOPs</button>
+      <div id="sopCatTabs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div style="margin-left:auto;position:relative">
+        <select id="sopSearchDrop" class="fsel" onchange="jumpToSOP(this.value)"
+          style="min-width:220px;padding-right:32px">
+          <option value="">🔍 Search SOP...</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <div class="ld" id="sopLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading SOPs...</div></div>
-  <div class="sopgrid" id="sopGrid"></div>
+  <div id="sopGroupedContent"></div>
   <div class="es" id="sopES" style="display:none">
     <div style="font-size:48px;margin-bottom:14px">📁</div>
     <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px">No SOPs uploaded yet</div>
@@ -714,17 +743,87 @@ async function uploadSOP() {
 
 // LOAD SOPs
 async function loadDBSOPs() {
-  showL('sopLD'); document.getElementById('sopGrid').innerHTML=''; hide2('sopES');
+  showL('sopLD');
+  document.getElementById('sopGroupedContent').innerHTML = '';
+  hide2('sopES');
+  document.getElementById('sopTabsWrap').style.display = 'none';
   try {
-    const d=await api('GET','/api/sops');
-    dbSOPs=d.sops||[]; hideL('sopLD');
-    if(!dbSOPs.length){show2('sopES');return;}
-    renderSOPs();
-  } catch(e){hideL('sopLD');show2('sopES');}
+    const d = await api('GET', '/api/sops');
+    dbSOPs = d.sops || [];
+    hideL('sopLD');
+    if (!dbSOPs.length) { show2('sopES'); return; }
+    buildCategoryUI();
+    renderGrouped('__all__');
+  } catch(e) { hideL('sopLD'); show2('sopES'); }
 }
 
-function renderSOPs() {
-  document.getElementById('sopGrid').innerHTML=dbSOPs.map(s=>`
+// Build dynamic category tabs + search dropdown
+function buildCategoryUI() {
+  // Get unique categories in order
+  const cats = [...new Set(dbSOPs.map(s => s.category))];
+
+  // Category tabs
+  document.getElementById('sopCatTabs').innerHTML = cats.map(cat => `
+    <button class="sopcattab" onclick="filterByCat('${escHtml(cat)}',this)">${cat}</button>
+  `).join('');
+
+  // Search dropdown - all SOPs
+  document.getElementById('sopSearchDrop').innerHTML =
+    `<option value="">🔍 Search SOP...</option>` +
+    dbSOPs.map(s => `<option value="${s.id}">${s.title} (${s.category})</option>`).join('');
+
+  // Category dropdown for upload input
+  const existing = [...new Set(dbSOPs.map(s => s.category))];
+  window._existingCats = existing;
+
+  document.getElementById('sopTabsWrap').style.display = 'block';
+}
+
+// Filter by category tab
+function filterByCat(cat, btn) {
+  document.querySelectorAll('.sopcattab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrouped(cat);
+}
+
+// Render SOPs grouped by category
+function renderGrouped(filterCat) {
+  const container = document.getElementById('sopGroupedContent');
+
+  let sopsToShow = filterCat === '__all__' ? dbSOPs : dbSOPs.filter(s => s.category === filterCat);
+
+  if (!sopsToShow.length) {
+    container.innerHTML = `<div class="es"><div style="font-size:40px;margin-bottom:12px">📁</div><div>No SOPs in this category.</div></div>`;
+    return;
+  }
+
+  if (filterCat === '__all__') {
+    // Group by category
+    const cats = [...new Set(dbSOPs.map(s => s.category))];
+    container.innerHTML = cats.map(cat => {
+      const catSOPs = dbSOPs.filter(s => s.category === cat);
+      return `
+        <div class="sop-group-title" id="cat-${slugify(cat)}">${cat} <span>${catSOPs.length} SOP${catSOPs.length>1?'s':''}</span></div>
+        <div class="sopgrid" style="margin-bottom:8px">${catSOPs.map(s => sopCardHTML(s)).join('')}</div>
+      `;
+    }).join('');
+  } else {
+    container.innerHTML = `
+      <div class="sop-group-title">${filterCat} <span>${sopsToShow.length} SOP${sopsToShow.length>1?'s':''}</span></div>
+      <div class="sopgrid">${sopsToShow.map(s => sopCardHTML(s)).join('')}</div>
+    `;
+  }
+}
+
+// Jump to SOP from search dropdown
+function jumpToSOP(id) {
+  if (!id) return;
+  openSOP(id);
+  document.getElementById('sopSearchDrop').value = '';
+}
+
+function sopCardHTML(s) {
+  return `
     <div class="sopc" onclick="openSOP('${s.id}')">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
         <div class="sopc-icon">${s.file_type==='application/pdf'?'📄':'🖼️'}</div>
@@ -738,53 +837,83 @@ function renderSOPs() {
         <span>${s.rev||'Rev 1.0'}</span>
         <span>${new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
       </div>
-    </div>`).join('');
+    </div>`;
+}
+
+// Category input autocomplete for upload form
+function showCatDropdown() {
+  filterCatDropdown(document.getElementById('sopCat').value);
+}
+function hideCatDropdown() {
+  document.getElementById('catDropdown').style.display = 'none';
+}
+function filterCatDropdown(val) {
+  const cats = window._existingCats || [];
+  const dd = document.getElementById('catDropdown');
+  const filtered = val
+    ? cats.filter(c => c.toLowerCase().includes(val.toLowerCase()))
+    : cats;
+  if (!filtered.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = filtered.map(c =>
+    `<div onclick="selectCat('${escHtml(c)}')"
+      style="padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--border);transition:background .15s"
+      onmouseover="this.style.background='var(--orange-light)'"
+      onmouseout="this.style.background=''">${c}</div>`
+  ).join('');
+  dd.style.display = 'block';
+}
+function selectCat(val) {
+  document.getElementById('sopCat').value = val;
+  hideCatDropdown();
 }
 
 function openSOP(id) {
-  const s=dbSOPs.find(x=>x.id===id); if(!s)return;
-  document.getElementById('mTitle').textContent=(s.file_type==='application/pdf'?'📄 ':'🖼️ ')+s.title;
-  document.getElementById('mSub').textContent=s.category.toUpperCase()+' — '+new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-  let body='';
-  if(s.description) body+=`<p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:20px">${s.description}</p>`;
-  if(s.file_data&&s.file_type){
-    // Convert base64 to Blob URL (works in all browsers, unlike data: URLs in iframes)
+  const s = dbSOPs.find(x => x.id === id); if (!s) return;
+  document.getElementById('mTitle').textContent = (s.file_type==='application/pdf'?'📄 ':'🖼️ ') + s.title;
+  document.getElementById('mSub').textContent = s.category.toUpperCase() + ' — ' +
+    new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  let body = '';
+  if (s.description) body += `<p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:20px">${s.description}</p>`;
+  if (s.file_data && s.file_type) {
+    // Use Blob URL — works in all browsers unlike data: URLs in iframes
     const byteChars = atob(s.file_data);
-    const byteNums = new Array(byteChars.length);
+    const byteNums = new Uint8Array(byteChars.length);
     for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
-    const byteArr = new Uint8Array(byteNums);
-    const blob = new Blob([byteArr], {type: s.file_type});
+    const blob = new Blob([byteNums], {type: s.file_type});
     const blobUrl = URL.createObjectURL(blob);
-
-    if(s.file_type==='application/pdf'){
-      body+=`<div style="margin-bottom:14px">
-        <a href="${blobUrl}" download="${s.file_name}"
-          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
-          background:var(--orange);color:#fff;border-radius:8px;
-          text-decoration:none;font-weight:700;font-size:14px">
-          📥 Download PDF
-        </a>
-        <a href="${blobUrl}" target="_blank"
-          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
-          background:var(--blue-light);color:var(--blue);border-radius:8px;
-          text-decoration:none;font-weight:700;font-size:14px;margin-left:8px;
-          border:1.5px solid var(--blue)">
-          🔗 Open in New Tab
-        </a>
-      </div>
-      <iframe src="${blobUrl}"
-        style="width:100%;height:560px;border:1px solid var(--border);border-radius:8px"
-        type="application/pdf">
-      </iframe>`;
+    if (s.file_type === 'application/pdf') {
+      body += `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <a href="${blobUrl}" download="${s.file_name}"
+            style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
+            background:var(--orange);color:#fff;border-radius:8px;
+            text-decoration:none;font-weight:700;font-size:14px">
+            📥 Download PDF
+          </a>
+          <a href="${blobUrl}" target="_blank"
+            style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;
+            background:var(--blue-light);color:var(--blue);border-radius:8px;
+            text-decoration:none;font-weight:700;font-size:14px;border:1.5px solid var(--blue)">
+            🔗 Open in New Tab
+          </a>
+        </div>
+        <iframe src="${blobUrl}" type="application/pdf"
+          style="width:100%;height:560px;border:1px solid var(--border);border-radius:8px">
+        </iframe>`;
     } else {
-      body+=`<img src="${blobUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="${s.title}"/>`;
+      body += `<img src="${blobUrl}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="${s.title}"/>`;
     }
-  } else { body+=`<div class="ib">ℹ️ No file attached to this SOP.</div>`; }
-  document.getElementById('mBody').innerHTML=body;
+  } else {
+    body += `<div class="ib">ℹ️ No file attached to this SOP.</div>`;
+  }
+  document.getElementById('mBody').innerHTML = body;
   document.getElementById('sopModal').classList.add('open');
 }
 
 function closeSOP(){document.getElementById('sopModal').classList.remove('open');}
+
+function escHtml(str) { return str.replace(/'/g,"\'").replace(/"/g,'&quot;'); }
+function slugify(str) { return str.toLowerCase().replace(/[^a-z0-9]/g,'-'); }
 
 async function deleteSOP(id,event) {
   event.stopPropagation();
