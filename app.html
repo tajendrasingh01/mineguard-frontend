@@ -156,6 +156,40 @@ textarea.fi2{resize:vertical;min-height:96px}
 .acl{background:var(--green-light);color:var(--green)}.acl:hover{background:#a7f3d0}
 .adl{background:var(--red-light);color:var(--red)}.adl:hover{background:#fca5a5}
 
+/* INCIDENT CARDS */
+.inc-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;box-shadow:var(--shadow-sm);transition:all .2s;border-left:4px solid var(--border)}
+.inc-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.inc-card.sev-nearMiss{border-left-color:var(--blue)}
+.inc-card.sev-minor{border-left-color:var(--yellow)}
+.inc-card.sev-serious{border-left-color:var(--orange)}
+.inc-card.sev-critical{border-left-color:var(--red)}
+.inc-card.sev-fatality{border-left-color:#7f1d1d}
+.inc-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.inc-card-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:var(--muted)}
+.inc-card-meta span{display:flex;align-items:center;gap:5px}
+.inc-card-desc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.inc-card-photos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.inc-thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer;transition:all .2s}
+.inc-thumb:hover{border-color:var(--orange);transform:scale(1.05)}
+.inc-photo-count{width:64px;height:64px;background:var(--orange-light);border:2px solid var(--orange);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;color:var(--orange)}
+.inc-card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.view-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;transition:all .2s}
+.view-btn:hover{background:#c94e00}
+/* Detail modal */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.detail-field{background:var(--bg);border-radius:var(--rs);padding:12px 14px}
+.detail-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.detail-value{font-size:14px;color:var(--text);font-weight:500}
+.detail-full{grid-column:1/-1}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:12px}
+.photo-grid img{width:100%;border-radius:8px;cursor:pointer;border:1px solid var(--border);transition:all .2s;aspect-ratio:1;object-fit:cover}
+.photo-grid img:hover{border-color:var(--orange);transform:scale(1.03);box-shadow:var(--shadow)}
+/* Full screen photo */
+#photoFullscreen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;cursor:zoom-out}
+#photoFullscreen.open{display:flex}
+#photoFullscreen img{max-width:92vw;max-height:92vh;border-radius:8px;object-fit:contain}
+#photoFullscreen button{position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer}
+
 /* FILTER */
 .fb{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
 .fsel{background:#fff;border:1.5px solid var(--border);color:var(--text);padding:9px 14px;font-family:var(--font);font-size:13px;cursor:pointer;outline:none;border-radius:var(--rs);font-weight:500}
@@ -472,10 +506,25 @@ textarea.fi2{resize:vertical;min-height:96px}
       <option value="all">All Locations</option>
       <option value="surface">Surface</option><option value="underground">Underground</option>
     </select>
+    <span id="incCount" style="font-size:13px;color:var(--muted);margin-left:4px"></span>
   </div>
   <div class="ld" id="incLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading...</div></div>
-  <div class="tw"><table class="dt"><thead><tr><th>Ref</th><th>Worker</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Injured</th><th>Status</th><th>Actions</th></tr></thead><tbody id="incTB"></tbody></table></div>
+  <div id="incCards" style="display:flex;flex-direction:column;gap:14px"></div>
   <div class="es" id="incES" style="display:none"><div style="font-size:40px;margin-bottom:12px">📋</div><div>No incidents found.</div></div>
+</div>
+
+<!-- INCIDENT DETAIL MODAL -->
+<div class="mo" id="incModal">
+  <div class="md" style="width:820px">
+    <div class="mh">
+      <div>
+        <div class="mt" id="incModalTitle">Incident Details</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px" id="incModalRef"></div>
+      </div>
+      <button class="mc" onclick="closeIncModal()">✕</button>
+    </div>
+    <div class="mb" id="incModalBody"></div>
+  </div>
 </div>
 
 <!-- WORKERS -->
@@ -487,6 +536,12 @@ textarea.fi2{resize:vertical;min-height:96px}
 </div>
 
 </main>
+
+<!-- FULLSCREEN PHOTO VIEWER -->
+<div id="photoFullscreen" onclick="closeFullscreen()">
+  <button onclick="closeFullscreen()">✕</button>
+  <img id="fsImg" src="" alt="Full size photo"/>
+</div>
 
 <!-- SOP MODAL -->
 <div class="mo" id="sopModal">
@@ -673,17 +728,169 @@ async function loadMyInc() {
 }
 
 // ADMIN INCIDENTS
+let allIncidents = [];
+
 async function loadAdminInc() {
-  showL('incLD'); hide2('incES'); document.getElementById('incTB').innerHTML='';
-  const sev=document.getElementById('fSev').value, loc=document.getElementById('fLoc').value;
+  showL('incLD'); hide2('incES');
+  document.getElementById('incCards').innerHTML = '';
+  document.getElementById('incCount').textContent = '';
+  const sev = document.getElementById('fSev').value;
+  const loc = document.getElementById('fLoc').value;
   try {
-    const d=await api('GET',`/api/admin/incidents?severity=${sev}&location_type=${loc}`); hideL('incLD');
-    if(!d.incidents.length){show2('incES');return;}
-    document.getElementById('incTB').innerHTML=d.incidents.map(i=>`<tr><td><span class="mono">${i.incident_ref}</span></td><td><div style="font-weight:600">${i.reporter_name}</div><div class="mono" style="color:var(--muted)">${i.reporter_worker_id}</div></td><td style="font-size:13px">${i.incident_type}</td><td style="font-size:13px">${i.location_zone}</td><td><span class="mono">${i.date_of_incident}</span></td><td><span class="badge ${sB(i.severity)}">${sL(i.severity)}</span></td><td style="text-align:center">${i.persons_injured}</td><td><span class="badge ${stB(i.status)}">${i.status.replace('_',' ')}</span></td><td>${i.status!=='under_review'?`<button class="ab arv" onclick="updInc('${i.id}','under_review')">Review</button>`:''} ${i.status!=='closed'?`<button class="ab acl" onclick="updInc('${i.id}','closed')">Close</button>`:''} <button class="ab adl" onclick="delInc('${i.id}')">Delete</button></td></tr>`).join('');
-  } catch(e){hideL('incLD');toast('⚠️ '+e.message,'error');}
+    const d = await api('GET', `/api/admin/incidents?severity=${sev}&location_type=${loc}`);
+    hideL('incLD');
+    allIncidents = d.incidents || [];
+    if (!allIncidents.length) { show2('incES'); return; }
+    document.getElementById('incCount').textContent = allIncidents.length + ' incident' + (allIncidents.length>1?'s':'') + ' found';
+    renderIncCards(allIncidents);
+  } catch(e) { hideL('incLD'); toast('⚠️ '+e.message, 'error'); }
 }
-async function updInc(id,status){try{await api('PATCH',`/api/admin/incidents/${id}`,{status});toast('✅ Status updated','success');loadAdminInc();}catch(e){toast('⚠️ '+e.message,'error');}}
-async function delInc(id){if(!confirm('Delete permanently?'))return;try{await api('DELETE',`/api/admin/incidents/${id}`);toast('✅ Deleted','success');loadAdminInc();}catch(e){toast('⚠️ '+e.message,'error');}}
+
+function renderIncCards(incidents) {
+  document.getElementById('incCards').innerHTML = incidents.map(i => {
+    // Parse photos if any
+    let photos = [];
+    try { if (i.photos) photos = JSON.parse(i.photos); } catch(e) {}
+
+    const photoPreview = photos.length ? `
+      <div class="inc-card-photos">
+        ${photos.slice(0,3).map((p,idx) =>
+          `<img class="inc-thumb" src="${p.data}" alt="Photo ${idx+1}" onclick="openFullscreen('${p.data}')" title="Click to enlarge"/>`
+        ).join('')}
+        ${photos.length > 3 ? `<div class="inc-photo-count" onclick="openIncModal('${i.id}')"><span style='font-size:20px'>📷</span>+${photos.length-3} more</div>` : ''}
+      </div>` : '';
+
+    return `
+      <div class="inc-card sev-${i.severity}" id="inc-${i.id}">
+        <div class="inc-card-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <span class="mono" style="font-size:12px;color:var(--orange);font-weight:700">${i.incident_ref}</span>
+              <span class="badge ${sB(i.severity)}">${sL(i.severity)}</span>
+              <span class="badge ${stB(i.status)}">${i.status.replace('_',' ')}</span>
+              ${photos.length ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--blue);font-weight:600;background:var(--blue-light);padding:3px 9px;border-radius:20px">📷 ${photos.length} photo${photos.length>1?'s':''}</span>` : ''}
+            </div>
+            <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">${i.incident_type}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text)">${i.reporter_name}</div>
+            <div style="font-size:11px;color:var(--muted)">${i.reporter_worker_id}</div>
+          </div>
+        </div>
+        <div class="inc-card-meta">
+          <span>📍 ${i.location_zone}${i.location_detail ? ' — '+i.location_detail : ''}</span>
+          <span>📅 ${i.date_of_incident}${i.time_of_incident ? ' at '+i.time_of_incident : ''}</span>
+          <span>🤕 ${i.persons_injured} injured</span>
+          <span>🦺 PPE: ${i.ppe_worn||'—'}</span>
+          <span>📋 SOP: ${i.sop_followed||'—'}</span>
+        </div>
+        ${i.description ? `<div class="inc-card-desc">${i.description.length > 180 ? i.description.substring(0,180)+'...' : i.description}</div>` : ''}
+        ${photoPreview}
+        <div class="inc-card-actions">
+          <button class="view-btn" onclick="openIncModal('${i.id}')">👁 View Full Details</button>
+          ${i.status!=='under_review' ? `<button class="ab arv" onclick="updInc('${i.id}','under_review')">Mark Under Review</button>` : ''}
+          ${i.status!=='closed' ? `<button class="ab acl" onclick="updInc('${i.id}','closed')">Close Incident</button>` : ''}
+          <button class="ab adl" onclick="delInc('${i.id}')">Delete</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openIncModal(id) {
+  const i = allIncidents.find(x => x.id === id); if (!i) return;
+  document.getElementById('incModalTitle').textContent = i.incident_type;
+  document.getElementById('incModalRef').textContent = i.incident_ref + ' — ' + i.date_of_incident;
+
+  let photos = [];
+  try { if (i.photos) photos = JSON.parse(i.photos); } catch(e) {}
+
+  const body = `
+    <div class="detail-grid">
+      <div class="detail-field">
+        <div class="detail-label">Reporter</div>
+        <div class="detail-value">${i.reporter_name} <span class="mono" style="color:var(--muted)">(${i.reporter_worker_id})</span></div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Department</div>
+        <div class="detail-value">${i.department || '—'}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Date & Time</div>
+        <div class="detail-value">${i.date_of_incident} ${i.time_of_incident ? 'at ' + i.time_of_incident : ''}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Location</div>
+        <div class="detail-value">${i.location_zone}${i.location_detail ? ' — '+i.location_detail : ''}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Severity</div>
+        <div class="detail-value"><span class="badge ${sB(i.severity)}">${sL(i.severity)}</span></div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Persons Injured</div>
+        <div class="detail-value">${i.persons_injured}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">PPE Worn</div>
+        <div class="detail-value" style="text-transform:capitalize">${i.ppe_worn || '—'}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">SOPs Followed</div>
+        <div class="detail-value" style="text-transform:capitalize">${i.sop_followed || '—'}</div>
+      </div>
+      ${i.witnesses ? `<div class="detail-field detail-full"><div class="detail-label">Witnesses</div><div class="detail-value">${i.witnesses}</div></div>` : ''}
+      <div class="detail-field detail-full">
+        <div class="detail-label">Description</div>
+        <div class="detail-value" style="line-height:1.7">${i.description || '—'}</div>
+      </div>
+      ${i.immediate_actions ? `<div class="detail-field detail-full"><div class="detail-label">Immediate Actions Taken</div><div class="detail-value" style="line-height:1.7">${i.immediate_actions}</div></div>` : ''}
+      <div class="detail-field">
+        <div class="detail-label">Status</div>
+        <div class="detail-value"><span class="badge ${stB(i.status)}">${i.status.replace('_',' ')}</span></div>
+      </div>
+      ${i.admin_notes ? `<div class="detail-field detail-full"><div class="detail-label">Admin Notes</div><div class="detail-value">${i.admin_notes}</div></div>` : ''}
+    </div>
+
+    ${photos.length ? `
+      <div style="border-top:1px solid var(--border);padding-top:20px">
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          📷 Photos / Evidence <span style="background:var(--blue-light);color:var(--blue);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px">${photos.length} photo${photos.length>1?'s':''}</span>
+        </div>
+        <div class="photo-grid">
+          ${photos.map((p,idx) => `<img src="${p.data}" alt="Photo ${idx+1}" title="${p.name}" onclick="openFullscreen('${p.data}')"/>`).join('')}
+        </div>
+      </div>` : `
+      <div style="border-top:1px solid var(--border);padding-top:16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px">
+        📷 No photos attached to this incident.
+      </div>`}
+
+    <div style="display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap">
+      ${i.status!=='under_review' ? `<button class="ab arv" style="padding:10px 18px;font-size:13px" onclick="updInc('${i.id}','under_review');closeIncModal()">Mark Under Review</button>` : ''}
+      ${i.status!=='closed' ? `<button class="ab acl" style="padding:10px 18px;font-size:13px" onclick="updInc('${i.id}','closed');closeIncModal()">Close Incident</button>` : ''}
+      <button class="ab adl" style="padding:10px 18px;font-size:13px" onclick="delInc('${i.id}');closeIncModal()">Delete Incident</button>
+    </div>`;
+
+  document.getElementById('incModalBody').innerHTML = body;
+  document.getElementById('incModal').classList.add('open');
+}
+
+function closeIncModal() { document.getElementById('incModal').classList.remove('open'); }
+
+function openFullscreen(src) {
+  document.getElementById('fsImg').src = src;
+  document.getElementById('photoFullscreen').classList.add('open');
+}
+function closeFullscreen() { document.getElementById('photoFullscreen').classList.remove('open'); }
+
+async function updInc(id,status){
+  try{await api('PATCH',`/api/admin/incidents/${id}`,{status});toast('✅ Status updated','success');loadAdminInc();}
+  catch(e){toast('⚠️ '+e.message,'error');}
+}
+async function delInc(id){
+  if(!confirm('Delete permanently?'))return;
+  try{await api('DELETE',`/api/admin/incidents/${id}`);toast('✅ Deleted','success');loadAdminInc();}
+  catch(e){toast('⚠️ '+e.message,'error');}
+}
 
 // DASHBOARD
 async function loadDash() {
