@@ -2,197 +2,200 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MineGuard — Sign In</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:wght@700;900&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Suraksha Prabandhan Pranali</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --orange:#e85d04; --red:#dc2626; --green:#059669;
-  --text:#1a1f2e; --text2:#4a5568; --muted:#8a93a6;
-  --bg:#f4f6f9; --white:#ffffff; --border:#e2e6ed;
-  --font:'DM Sans',sans-serif; --head:'Fraunces',serif;
-  --shadow:0 4px 24px rgba(0,0,0,.08);
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --orange:#f05a28;--orange2:#ff7a45;--orange-light:#fff4ef;
+  --text:#0f1623;--text2:#3d4a5c;--muted:#8896aa;
+  --bg:#f7f8fc;--white:#ffffff;--border:#e8ecf2;
+  --green:#10b981;--red:#ef4444;--blue:#3b82f6;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.06);
+  --shadow:0 8px 32px rgba(0,0,0,.1);
+  --shadow-lg:0 24px 64px rgba(0,0,0,.14);
+  --r:16px;--rs:10px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --head:'Sora',sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--bg);min-height:100vh;display:flex}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;min-height:100dvh;display:flex;align-items:stretch}
 
-/* ── LAYOUT ── */
-.login-left{
-  flex:1;background:var(--orange);padding:60px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  position:relative;overflow:hidden;
+/* ── LEFT PANEL ── */
+.left{
+  flex:1;background:linear-gradient(145deg,#f05a28 0%,#d94a1a 60%,#b83d12 100%);
+  padding:52px 56px;display:flex;flex-direction:column;
+  justify-content:space-between;position:relative;overflow:hidden;
 }
-.login-left::before{
-  content:'';position:absolute;top:-120px;right:-120px;
-  width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.07);
+.left::before{content:'';position:absolute;top:-140px;right:-100px;width:480px;height:480px;border-radius:50%;background:rgba(255,255,255,.06)}
+.left::after{content:'';position:absolute;bottom:-100px;left:-60px;width:340px;height:340px;border-radius:50%;background:rgba(0,0,0,.08)}
+.left-brand{position:relative;z-index:2}
+.left-logo{display:flex;align-items:center;gap:14px;margin-bottom:56px}
+.left-logo-icon{
+  width:52px;height:52px;background:rgba(255,255,255,.18);
+  border-radius:15px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(8px);
 }
-.login-left::after{
-  content:'';position:absolute;bottom:-80px;left:-80px;
-  width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.05);
-}
-.brand{position:relative;z-index:1}
-.brand-logo{display:flex;align-items:center;gap:14px;margin-bottom:52px}
-.brand-icon{
-  width:48px;height:48px;background:rgba(255,255,255,.2);
-  border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;
-}
-.brand-name{font-family:var(--head);font-size:28px;color:white;letter-spacing:.5px}
-.tagline{font-family:var(--head);font-size:42px;color:white;line-height:1.15;margin-bottom:18px}
-.tagline em{color:rgba(255,255,255,.5);font-style:normal}
-.desc{color:rgba(255,255,255,.75);font-size:15px;line-height:1.8;max-width:360px}
-.features{position:relative;z-index:1}
-.feature{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 0;border-top:1px solid rgba(255,255,255,.15);
-  color:rgba(255,255,255,.85);font-size:14px;
-}
-.feature-icon{
-  width:36px;height:36px;background:rgba(255,255,255,.15);
-  border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-}
+.left-logo-name{font-family:var(--head);font-size:18px;color:#fff;line-height:1.3;font-weight:800}
+.left-tagline{font-family:var(--head);font-size:44px;color:#fff;line-height:1.1;font-weight:800;margin-bottom:20px}
+.left-tagline em{color:rgba(255,255,255,.45);font-style:normal;display:block}
+.left-desc{color:rgba(255,255,255,.7);font-size:15px;line-height:1.8;max-width:360px}
+.left-features{position:relative;z-index:2}
+.feat{display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.82);font-size:14px;font-weight:500}
+.feat-icon{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:1px solid rgba(255,255,255,.15)}
 
-/* ── FORM SIDE ── */
-.login-right{
-  width:500px;display:flex;align-items:center;
-  justify-content:center;padding:48px 60px;background:var(--white);
+/* ── RIGHT PANEL ── */
+.right{
+  width:480px;background:#fff;display:flex;align-items:center;
+  justify-content:center;padding:48px 52px;
+  box-shadow:-4px 0 40px rgba(0,0,0,.06);
 }
 .form-box{width:100%}
-.form-title{font-family:var(--head);font-size:32px;color:var(--text);margin-bottom:6px}
-.form-sub{color:var(--muted);font-size:14px;margin-bottom:36px}
+.form-eyebrow{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.form-title{font-family:var(--head);font-size:30px;color:var(--text);margin-bottom:6px;font-weight:800;line-height:1.2}
+.form-sub{color:var(--muted);font-size:14px;margin-bottom:32px;line-height:1.6}
 
-/* tabs */
-.auth-tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:2px solid var(--border)}
-.auth-tab{
-  padding:12px 24px;background:none;border:none;
-  font-family:var(--font);font-size:14px;font-weight:600;
-  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
-  margin-bottom:-2px;transition:all .2s;
+/* Tabs */
+.tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;gap:4px;margin-bottom:28px}
+.tab{flex:1;padding:10px;background:none;border:none;font-family:var(--font);font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:9px;transition:all .2s}
+.tab.active{background:#fff;color:var(--orange);box-shadow:var(--shadow-sm)}
+
+.panel{display:none}.panel.active{display:block}
+
+/* Form controls */
+.fg{margin-bottom:18px}
+.fl{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;letter-spacing:.3px}
+.fi{
+  width:100%;background:var(--bg);border:2px solid var(--border);
+  color:var(--text);padding:14px 16px;font-family:var(--font);font-size:15px;
+  outline:none;transition:all .25s;border-radius:var(--rs);font-weight:500;
+  -webkit-appearance:none;appearance:none;
 }
-.auth-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.fi:focus{border-color:var(--orange);background:#fff;box-shadow:0 0 0 4px rgba(240,90,40,.1)}
+.fi::placeholder{color:var(--muted)}
+select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238896aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;background-color:var(--bg)}
+select.fi:focus{background-color:#fff}
 
-.form-panel{display:none}.form-panel.active{display:block}
-
-.form-group{margin-bottom:20px}
-.form-label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
-.form-input{
-  width:100%;background:var(--bg);border:1.5px solid var(--border);
-  color:var(--text);padding:13px 16px;font-family:var(--font);font-size:15px;
-  outline:none;transition:all .2s;border-radius:10px;
-}
-.form-input:focus{border-color:var(--orange);background:var(--white);box-shadow:0 0 0 3px rgba(232,93,4,.1)}
-select.form-input option{background:var(--white)}
-
-.btn-submit{
-  width:100%;background:var(--orange);color:white;border:none;
-  padding:14px;font-family:var(--font);font-size:15px;font-weight:700;
-  cursor:pointer;transition:all .2s;border-radius:10px;
+.btn{
+  width:100%;background:var(--orange);color:#fff;border:none;
+  padding:15px;font-family:var(--font);font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .25s;border-radius:var(--rs);
   display:flex;align-items:center;justify-content:center;gap:10px;
-  box-shadow:0 4px 14px rgba(232,93,4,.3);
+  box-shadow:0 4px 16px rgba(240,90,40,.35);letter-spacing:.2px;
+  -webkit-appearance:none;
 }
-.btn-submit:hover{background:#c94e00;transform:translateY(-1px);box-shadow:0 8px 20px rgba(232,93,4,.35)}
-.btn-submit:disabled{background:#ccc;color:#888;cursor:not-allowed;transform:none;box-shadow:none}
+.btn:hover{background:#d94a1a;transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,90,40,.4)}
+.btn:active{transform:translateY(0);box-shadow:0 4px 12px rgba(240,90,40,.3)}
+.btn:disabled{background:#ccc;color:#888;cursor:not-allowed;transform:none;box-shadow:none}
 
-.spinner{
-  width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
-  border-top-color:white;border-radius:50%;
-  animation:spin .7s linear infinite;display:none;
+.spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none;flex-shrink:0}
+.spin.on{display:block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.err{background:#fef2f2;border:1.5px solid #fca5a5;color:#b91c1c;padding:12px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;margin-top:14px;display:none;align-items:flex-start;gap:8px;line-height:1.5}
+.err.on{display:flex}
+
+/* Mobile */
+@media(max-width:768px){
+  body{flex-direction:column}
+  .left{display:none}
+  .right{width:100%;padding:0;box-shadow:none;align-items:flex-start;background:var(--bg)}
+  .form-box{background:#fff;border-radius:0;padding:32px 24px;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
+  .form-title{font-size:26px}
+  /* Mobile top bar */
+  .mobile-top{display:flex;align-items:center;gap:12px;padding:24px 24px 0;background:var(--orange);color:#fff;margin:-32px -24px 32px}
+  .mobile-top-icon{width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .mobile-top-name{font-family:var(--head);font-size:15px;font-weight:800;padding-bottom:20px}
 }
-.spinner.show{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.err-box{
-  background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;
-  padding:12px 16px;border-radius:8px;font-size:13px;
-  margin-top:14px;display:none;
-}
-.err-box.show{display:block}
-
-@media(max-width:860px){
-  .login-left{display:none}
-  .login-right{width:100%;padding:40px 28px}
+@media(min-width:769px){
+  .mobile-top{display:none}
 }
 </style>
 </head>
 <body>
 
-<div class="login-left">
-  <div class="brand">
-    <div class="brand-logo">
-      <div class="brand-icon">⛏</div>
-      <div class="brand-name">MineGuard</div>
+<!-- LEFT BRANDING -->
+<div class="left">
+  <div class="left-brand">
+    <div class="left-logo">
+      <div class="left-logo-icon">⛏</div>
+      <div class="left-logo-name">Suraksha<br>Prabandhan Pranali</div>
     </div>
-    <div class="tagline">Safety starts <em>here.</em></div>
-    <div class="desc">A unified portal for incident reporting and standard operating procedures across all underground and surface mining operations.</div>
+    <div class="left-tagline">Safety starts <em>here.</em></div>
+    <div class="left-desc">A unified portal for incident reporting and standard operating procedures across all underground and surface mining operations.</div>
   </div>
-  <div class="features">
-    <div class="feature"><div class="feature-icon">⚠️</div>Report incidents instantly from any device</div>
-    <div class="feature"><div class="feature-icon">📋</div>Access all SOPs — underground or surface</div>
-    <div class="feature"><div class="feature-icon">📊</div>Real-time safety analytics for management</div>
-    <div class="feature"><div class="feature-icon">🔒</div>Role-based access — worker privacy protected</div>
+  <div class="left-features">
+    <div class="feat"><div class="feat-icon">⚠️</div>Report incidents instantly from any device</div>
+    <div class="feat"><div class="feat-icon">📋</div>Access all SOPs — underground or surface</div>
+    <div class="feat"><div class="feat-icon">📊</div>Real-time safety analytics for management</div>
+    <div class="feat"><div class="feat-icon">🔒</div>Role-based access — privacy protected</div>
   </div>
 </div>
 
-<div class="login-right">
+<!-- RIGHT FORM -->
+<div class="right">
   <div class="form-box">
+
+    <!-- Mobile only top bar -->
+    <div class="mobile-top">
+      <div class="mobile-top-icon">⛏</div>
+      <div class="mobile-top-name">Suraksha Prabandhan Pranali</div>
+    </div>
+
+    <div class="form-eyebrow">Mine Worker Portal</div>
     <div class="form-title">Welcome back</div>
     <div class="form-sub">Sign in or create your account to continue</div>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login',this)">Sign In</button>
-      <button class="auth-tab" onclick="switchTab('register',this)">Register</button>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login',this)">Sign In</button>
+      <button class="tab" onclick="switchTab('register',this)">Register</button>
     </div>
 
     <!-- LOGIN -->
-    <div class="form-panel active" id="loginPanel">
-      <div class="form-group">
-        <label class="form-label">Worker ID / Badge No</label>
-        <input id="loginId" class="form-input" type="text" placeholder="e.g. UG-4471" autocomplete="username"/>
+    <div class="panel active" id="loginPanel">
+      <div class="fg">
+        <label class="fl">ID / NEIS Number</label>
+        <input id="loginId" class="fi" type="text" placeholder="Enter your ID or NEIS number" autocomplete="username" inputmode="text"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input id="loginPass" class="form-input" type="password" placeholder="Your password" autocomplete="current-password"/>
+      <div class="fg">
+        <label class="fl">Password</label>
+        <input id="loginPass" class="fi" type="password" placeholder="Your password" autocomplete="current-password"/>
       </div>
-      <button class="btn-submit" id="loginBtn" onclick="doLogin()">
-        <div class="spinner" id="loginSpin"></div>
-        <span id="loginBtnTxt">Sign In →</span>
+      <button class="btn" id="loginBtn" onclick="doLogin()">
+        <div class="spin" id="loginSpin"></div>
+        <span id="loginTxt">Sign In →</span>
       </button>
-      <div class="err-box" id="loginErr"></div>
+      <div class="err" id="loginErr"></div>
     </div>
 
     <!-- REGISTER -->
-    <div class="form-panel" id="registerPanel">
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input id="regName" class="form-input" type="text" placeholder="Your full name"/>
+    <div class="panel" id="registerPanel">
+      <div class="fg">
+        <label class="fl">Full Name</label>
+        <input id="regName" class="fi" type="text" placeholder="Your full name" autocomplete="name"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Worker ID / Badge No</label>
-        <input id="regId" class="form-input" type="text" placeholder="e.g. UG-4471"/>
+      <div class="fg">
+        <label class="fl">ID / NEIS Number</label>
+        <input id="regId" class="fi" type="text" placeholder="Enter your ID or NEIS number"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Department</label>
-        <select id="regDept" class="form-input">
+      <div class="fg">
+        <label class="fl">Department</label>
+        <select id="regDept" class="fi">
           <option value="">Select Department</option>
-          <option>Drilling & Blasting</option>
-          <option>Loading & Hauling</option>
-          <option>Ground Support</option>
-          <option>Ventilation</option>
-          <option>Maintenance</option>
-          <option>Surface Operations</option>
-          <option>Ore Processing</option>
-          <option>Safety & Security</option>
+          <option>Departmental</option>
+          <option>Contractual</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input id="regPass" class="form-input" type="password" placeholder="Create a password (min 6 chars)"/>
+      <div class="fg">
+        <label class="fl">Password</label>
+        <input id="regPass" class="fi" type="password" placeholder="Create a password (min 6 chars)" autocomplete="new-password"/>
       </div>
-      <button class="btn-submit" id="regBtn" onclick="doRegister()">
-        <div class="spinner" id="regSpin"></div>
-        <span id="regBtnTxt">Create Account →</span>
+      <button class="btn" id="regBtn" onclick="doRegister()">
+        <div class="spin" id="regSpin"></div>
+        <span id="regTxt">Create Account →</span>
       </button>
-      <div class="err-box" id="regErr"></div>
+      <div class="err" id="regErr"></div>
     </div>
 
   </div>
@@ -201,24 +204,20 @@ select.form-input option{background:var(--white)}
 <script>
 const API_BASE = 'https://mineguard-api.onrender.com';
 
-// If already logged in — go straight to app
 window.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('mg_token');
   if (token) {
     try {
       const p = JSON.parse(atob(token.split('.')[1]));
-      if (p.exp * 1000 > Date.now()) {
-        window.location.href = 'app.html';
-        return;
-      }
+      if (p.exp * 1000 > Date.now()) { window.location.href = 'app.html'; return; }
     } catch {}
     localStorage.removeItem('mg_token');
   }
 });
 
 function switchTab(tab, btn) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(tab + 'Panel').classList.add('active');
 }
@@ -226,64 +225,48 @@ function switchTab(tab, btn) {
 async function doLogin() {
   const worker_id = document.getElementById('loginId').value.trim();
   const password  = document.getElementById('loginPass').value;
-  const err       = document.getElementById('loginErr');
-  err.classList.remove('show');
-  if (!worker_id || !password) { err.textContent = '⚠️ Please enter your Worker ID and password.'; err.classList.add('show'); return; }
-
-  setBusy('loginBtn','loginSpin','loginBtnTxt','Signing in...');
+  const err = document.getElementById('loginErr');
+  err.classList.remove('on');
+  if (!worker_id || !password) { err.innerHTML='⚠️ Please enter your ID and password.'; err.classList.add('on'); return; }
+  busy('loginBtn','loginSpin','loginTxt','Signing in...');
   try {
-    const res  = await fetch(API_BASE + '/api/auth/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ worker_id, password })
-    });
+    const res  = await fetch(API_BASE + '/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({worker_id,password}) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Login failed');
     localStorage.setItem('mg_token', data.token);
     window.location.href = 'app.html';
   } catch(e) {
-    err.textContent = '⚠️ ' + e.message;
-    err.classList.add('show');
-    setIdle('loginBtn','loginSpin','loginBtnTxt','Sign In →');
+    err.innerHTML = '⚠️ ' + e.message;
+    err.classList.add('on');
+    idle('loginBtn','loginSpin','loginTxt','Sign In →');
   }
 }
 
 async function doRegister() {
-  const name      = document.getElementById('regName').value.trim();
-  const worker_id = document.getElementById('regId').value.trim();
-  const department= document.getElementById('regDept').value;
-  const password  = document.getElementById('regPass').value;
-  const err       = document.getElementById('regErr');
-  err.classList.remove('show');
-  if (!name || !worker_id || !password) { err.textContent = '⚠️ Name, Worker ID and password are required.'; err.classList.add('show'); return; }
-  if (password.length < 6) { err.textContent = '⚠️ Password must be at least 6 characters.'; err.classList.add('show'); return; }
-
-  setBusy('regBtn','regSpin','regBtnTxt','Creating account...');
+  const name       = document.getElementById('regName').value.trim();
+  const worker_id  = document.getElementById('regId').value.trim();
+  const department = document.getElementById('regDept').value;
+  const password   = document.getElementById('regPass').value;
+  const err = document.getElementById('regErr');
+  err.classList.remove('on');
+  if (!name || !worker_id || !password) { err.innerHTML='⚠️ Name, ID and password are required.'; err.classList.add('on'); return; }
+  if (password.length < 6) { err.innerHTML='⚠️ Password must be at least 6 characters.'; err.classList.add('on'); return; }
+  busy('regBtn','regSpin','regTxt','Creating account...');
   try {
-    const res  = await fetch(API_BASE + '/api/auth/register', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ name, worker_id, department, password })
-    });
+    const res  = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,worker_id,department,password}) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Registration failed');
     localStorage.setItem('mg_token', data.token);
     window.location.href = 'app.html';
   } catch(e) {
-    err.textContent = '⚠️ ' + e.message;
-    err.classList.add('show');
-    setIdle('regBtn','regSpin','regBtnTxt','Create Account →');
+    err.innerHTML = '⚠️ ' + e.message;
+    err.classList.add('on');
+    idle('regBtn','regSpin','regTxt','Create Account →');
   }
 }
 
-function setBusy(btnId, spinId, txtId, msg) {
-  document.getElementById(btnId).disabled = true;
-  document.getElementById(spinId).classList.add('show');
-  document.getElementById(txtId).textContent = msg;
-}
-function setIdle(btnId, spinId, txtId, msg) {
-  document.getElementById(btnId).disabled = false;
-  document.getElementById(spinId).classList.remove('show');
-  document.getElementById(txtId).textContent = msg;
-}
+function busy(b,s,t,msg){ document.getElementById(b).disabled=true; document.getElementById(s).classList.add('on'); document.getElementById(t).textContent=msg; }
+function idle(b,s,t,msg){ document.getElementById(b).disabled=false; document.getElementById(s).classList.remove('on'); document.getElementById(t).textContent=msg; }
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
