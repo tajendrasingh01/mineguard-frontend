@@ -338,10 +338,14 @@ textarea.fi2{resize:vertical;min-height:88px;line-height:1.6}
 <header>
   <div class="hb">
     <div class="hi">⛏</div>
-    <div class="hb-name">Suraksha <span>Prabandhan Pranali</span></div>
+    <div>
+      <div class="hb-name">Suraksha <span>Prabandhan Pranali</span></div>
+      <div style="font-size:10px;color:var(--muted);font-weight:600;display:none" id="hdrId"></div>
+    </div>
   </div>
   <div class="hr">
     <div class="hav" id="hdrAvatar" title="Signed in">?</div>
+    <div style="display:none" id="hdrName"></div>
     <span class="rp" id="rolePill"></span>
     <button class="eb" onclick="triggerEmergency()">🚨 <span>Emergency</span></button>
     <button class="lb2" onclick="doLogout()">Sign Out</button>
@@ -660,10 +664,11 @@ async function api(method, path, body) {
 
 // INIT
 function initApp() {
+  try {
   const ini = (currentUser.name||'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  document.getElementById('hdrAvatar').textContent = ini;
-  document.getElementById('hdrName').textContent   = currentUser.name || currentUser.worker_id;
-  document.getElementById('hdrId').textContent     = currentUser.worker_id;
+  const av = document.getElementById('hdrAvatar'); if(av) av.textContent = ini;
+  const hn = document.getElementById('hdrName'); if(hn) hn.textContent = currentUser.name || currentUser.worker_id;
+  const hi = document.getElementById('hdrId'); if(hi) hi.textContent = currentUser.worker_id;
   const rp = document.getElementById('rolePill');
   rp.textContent = currentUser.role.toUpperCase();
   rp.className   = 'rp ' + currentUser.role;
@@ -673,6 +678,10 @@ function initApp() {
     switchSec('sec-dashboard'); loadDash();
   } else {
     switchSec('sec-report'); prefill();
+  }
+  } catch(err) {
+    console.error('initApp error:', err);
+    toast('⚠️ Error loading portal: ' + err.message, 'error');
   }
 }
 
@@ -708,9 +717,12 @@ function syncNavActive(id) {
 function switchSec(id, btn) {
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nt,.bn-item').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id)?.classList.add('active');
-  // Activate all nav buttons matching this section
-  document.querySelectorAll(`.nt[onclick*="'${id}'"],.bn-item[onclick*="'${id}'"]`).forEach(t=>t.classList.add('active'));
+  const sec = document.getElementById(id);
+  if(sec) sec.classList.add('active');
+  // Highlight matching nav buttons
+  document.querySelectorAll('.nt,.bn-item').forEach(t=>{
+    if(t.getAttribute('onclick') && t.getAttribute('onclick').includes(id)) t.classList.add('active');
+  });
   if (id==='sec-mine') loadMyInc();
   if (id==='sec-incidents') loadAdminInc();
   if (id==='sec-workers') loadWorkers();
@@ -720,12 +732,14 @@ function switchSec(id, btn) {
 
 // FORM
 function prefill() {
-  document.getElementById('rName').value = currentUser.name||'';
-  document.getElementById('rId').value   = currentUser.worker_id||'';
-  document.getElementById('rDept').value = currentUser.department||'';
-  const n = new Date();
-  document.getElementById('rDate').value = n.toISOString().split('T')[0];
-  document.getElementById('rTime').value = n.toTimeString().substring(0,5);
+  try {
+    document.getElementById('rName').value = currentUser.name||'';
+    document.getElementById('rId').value   = currentUser.worker_id||'';
+    document.getElementById('rDept').value = currentUser.department||'';
+    const n = new Date();
+    document.getElementById('rDate').value = n.toISOString().split('T')[0];
+    document.getElementById('rTime').value = n.toTimeString().substring(0,5);
+  } catch(e) { console.error('prefill error:', e); }
 }
 function selSev(el,val){ document.querySelectorAll('.sb2').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); selSeverity=val; }
 function selLoc(el){ document.querySelectorAll('.locb').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); selLocation=el.innerText.trim().split('\n').pop().trim(); }
@@ -994,7 +1008,16 @@ async function loadDash() {
     document.getElementById('sevBD').innerHTML=sevs.map(s=>{const n=d.by_severity?.[s.k]||0,p=Math.round((n/tot)*100);return`<div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-weight:600">${s.l}</span><span style="color:${s.c};font-weight:700">${n}</span></div><div class="pb"><div class="pf" style="width:${p}%;background:${s.c}"></div></div></div>`;}).join('');
     const su=d.by_zone?.surface||0,ug=d.by_zone?.underground||0,t2=su+ug||1;
     document.getElementById('zoneS').innerHTML=`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-weight:600">🏗️ Surface</span><span style="color:var(--blue);font-weight:700">${su}</span></div><div class="pb"><div class="pf" style="width:${Math.round((su/t2)*100)}%;background:var(--blue)"></div></div></div><div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-weight:600">⛏️ Underground</span><span style="color:var(--orange);font-weight:700">${ug}</span></div><div class="pb"><div class="pf" style="width:${Math.round((ug/t2)*100)}%;background:var(--orange)"></div></div></div>`;
-  } catch(e){hideL('dashLD');toast('⚠️ '+e.message,'error');}
+  } catch(e){
+    hideL('dashLD');
+    document.getElementById('dashC').style.display='block';
+    document.getElementById('dashC').innerHTML=`<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:32px;text-align:center;color:var(--muted)">
+      <div style="font-size:36px;margin-bottom:12px">⚠️</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Could not load dashboard</div>
+      <div style="font-size:13px;margin-bottom:16px">${e.message}</div>
+      <button onclick="loadDash()" style="background:var(--orange);color:#fff;border:none;padding:10px 20px;border-radius:var(--rs);font-family:var(--font);font-weight:700;cursor:pointer;font-size:13px">Try Again</button>
+    </div>`;
+  }
 }
 
 // WORKERS
