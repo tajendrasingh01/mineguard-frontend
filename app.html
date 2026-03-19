@@ -2,106 +2,148 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MineGuard Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:wght@700;900&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Suraksha Prabandhan Pranali</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --orange:#e85d04;--orange-light:#fff3ec;
-  --red:#dc2626;--red-light:#fef2f2;
-  --green:#059669;--green-light:#ecfdf5;
-  --blue:#2563eb;--blue-light:#eff6ff;
-  --yellow:#d97706;--yellow-light:#fffbeb;
-  --text:#1a1f2e;--text2:#4a5568;--muted:#8a93a6;
-  --bg:#f4f6f9;--bg2:#eef0f5;--white:#fff;
-  --border:#e2e6ed;--border2:#d0d5de;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.07);
-  --shadow:0 4px 16px rgba(0,0,0,.08);
-  --shadow-lg:0 20px 48px rgba(0,0,0,.12);
-  --r:12px;--rs:8px;
-  --font:'DM Sans',sans-serif;--head:'Fraunces',serif;
+  --orange:#f05a28;--orange2:#ff7a45;--orange-light:#fff4ef;--orange-mid:#ffd4b8;
+  --red:#ef4444;--red-light:#fef2f2;
+  --green:#10b981;--green-light:#ecfdf5;
+  --blue:#3b82f6;--blue-light:#eff6ff;
+  --yellow:#f59e0b;--yellow-light:#fffbeb;
+  --text:#0f1623;--text2:#3d4a5c;--muted:#8896aa;
+  --bg:#f7f8fc;--bg2:#eef0f7;--white:#ffffff;
+  --border:#e8ecf2;--border2:#d4d9e4;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.06);
+  --shadow:0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.12);
+  --r:14px;--rs:10px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --head:'Sora',sans-serif;
+  --nav-h:60px;
+  --header-h:60px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;min-height:100vh}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;min-height:100dvh}
 
-/* LOADER */
+/* ── PAGE LOADER ── */
 #PL{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #PL.fade{opacity:0;pointer-events:none}
-.pl-wrap{display:flex;align-items:center;gap:14px;margin-bottom:28px}
-.pl-icon{width:50px;height:50px;background:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(232,93,4,.3)}
-.pl-title{font-family:var(--head);font-size:30px;color:var(--text)}
-.pl-title span{color:var(--orange)}
-.pl-bar{width:200px;height:4px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.pl-icon{width:56px;height:56px;background:var(--orange);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 28px rgba(240,90,40,.35);margin-bottom:20px;animation:plpulse 2s ease-in-out infinite}
+@keyframes plpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.pl-name{font-family:var(--head);font-size:20px;color:var(--text);font-weight:800;margin-bottom:6px;text-align:center;line-height:1.3}
+.pl-name span{color:var(--orange)}
+.pl-bar{width:180px;height:3px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-top:20px}
 .pl-fill{height:100%;background:var(--orange);border-radius:4px;animation:lb 1.5s ease forwards}
 @keyframes lb{from{width:0}to{width:100%}}
-.pl-txt{margin-top:12px;font-size:13px;color:var(--muted)}
+.pl-txt{margin-top:10px;font-size:12px;color:var(--muted);font-weight:500}
 
-/* HEADER */
-header{background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
-.hb{display:flex;align-items:center;gap:12px}
-.hi{width:36px;height:36px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
-.hb h1{font-family:var(--head);font-size:22px;color:var(--text)}
-.hb h1 span{color:var(--orange)}
-.hr{display:flex;align-items:center;gap:12px}
-.hu{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)}
-.hav{width:30px;height:30px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
-.hn{font-size:13px;font-weight:600;color:var(--text);line-height:1.2}
-.hid{font-size:11px;color:var(--muted)}
-.rp{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+/* ── HEADER ── */
+header{
+  background:#fff;border-bottom:1px solid var(--border);
+  height:var(--header-h);position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;box-shadow:var(--shadow-sm);
+}
+.hb{display:flex;align-items:center;gap:10px}
+.hi{width:34px;height:34px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.hb-name{font-family:var(--head);font-size:13px;color:var(--text);font-weight:800;line-height:1.2}
+.hb-name span{color:var(--orange)}
+.hr{display:flex;align-items:center;gap:8px}
+.hav{width:34px;height:34px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;flex-shrink:0;cursor:pointer}
+.rp{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;display:none}
 .rp.worker{background:var(--blue-light);color:var(--blue)}
 .rp.admin{background:var(--orange-light);color:var(--orange)}
-.eb{background:var(--red);color:#fff;border:none;padding:9px 16px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border-radius:var(--rs);transition:all .2s}
-.eb:hover{background:#b91c1c}
-.lb{background:none;border:1.5px solid var(--border);color:var(--text2);padding:8px 14px;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;transition:all .2s;border-radius:var(--rs)}
-.lb:hover{border-color:var(--red);color:var(--red)}
+.eb{background:var(--red);color:#fff;border:none;padding:8px 12px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;border-radius:var(--rs);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.lb2{background:none;border:1.5px solid var(--border);color:var(--text2);padding:7px 12px;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;border-radius:var(--rs);white-space:nowrap;display:none}
+.lb2:hover{border-color:var(--red);color:var(--red)}
+@media(min-width:640px){.rp{display:inline-flex}.lb2{display:block}}
 
-/* NAV */
-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;padding:0 32px;gap:4px;overflow-x:auto}
-.nt{padding:16px 18px;font-family:var(--font);font-weight:600;font-size:13px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+/* ── BOTTOM NAV (mobile) ── */
+.bottom-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background:#fff;border-top:1px solid var(--border);
+  height:64px;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+.bn-items{display:flex;height:100%}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--muted);font-family:var(--font);font-size:10px;font-weight:600;transition:all .2s;padding:0}
+.bn-item.active{color:var(--orange)}
+.bn-icon{font-size:20px;line-height:1}
+@media(max-width:767px){.bottom-nav{display:flex}}
+
+/* ── TOP NAV (desktop) ── */
+.top-nav{background:#fff;border-bottom:1px solid var(--border);display:none;padding:0 20px;gap:4px;overflow-x:auto;scrollbar-width:none}
+.top-nav::-webkit-scrollbar{display:none}
+.nt{padding:14px 16px;font-family:var(--font);font-weight:600;font-size:13px;cursor:pointer;color:var(--muted);border-bottom:2.5px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
 .nt:hover{color:var(--text)}
 .nt.active{color:var(--orange);border-bottom-color:var(--orange)}
+@media(min-width:768px){.top-nav{display:flex}}
 
-/* MAIN */
-main{padding:28px 32px;max-width:1400px;margin:0 auto;width:100%}
-.sec{display:none;animation:fi .3s ease}
+/* ── MAIN ── */
+main{
+  padding:20px 16px;max-width:1200px;margin:0 auto;width:100%;
+  padding-bottom:80px; /* space for bottom nav on mobile */
+}
+@media(min-width:768px){main{padding:28px 24px 32px}}
+@media(min-width:1024px){main{padding:32px 32px 40px}}
+
+.sec{display:none;animation:fi .25s ease}
 .sec.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.ph{margin-bottom:28px}
-.pt{font-family:var(--head);font-size:32px;color:var(--text);margin-bottom:4px}
-.ps{color:var(--muted);font-size:14px}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* STAT CARDS */
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.sc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow-sm)}
-.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+/* ── PAGE HEADER ── */
+.ph{margin-bottom:22px}
+.pt{font-family:var(--head);font-size:26px;color:var(--text);margin-bottom:3px;font-weight:800}
+.ps{color:var(--muted);font-size:13px;font-weight:500}
+@media(min-width:768px){.pt{font-size:30px}}
+
+/* ── STAT CARDS ── */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:768px){.sg{grid-template-columns:repeat(4,1fr);gap:16px}}
+.sc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.sc::after{content:'';position:absolute;top:-16px;right:-16px;width:72px;height:72px;border-radius:50%;opacity:.07}
+.co::after{background:var(--orange)}.cr2::after{background:var(--red)}.cy::after{background:var(--yellow)}.cg::after{background:var(--green)}
+.si{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px}
 .co .si{background:var(--orange-light)}.cr2 .si{background:var(--red-light)}.cy .si{background:var(--yellow-light)}.cg .si{background:var(--green-light)}
-.sl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sv{font-family:var(--head);font-size:36px;color:var(--text);line-height:1;margin-bottom:4px}
-.ss{font-size:12px;color:var(--muted)}
+.sl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.sv{font-family:var(--head);font-size:30px;color:var(--text);line-height:1;margin-bottom:3px;font-weight:800}
+.ss{font-size:11px;color:var(--muted);font-weight:500}
 
-/* CARD */
-.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
-.ct{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.ci{width:28px;height:28px;background:var(--orange-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+/* ── CARD ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+@media(min-width:768px){.card{padding:22px 24px}}
+.ct{font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ci{width:26px;height:26px;background:var(--orange-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
 
-/* FORM */
-.fs{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
-.fsh{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.fn{width:28px;height:28px;background:var(--orange);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-.fst{font-size:15px;font-weight:700;color:var(--text)}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.ff{grid-column:1/-1}
-.fgr{display:flex;flex-direction:column;gap:8px}
-.fl{font-size:13px;font-weight:600;color:var(--text2)}
-.fi2{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--text);padding:12px 16px;font-family:var(--font);font-size:15px;outline:none;transition:all .2s;border-radius:var(--rs)}
-.fi2:focus{border-color:var(--orange);background:#fff;box-shadow:0 0 0 3px rgba(232,93,4,.08)}
-.fi2[readonly]{opacity:.65;cursor:not-allowed}
-select.fi2 option{background:#fff}
-textarea.fi2{resize:vertical;min-height:96px}
+/* ── FORM SECTIONS ── */
+.fs{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+@media(min-width:768px){.fs{padding:22px 24px}}
+.fsh{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.fn{width:26px;height:26px;background:var(--orange);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.fst{font-size:14px;font-weight:700;color:var(--text)}
+.fg2{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.fg2{grid-template-columns:1fr 1fr}}
+.ff2{grid-column:1/-1}
+.fgr{display:flex;flex-direction:column;gap:7px}
+.fl2{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.2px}
+.fi2{
+  width:100%;background:var(--bg);border:2px solid var(--border);
+  color:var(--text);padding:13px 14px;font-family:var(--font);font-size:15px;
+  outline:none;transition:all .2s;border-radius:var(--rs);font-weight:500;
+  -webkit-appearance:none;appearance:none;
+}
+.fi2:focus{border-color:var(--orange);background:#fff;box-shadow:0 0 0 4px rgba(240,90,40,.08)}
+.fi2[readonly]{opacity:.6;cursor:not-allowed;background:var(--bg)}
+select.fi2{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238896aa' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;background-color:var(--bg)}
+select.fi2:focus{background-color:#fff}
+textarea.fi2{resize:vertical;min-height:88px;line-height:1.6}
 
-/* SEV */
-.sevg{display:flex;gap:10px;flex-wrap:wrap}
-.sb2{padding:10px 18px;border:2px solid var(--border);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;background:#fff;transition:all .2s;border-radius:var(--rs);color:var(--text2)}
+/* ── SEVERITY ── */
+.sevg{display:flex;gap:8px;flex-wrap:wrap}
+.sb2{padding:9px 14px;border:2px solid var(--border);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;background:#fff;transition:all .2s;border-radius:var(--rs);color:var(--text2)}
+@media(min-width:480px){.sb2{padding:10px 16px;font-size:13px}}
 .sb2.nm{color:var(--blue)}.sb2.nm.sel{background:var(--blue-light);border-color:var(--blue)}
 .sb2.mi{color:var(--yellow)}.sb2.mi.sel{background:var(--yellow-light);border-color:var(--yellow)}
 .sb2.se{color:var(--orange)}.sb2.se.sel{background:var(--orange-light);border-color:var(--orange)}
@@ -109,36 +151,38 @@ textarea.fi2{resize:vertical;min-height:96px}
 .sb2.fa{color:#7f1d1d;animation:fl2 1.5s infinite}.sb2.fa.sel{background:#fef2f2;border-color:#7f1d1d}
 @keyframes fl2{0%,100%{opacity:1}50%{opacity:.5}}
 
-/* LOC */
-.lg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.locb{padding:14px 10px;border:2px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:600;font-size:12px;text-align:center;transition:all .2s;border-radius:var(--rs)}
+/* ── LOCATION ── */
+.lg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:480px){.lg{grid-template-columns:repeat(3,1fr)}}
+.locb{padding:12px 8px;border:2px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:600;font-size:11px;text-align:center;transition:all .2s;border-radius:var(--rs);line-height:1.3}
+@media(min-width:480px){.locb{font-size:12px}}
 .locb:hover,.locb.sel{border-color:var(--orange);color:var(--orange);background:var(--orange-light)}
-.loci{font-size:20px;display:block;margin-bottom:6px}
+.loci{font-size:18px;display:block;margin-bottom:5px}
 
-/* TOGGLE */
-.tg{display:flex;border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden;width:fit-content}
-.tb{padding:9px 18px;background:#fff;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-weight:600;font-size:13px;transition:all .2s;border-right:1px solid var(--border)}
-.tb:last-child{border-right:none}
-.tb.active{background:var(--orange);color:#fff}
+/* ── TOGGLE ── */
+.tg{display:flex;background:var(--bg);border-radius:var(--rs);padding:3px;gap:3px;width:fit-content}
+.tb{padding:8px 16px;background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-weight:600;font-size:13px;transition:all .2s;border-radius:8px}
+.tb.active{background:#fff;color:var(--orange);box-shadow:var(--shadow-sm)}
 
-/* BTN */
-.sbtn{background:var(--orange);color:#fff;border:none;padding:14px 36px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;border-radius:var(--rs);display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(232,93,4,.25)}
-.sbtn:hover{background:#c94e00;transform:translateY(-1px);box-shadow:0 8px 20px rgba(232,93,4,.3)}
+/* ── BUTTONS ── */
+.sbtn{background:var(--orange);color:#fff;border:none;padding:14px 28px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;border-radius:var(--rs);display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(240,90,40,.3);width:100%}
+@media(min-width:480px){.sbtn{width:auto}}
+.sbtn:hover{background:#d94a1a;transform:translateY(-1px);box-shadow:0 8px 20px rgba(240,90,40,.35)}
 .sbtn:disabled{background:var(--border2);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
-.spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
-.spin.show{display:block}
+.spin2{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none;flex-shrink:0}
+.spin2.on{display:block}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* TABLE */
-.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-.dt{width:100%;border-collapse:collapse;background:#fff}
-.dt th{background:var(--bg);font-size:11px;font-weight:700;color:var(--muted);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
-.dt td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text)}
+/* ── TABLE ── */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);-webkit-overflow-scrolling:touch}
+.dt{width:100%;border-collapse:collapse;background:#fff;min-width:560px}
+.dt th{background:var(--bg);font-size:10px;font-weight:800;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.dt td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
 .dt tr:last-child td{border-bottom:none}
 .dt tr:hover td{background:var(--bg)}
 
-/* BADGES */
-.badge{padding:4px 10px;font-size:11px;font-weight:700;border-radius:20px;white-space:nowrap;display:inline-block}
+/* ── BADGES ── */
+.badge{padding:3px 9px;font-size:10px;font-weight:800;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;letter-spacing:.3px}
 .bnm{background:var(--blue-light);color:var(--blue)}
 .bmi{background:var(--yellow-light);color:var(--yellow)}
 .bse{background:var(--orange-light);color:var(--orange)}
@@ -150,174 +194,189 @@ textarea.fi2{resize:vertical;min-height:96px}
 .bad{background:var(--orange-light);color:var(--orange)}
 .bwk{background:var(--blue-light);color:var(--blue)}
 
-/* ACT BTNS */
-.ab{padding:5px 12px;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;border-radius:6px;border:none;transition:all .2s;margin-right:4px}
+/* ── ACTION BTNS ── */
+.ab{padding:5px 10px;font-family:var(--font);font-size:10px;font-weight:800;cursor:pointer;border-radius:6px;border:none;transition:all .2s;margin-right:4px;white-space:nowrap}
 .arv{background:var(--yellow-light);color:var(--yellow)}.arv:hover{background:#fde68a}
 .acl{background:var(--green-light);color:var(--green)}.acl:hover{background:#a7f3d0}
 .adl{background:var(--red-light);color:var(--red)}.adl:hover{background:#fca5a5}
 
-/* INCIDENT CARDS */
-.inc-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;box-shadow:var(--shadow-sm);transition:all .2s;border-left:4px solid var(--border)}
-.inc-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+/* ── FILTER BAR ── */
+.fb{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.fsel{background:#fff;border:2px solid var(--border);color:var(--text);padding:9px 12px;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;outline:none;border-radius:var(--rs);-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238896aa' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px}
+.fsel:focus{border-color:var(--orange)}
+
+/* ── INCIDENT CARDS ── */
+.inc-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);transition:box-shadow .2s;border-left:4px solid var(--border)}
+@media(min-width:768px){.inc-card{padding:20px 22px}}
+.inc-card:hover{box-shadow:var(--shadow)}
 .inc-card.sev-nearMiss{border-left-color:var(--blue)}
 .inc-card.sev-minor{border-left-color:var(--yellow)}
 .inc-card.sev-serious{border-left-color:var(--orange)}
 .inc-card.sev-critical{border-left-color:var(--red)}
 .inc-card.sev-fatality{border-left-color:#7f1d1d}
-.inc-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
-.inc-card-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:var(--muted)}
-.inc-card-meta span{display:flex;align-items:center;gap:5px}
-.inc-card-desc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:14px}
-.inc-card-photos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.inc-thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer;transition:all .2s}
-.inc-thumb:hover{border-color:var(--orange);transform:scale(1.05)}
-.inc-photo-count{width:64px;height:64px;background:var(--orange-light);border:2px solid var(--orange);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;color:var(--orange)}
-.inc-card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.view-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;transition:all .2s}
-.view-btn:hover{background:#c94e00}
-/* Detail modal */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.detail-field{background:var(--bg);border-radius:var(--rs);padding:12px 14px}
-.detail-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.detail-value{font-size:14px;color:var(--text);font-weight:500}
-.detail-full{grid-column:1/-1}
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:12px}
+.inc-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.inc-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.inc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.inc-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:10px}
+.inc-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.inc-photos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.inc-thumb{width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer}
+@media(min-width:480px){.inc-thumb{width:64px;height:64px}}
+.inc-more{width:56px;height:56px;background:var(--orange-light);border:2px solid var(--orange);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:800;color:var(--orange)}
+@media(min-width:480px){.inc-more{width:64px;height:64px}}
+.inc-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.view-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--orange);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;transition:all .2s}
+.view-btn:hover{background:#d94a1a}
+
+/* ── DETAIL MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+@media(min-width:640px){.mo{align-items:center}}
+.mo.open{display:flex}
+.md{background:#fff;width:100%;max-width:780px;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:639px){.md{border-radius:20px 20px 0 0;max-height:92dvh}}
+@media(min-width:640px){.md{border-radius:var(--r);box-shadow:var(--shadow-lg);max-height:88vh}}
+.mh{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-radius:var(--r) var(--r) 0 0}
+.mh-drag{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 14px;display:block}
+@media(min-width:640px){.mh-drag{display:none}}
+.mt2{font-family:var(--head);font-size:18px;color:var(--text);font-weight:800}
+@media(min-width:640px){.mt2{font-size:20px}}
+.mc{background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mc:hover{background:var(--red-light);color:var(--red)}
+.mb2{padding:18px 20px}
+@media(min-width:640px){.mb2{padding:22px 24px}}
+.ms2{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:16px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+@media(min-width:640px){.detail-grid{gap:14px}}
+.df{background:var(--bg);border-radius:var(--rs);padding:11px 13px}
+.dfl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dfv{font-size:13px;color:var(--text);font-weight:600;line-height:1.5}
+.dff{grid-column:1/-1}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:10px}
+@media(min-width:480px){.photo-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
 .photo-grid img{width:100%;border-radius:8px;cursor:pointer;border:1px solid var(--border);transition:all .2s;aspect-ratio:1;object-fit:cover}
-.photo-grid img:hover{border-color:var(--orange);transform:scale(1.03);box-shadow:var(--shadow)}
-/* Full screen photo */
-#photoFullscreen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;cursor:zoom-out}
+.photo-grid img:hover{border-color:var(--orange);box-shadow:var(--shadow-sm)}
+#photoFullscreen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:2000;align-items:center;justify-content:center}
 #photoFullscreen.open{display:flex}
-#photoFullscreen img{max-width:92vw;max-height:92vh;border-radius:8px;object-fit:contain}
-#photoFullscreen button{position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer}
+#photoFullscreen img{max-width:95vw;max-height:92dvh;object-fit:contain;border-radius:8px}
+#photoFullscreen button{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer}
 
-/* FILTER */
-.fb{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-.fsel{background:#fff;border:1.5px solid var(--border);color:var(--text);padding:9px 14px;font-family:var(--font);font-size:13px;cursor:pointer;outline:none;border-radius:var(--rs);font-weight:500}
-.fsel:focus{border-color:var(--orange)}
-
-/* SOP */
-.sopgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.sopc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px;cursor:pointer;transition:all .25s;box-shadow:var(--shadow-sm)}
-.sopc:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-3px)}
-.sopc-icon{width:48px;height:48px;border-radius:12px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
-.sopc-cat{font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sopc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
-.sopc-desc{font-size:13px;color:var(--muted);line-height:1.6}
-.sopc-foot{margin-top:14px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding-top:12px;border-top:1px solid var(--border)}
-.soptag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:var(--green-light);color:var(--green);border-radius:6px;font-size:11px;font-weight:700;margin-top:8px}
-
-/* SOP CATEGORY TABS */
-.sopcattab{padding:8px 18px;background:#fff;border:1.5px solid var(--border);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:600;font-size:13px;transition:all .2s;border-radius:20px}
+/* ── SOP CARDS ── */
+.sopcattab{padding:8px 16px;background:#fff;border:2px solid var(--border);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:700;font-size:12px;transition:all .2s;border-radius:20px;white-space:nowrap}
 .sopcattab:hover{border-color:var(--orange);color:var(--orange)}
 .sopcattab.active{background:var(--orange);color:#fff;border-color:var(--orange)}
-.sop-group-title{font-family:var(--head);font-size:22px;color:var(--text);margin:28px 0 14px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
-.sop-group-title span{background:var(--orange-light);color:var(--orange);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:var(--font)}
+.sop-tabs-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+.sop-tabs-scroll::-webkit-scrollbar{display:none}
+.sop-group-title{font-family:var(--head);font-size:18px;color:var(--text);margin:22px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;font-weight:800}
+.sop-group-title span{background:var(--orange-light);color:var(--orange);font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;font-family:var(--font)}
+.sopgrid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:480px){.sopgrid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.sopgrid{grid-template-columns:repeat(3,1fr)}}
+.sopc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-sm)}
+.sopc:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-2px)}
+.sopc:active{transform:translateY(0)}
+.sopc-icon{width:44px;height:44px;border-radius:12px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.sopc-cat{font-size:10px;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.sopc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3}
+.sopc-desc{font-size:12px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sopc-foot{margin-top:12px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding-top:10px;border-top:1px solid var(--border)}
+.soptag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--green-light);color:var(--green);border-radius:6px;font-size:10px;font-weight:800;margin-top:7px}
 
-/* UPLOAD */
-.uz{border:2px dashed var(--border2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+/* ── UPLOAD ZONE ── */
+.uz{border:2px dashed var(--border2);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
 .uz:hover{border-color:var(--orange);background:var(--orange-light)}
 .uz input{display:none}
 
-/* MODAL */
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.mo.open{display:flex}
-.md{background:#fff;border-radius:var(--r);width:720px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
-.mh{padding:22px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-radius:var(--r) var(--r) 0 0}
-.mt{font-family:var(--head);font-size:22px;color:var(--text)}
-.mc{background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .2s}
-.mc:hover{background:var(--red-light);color:var(--red)}
-.mb{padding:24px 28px}
-.ms{font-size:13px;color:var(--muted);margin-bottom:20px}
-.ib{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:var(--rs);padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.6;color:#1e40af;display:flex;gap:10px}
+/* ── NOTICES ── */
+.banner{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:var(--rs);padding:12px 15px;margin-bottom:18px;font-size:13px;color:#1d4ed8;line-height:1.6;font-weight:500}
+.ib{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:var(--rs);padding:12px 14px;margin:10px 0;font-size:13px;line-height:1.6;color:#1d4ed8;display:flex;gap:8px;font-weight:500}
 
-/* NOTICE */
-.banner{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:var(--rs);padding:14px 18px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.6}
-
-/* LOADER */
+/* ── LOADER ── */
 .ld{display:none;text-align:center;padding:48px 20px}
 .ld.show{display:block}
-.sp2{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 14px}
-.es{text-align:center;padding:56px 20px;color:var(--muted)}
+.sp2{width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
+.es{text-align:center;padding:48px 20px;color:var(--muted)}
+.ei{font-size:38px;margin-bottom:10px}
 
-/* PROGRESS */
-.pb{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-top:8px}
+/* ── PROGRESS ── */
+.pb{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-top:7px}
 .pf{height:100%;border-radius:3px;transition:width .8s ease}
-.dg{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.dg{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:768px){.dg{grid-template-columns:2fr 1fr}}
 
-/* TOAST */
-.toast{position:fixed;bottom:28px;right:28px;padding:14px 20px;font-size:14px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:500;border-radius:var(--rs);display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg)}
-.toast.show{transform:translateY(0);opacity:1}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);padding:12px 18px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:500;border-radius:var(--rs);display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);white-space:nowrap;max-width:90vw}
+@media(min-width:768px){.toast{bottom:28px;left:auto;right:28px;transform:translateX(0) translateY(60px)}}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:768px){.toast.show{transform:translateX(0) translateY(0)}}
 .toast.success{background:var(--green);color:#fff}
 .toast.error{background:var(--red);color:#fff}
-.mono{font-family:'Courier New',monospace;font-size:12px}
 
-@media(max-width:900px){
-  .fg{grid-template-columns:1fr}.ff{grid-column:1}
-  .sg{grid-template-columns:1fr 1fr}
-  .sopgrid{grid-template-columns:1fr}
-  .dg{grid-template-columns:1fr}
-  nav,main,header{padding-left:16px;padding-right:16px}
-  .hu{display:none}
-}
+/* ── MISC ── */
+.mono{font-family:'Courier New',monospace;font-size:11px}
+
+/* ── SOP CATEGORY DROPDOWN ── */
+#catDropdown div:last-child{border-bottom:none}
+
+/* ── PHOTO PREVIEW ── */
+#photoPreview{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ph-wrap{position:relative;width:68px;height:68px;flex-shrink:0}
+.ph-img{width:100%;height:100%;object-fit:cover;border-radius:8px;border:2px solid var(--border)}
+.ph-rm{position:absolute;top:-6px;right:-6px;width:20px;height:20px;background:var(--red);border:none;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700}
 </style>
 </head>
 <body>
 
+<!-- PAGE LOADER -->
 <div id="PL">
-  <div class="pl-wrap">
-    <div class="pl-icon">⛏</div>
-    <div class="pl-title">Mine<span>Guard</span></div>
-  </div>
+  <div class="pl-icon">⛏</div>
+  <div class="pl-name">Suraksha <span>Prabandhan Pranali</span></div>
   <div class="pl-bar"><div class="pl-fill"></div></div>
   <div class="pl-txt">Loading your portal...</div>
 </div>
 
+<!-- HEADER -->
 <header>
   <div class="hb">
     <div class="hi">⛏</div>
-    <h1>Mine<span>Guard</span></h1>
+    <div class="hb-name">Suraksha <span>Prabandhan Pranali</span></div>
   </div>
   <div class="hr">
-    <div class="hu">
-      <div class="hav" id="hdrAvatar">?</div>
-      <div>
-        <div class="hn" id="hdrName">—</div>
-        <div class="hid" id="hdrId">—</div>
-      </div>
-    </div>
+    <div class="hav" id="hdrAvatar" title="Signed in">?</div>
     <span class="rp" id="rolePill"></span>
-    <button class="eb" onclick="triggerEmergency()">🚨 Emergency</button>
-    <button class="lb" onclick="doLogout()">Sign Out</button>
+    <button class="eb" onclick="triggerEmergency()">🚨 <span>Emergency</span></button>
+    <button class="lb2" onclick="doLogout()">Sign Out</button>
   </div>
 </header>
 
-<nav id="appNav"></nav>
+<!-- DESKTOP TOP NAV -->
+<nav class="top-nav" id="appNav"></nav>
 
+<!-- MAIN CONTENT -->
 <main>
 
-<!-- REPORT INCIDENT -->
+<!-- ════ REPORT INCIDENT ════ -->
 <div id="sec-report" class="sec">
-  <div class="ph"><div class="pt">Report an Incident</div><div class="ps">Submit immediately after any incident — fill in as much detail as possible</div></div>
+  <div class="ph"><div class="pt">Report Incident</div><div class="ps">Submit after any incident — fill in as much detail as possible</div></div>
 
   <div class="fs">
     <div class="fsh"><div class="fn">1</div><div class="fst">Your Details</div></div>
-    <div class="fg">
-      <div class="fgr"><label class="fl">Full Name</label><input id="rName" class="fi2" type="text" readonly/></div>
-      <div class="fgr"><label class="fl">Worker ID</label><input id="rId" class="fi2" type="text" readonly/></div>
-      <div class="fgr"><label class="fl">Supervisor on Duty</label><input id="rSup" class="fi2" type="text" placeholder="Supervisor name"/></div>
-      <div class="fgr"><label class="fl">Department</label><input id="rDept" class="fi2" type="text" readonly/></div>
+    <div class="fg2">
+      <div class="fgr"><label class="fl2">Full Name</label><input id="rName" class="fi2" type="text" readonly/></div>
+      <div class="fgr"><label class="fl2">ID / NEIS Number</label><input id="rId" class="fi2" type="text" readonly/></div>
+      <div class="fgr"><label class="fl2">Supervisor on Duty</label><input id="rSup" class="fi2" type="text" placeholder="Supervisor name"/></div>
+      <div class="fgr"><label class="fl2">Department</label><input id="rDept" class="fi2" type="text" readonly/></div>
     </div>
   </div>
 
   <div class="fs">
     <div class="fsh"><div class="fn">2</div><div class="fst">Incident Details</div></div>
-    <div class="fg">
-      <div class="fgr"><label class="fl">Date</label><input id="rDate" class="fi2" type="date"/></div>
-      <div class="fgr"><label class="fl">Time</label><input id="rTime" class="fi2" type="time"/></div>
-      <div class="fgr ff">
-        <label class="fl">Incident Type</label>
+    <div class="fg2">
+      <div class="fgr"><label class="fl2">Date</label><input id="rDate" class="fi2" type="date"/></div>
+      <div class="fgr"><label class="fl2">Time</label><input id="rTime" class="fi2" type="time"/></div>
+      <div class="fgr ff2">
+        <label class="fl2">Incident Type</label>
         <select id="rType" class="fi2">
-          <option value="">— Select incident type —</option>
+          <option value="">— Select type —</option>
           <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
           <option>Equipment / Machinery Accident</option><option>Electrical Incident</option>
           <option>Fire / Explosion</option><option>Gas / Fume Exposure</option>
@@ -327,22 +386,22 @@ textarea.fi2{resize:vertical;min-height:96px}
           <option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option>
         </select>
       </div>
-      <div class="fgr ff">
-        <label class="fl">Location</label>
+      <div class="fgr ff2">
+        <label class="fl2">Location</label>
         <div class="lg">
           <button class="locb" onclick="selLoc(this)"><span class="loci">🏗️</span>Surface – General</button>
           <button class="locb" onclick="selLoc(this)"><span class="loci">⚙️</span>Surface – Crusher</button>
           <button class="locb" onclick="selLoc(this)"><span class="loci">🔧</span>Surface – Workshop</button>
-          <button class="locb" onclick="selLoc(this)"><span class="loci">🚪</span>Portal / Adit Entry</button>
+          <button class="locb" onclick="selLoc(this)"><span class="loci">🚪</span>Portal / Adit</button>
           <button class="locb" onclick="selLoc(this)"><span class="loci">🪨</span>UG – Stope</button>
-          <button class="locb" onclick="selLoc(this)"><span class="loci">⛏️</span>UG – Development Drive</button>
-          <button class="locb" onclick="selLoc(this)"><span class="loci">🚛</span>UG – Haulage Level</button>
-          <button class="locb" onclick="selLoc(this)"><span class="loci">🌬️</span>UG – Ventilation Shaft</button>
+          <button class="locb" onclick="selLoc(this)"><span class="loci">⛏️</span>UG – Development</button>
+          <button class="locb" onclick="selLoc(this)"><span class="loci">🚛</span>UG – Haulage</button>
+          <button class="locb" onclick="selLoc(this)"><span class="loci">🌬️</span>UG – Ventilation</button>
           <button class="locb" onclick="selLoc(this)"><span class="loci">📦</span>UG – Ore Pass</button>
         </div>
       </div>
-      <div class="fgr"><label class="fl">Level / Zone Detail</label><input id="rLocD" class="fi2" type="text" placeholder="e.g. Level 4 – Block 2A"/></div>
-      <div class="fgr"><label class="fl">Persons Injured</label><input id="rInj" class="fi2" type="number" min="0" value="0"/></div>
+      <div class="fgr"><label class="fl2">Level / Zone Detail</label><input id="rLocD" class="fi2" type="text" placeholder="e.g. Level 4 – Block 2A"/></div>
+      <div class="fgr"><label class="fl2">Persons Injured</label><input id="rInj" class="fi2" type="number" min="0" value="0" inputmode="numeric"/></div>
     </div>
   </div>
 
@@ -350,8 +409,8 @@ textarea.fi2{resize:vertical;min-height:96px}
     <div class="fsh"><div class="fn">3</div><div class="fst">Severity Level</div></div>
     <div class="sevg">
       <button class="sb2 nm" onclick="selSev(this,'nearMiss')">🔵 Near Miss</button>
-      <button class="sb2 mi" onclick="selSev(this,'minor')">🟡 Minor Injury</button>
-      <button class="sb2 se" onclick="selSev(this,'serious')">🟠 Serious Injury</button>
+      <button class="sb2 mi" onclick="selSev(this,'minor')">🟡 Minor</button>
+      <button class="sb2 se" onclick="selSev(this,'serious')">🟠 Serious</button>
       <button class="sb2 cr3" onclick="selSev(this,'critical')">🔴 Critical</button>
       <button class="sb2 fa" onclick="selSev(this,'fatality')">☠️ Fatality</button>
     </div>
@@ -359,11 +418,11 @@ textarea.fi2{resize:vertical;min-height:96px}
 
   <div class="fs">
     <div class="fsh"><div class="fn">4</div><div class="fst">Description</div></div>
-    <div class="fg">
-      <div class="fgr ff"><label class="fl">What Happened?</label><textarea id="rDesc" class="fi2" placeholder="Describe the full sequence of events — what was being done, what went wrong, contributing factors..."></textarea></div>
-      <div class="fgr ff"><label class="fl">Immediate Actions Taken</label><textarea id="rAct" class="fi2" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea></div>
+    <div class="fg2">
+      <div class="fgr ff2"><label class="fl2">What Happened?</label><textarea id="rDesc" class="fi2" placeholder="Describe the sequence of events — what was being done, what went wrong..."></textarea></div>
+      <div class="fgr ff2"><label class="fl2">Immediate Actions Taken</label><textarea id="rAct" class="fi2" placeholder="e.g. Area evacuated, first aid given, supervisor called..."></textarea></div>
       <div class="fgr">
-        <label class="fl">PPE Worn?</label>
+        <label class="fl2">PPE Worn?</label>
         <div class="tg" id="tPPE">
           <button class="tb active" onclick="selT(this,'tPPE')">Yes</button>
           <button class="tb" onclick="selT(this,'tPPE')">No</button>
@@ -371,131 +430,128 @@ textarea.fi2{resize:vertical;min-height:96px}
         </div>
       </div>
       <div class="fgr">
-        <label class="fl">SOPs Followed?</label>
+        <label class="fl2">SOPs Followed?</label>
         <div class="tg" id="tSOP">
           <button class="tb active" onclick="selT(this,'tSOP')">Yes</button>
           <button class="tb" onclick="selT(this,'tSOP')">No</button>
           <button class="tb" onclick="selT(this,'tSOP')">Unknown</button>
         </div>
       </div>
-      <div class="fgr ff"><label class="fl">Witness Names</label><input id="rWit" class="fi2" type="text" placeholder="Names of any witnesses (optional)"/></div>
+      <div class="fgr ff2"><label class="fl2">Witness Names</label><input id="rWit" class="fi2" type="text" placeholder="Names of any witnesses (optional)"/></div>
     </div>
   </div>
 
   <div class="fs">
-    <div class="fsh"><div class="fn">5</div><div class="fst">Photos / Evidence (Optional)</div></div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+    <div class="fsh"><div class="fn">5</div><div class="fst">Photos / Evidence</div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
       <button type="button" onclick="document.getElementById('photoGallery').click()"
-        style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--blue-light);border:1.5px solid var(--blue);color:var(--blue);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:14px;font-weight:700;transition:all .2s">
-        🖼️ Choose from Files
+        style="display:flex;align-items:center;gap:7px;padding:11px 18px;background:var(--blue-light);border:2px solid var(--blue);color:var(--blue);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700">
+        🖼️ Choose Files
       </button>
       <button type="button" onclick="document.getElementById('photoCamera').click()"
-        style="display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--green-light);border:1.5px solid var(--green);color:var(--green);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:14px;font-weight:700;transition:all .2s">
-        📷 Open Camera
+        style="display:flex;align-items:center;gap:7px;padding:11px 18px;background:var(--green-light);border:2px solid var(--green);color:var(--green);border-radius:var(--rs);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700">
+        📷 Camera
       </button>
-      <span id="photoCount" style="display:flex;align-items:center;font-size:13px;color:var(--muted)">No photos selected</span>
+      <span id="photoCount" style="display:flex;align-items:center;font-size:12px;color:var(--muted);font-weight:600">No photos selected</span>
     </div>
-    <input type="file" id="photoGallery" accept="image/*" multiple style="display:none" onchange="handlePhotos(this,false)"/>
-    <input type="file" id="photoCamera" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(this,true)"/>
-    <div id="photoPreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px"></div>
+    <input type="file" id="photoGallery" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)"/>
+    <input type="file" id="photoCamera" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(this)"/>
+    <div id="photoPreview"></div>
   </div>
 
   <button class="sbtn" id="subBtn" onclick="submitInc()">
-    <div class="spin" id="subSpin"></div>
+    <div class="spin2" id="subSpin"></div>
     <span id="subTxt">Submit Report →</span>
   </button>
 </div>
 
-<!-- MY REPORTS -->
+<!-- ════ MY REPORTS ════ -->
 <div id="sec-mine" class="sec">
   <div class="ph"><div class="pt">My Reports</div><div class="ps">Incidents you have submitted</div></div>
-  <div class="banner">ℹ️ You can only view your own submitted reports. Other workers' details are kept private.</div>
-  <div class="ld" id="mineLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading...</div></div>
+  <div class="banner">ℹ️ You can only see your own submitted reports. Other mine workers' details are kept private.</div>
+  <div class="ld" id="mineLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px;font-weight:500">Loading...</div></div>
   <div class="tw"><table class="dt"><thead><tr><th>Ref</th><th>Type</th><th>Location</th><th>Date</th><th>Severity</th><th>Status</th></tr></thead><tbody id="mineTB"></tbody></table></div>
-  <div class="es" id="mineES" style="display:none"><div style="font-size:40px;margin-bottom:12px">📋</div><div>No incidents reported yet.</div></div>
+  <div class="es" id="mineES" style="display:none"><div class="ei">📋</div><div style="font-size:14px;font-weight:600">No incidents reported yet.</div></div>
 </div>
 
-<!-- SOP LIBRARY -->
+<!-- ════ SOP LIBRARY ════ -->
 <div id="sec-sop" class="sec">
   <div class="ph"><div class="pt">SOP Library</div><div class="ps">Standard Operating Procedures — uploaded by administrator</div></div>
 
-  <!-- Admin upload form -->
   <div id="sopUploadArea" style="display:none">
     <div class="card">
       <div class="ct"><div class="ci">➕</div>Upload New SOP</div>
-      <div class="fg">
-        <div class="fgr"><label class="fl">SOP Title *</label><input id="sopTitle" class="fi2" type="text" placeholder="e.g. Confined Space Entry Procedure"/></div>
+      <div class="fg2">
+        <div class="fgr"><label class="fl2">SOP Title *</label><input id="sopTitle" class="fi2" type="text" placeholder="e.g. Confined Space Entry"/></div>
         <div class="fgr">
-          <label class="fl">Category Name *</label>
+          <label class="fl2">Category Name *</label>
           <div style="position:relative">
             <input id="sopCat" class="fi2" type="text" placeholder="Type or select a category..." autocomplete="off"
               oninput="filterCatDropdown(this.value)" onfocus="showCatDropdown()" onblur="setTimeout(hideCatDropdown,200)"/>
-            <div id="catDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--orange);border-top:none;border-radius:0 0 var(--rs) var(--rs);z-index:50;max-height:180px;overflow-y:auto;box-shadow:var(--shadow)"></div>
+            <div id="catDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:2px solid var(--orange);border-top:none;border-radius:0 0 var(--rs) var(--rs);z-index:50;max-height:160px;overflow-y:auto;box-shadow:var(--shadow)"></div>
           </div>
         </div>
-        <div class="fgr ff"><label class="fl">Description</label><input id="sopDesc" class="fi2" type="text" placeholder="Brief description of what this SOP covers"/></div>
-        <div class="fgr ff">
-          <label class="fl">Attach File (PDF or Image) *</label>
+        <div class="fgr ff2"><label class="fl2">Description</label><input id="sopDesc" class="fi2" type="text" placeholder="Brief description of what this SOP covers"/></div>
+        <div class="fgr ff2">
+          <label class="fl2">Attach File (PDF or Image) *</label>
           <div class="uz" onclick="document.getElementById('sopFile').click()">
             <input type="file" id="sopFile" accept=".pdf,image/*" onchange="handleSopFile(this)"/>
-            <div style="font-size:36px;margin-bottom:10px">📎</div>
-            <div style="font-size:14px;color:var(--muted);margin-bottom:4px">Click to attach PDF or image</div>
-            <div style="font-size:12px;color:var(--muted)">PDF, JPG, PNG — max 10MB</div>
+            <div style="font-size:32px;margin-bottom:8px">📎</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:3px;font-weight:500">Tap to attach PDF or image</div>
+            <div style="font-size:11px;color:var(--muted)">PDF, JPG, PNG — max 10MB</div>
           </div>
           <div id="sopFP"></div>
         </div>
       </div>
-      <button class="sbtn" id="sopUpBtn" onclick="uploadSOP()" style="margin-top:8px">
-        <div class="spin" id="sopUpSpin"></div>
+      <button class="sbtn" id="sopUpBtn" onclick="uploadSOP()" style="margin-top:10px">
+        <div class="spin2" id="sopUpSpin"></div>
         <span id="sopUpTxt">Upload SOP →</span>
       </button>
     </div>
   </div>
 
-  <!-- Category tabs (dynamic) -->
-  <div id="sopTabsWrap" style="display:none;margin-bottom:20px">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <button class="sopcattab active" onclick="filterByCat('__all__',this)">All SOPs</button>
-      <div id="sopCatTabs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-      <div style="margin-left:auto;position:relative">
-        <select id="sopSearchDrop" class="fsel" onchange="jumpToSOP(this.value)"
-          style="min-width:220px;padding-right:32px">
-          <option value="">🔍 Search SOP...</option>
-        </select>
+  <div id="sopTabsWrap" style="display:none;margin-bottom:16px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="sop-tabs-scroll" style="flex:1">
+        <button class="sopcattab active" onclick="filterByCat('__all__',this)">All SOPs</button>
+        <div id="sopCatTabs" style="display:contents"></div>
       </div>
+      <select id="sopSearchDrop" class="fsel" onchange="jumpToSOP(this.value)" style="min-width:180px;flex-shrink:0">
+        <option value="">🔍 Search SOP...</option>
+      </select>
     </div>
   </div>
 
-  <div class="ld" id="sopLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading SOPs...</div></div>
+  <div class="ld" id="sopLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px;font-weight:500">Loading SOPs...</div></div>
   <div id="sopGroupedContent"></div>
   <div class="es" id="sopES" style="display:none">
-    <div style="font-size:48px;margin-bottom:14px">📁</div>
-    <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px">No SOPs uploaded yet</div>
-    <div style="font-size:14px;color:var(--muted)">Admin can upload PDFs or images using the form above</div>
+    <div class="ei">📁</div>
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">No SOPs uploaded yet</div>
+    <div style="font-size:13px;color:var(--muted)">Admin can upload PDFs or images using the form above</div>
   </div>
 </div>
 
-<!-- ADMIN DASHBOARD -->
+<!-- ════ ADMIN DASHBOARD ════ -->
 <div id="sec-dashboard" class="sec">
-  <div class="ph"><div class="pt">Safety Dashboard</div><div class="ps">Real incident data submitted by workers — no synthetic data</div></div>
-  <div class="ld" id="dashLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading dashboard...</div></div>
+  <div class="ph"><div class="pt">Safety Dashboard</div><div class="ps">Real incident data — submitted by mine workers</div></div>
+  <div class="ld" id="dashLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px;font-weight:500">Loading...</div></div>
   <div id="dashC" style="display:none">
     <div class="sg">
-      <div class="sc co"><div class="si">📊</div><div class="sl">Total Incidents (30d)</div><div class="sv" id="st1">—</div><div class="ss">Real reports only</div></div>
-      <div class="sc cr2"><div class="si">🚨</div><div class="sl">Critical / Fatality</div><div class="sv" id="st2">—</div><div class="ss">Immediate review needed</div></div>
-      <div class="sc cy"><div class="si">📋</div><div class="sl">Open Incidents</div><div class="sv" id="st3">—</div><div class="ss">Pending investigation</div></div>
-      <div class="sc cg"><div class="si">✅</div><div class="sl">Safe Days</div><div class="sv" id="st4">—</div><div class="ss">Since last serious incident</div></div>
+      <div class="sc co"><div class="si">📊</div><div class="sl">Total (30d)</div><div class="sv" id="st1">—</div><div class="ss">Real reports</div></div>
+      <div class="sc cr2"><div class="si">🚨</div><div class="sl">Critical/Fatal</div><div class="sv" id="st2">—</div><div class="ss">Needs review</div></div>
+      <div class="sc cy"><div class="si">📋</div><div class="sl">Open</div><div class="sv" id="st3">—</div><div class="ss">Pending</div></div>
+      <div class="sc cg"><div class="si">✅</div><div class="sl">Safe Days</div><div class="sv" id="st4">—</div><div class="ss">Since last serious</div></div>
     </div>
     <div class="dg">
-      <div class="card"><div class="ct"><div class="ci">📈</div>Severity Breakdown</div><div id="sevBD" style="display:flex;flex-direction:column;gap:12px"></div></div>
+      <div class="card"><div class="ct"><div class="ci">📈</div>Severity Breakdown</div><div id="sevBD" style="display:flex;flex-direction:column;gap:10px"></div></div>
       <div class="card"><div class="ct"><div class="ci">📍</div>Zone Split</div><div id="zoneS"></div></div>
     </div>
   </div>
 </div>
 
-<!-- ALL INCIDENTS -->
+<!-- ════ ALL INCIDENTS ════ -->
 <div id="sec-incidents" class="sec">
-  <div class="ph"><div class="pt">All Incidents</div><div class="ps">Full log of all worker-submitted reports</div></div>
+  <div class="ph"><div class="pt">All Incidents</div><div class="ps">Full log of all submitted reports</div></div>
   <div class="fb">
     <select class="fsel" id="fSev" onchange="loadAdminInc()">
       <option value="all">All Severities</option>
@@ -506,60 +562,65 @@ textarea.fi2{resize:vertical;min-height:96px}
       <option value="all">All Locations</option>
       <option value="surface">Surface</option><option value="underground">Underground</option>
     </select>
-    <span id="incCount" style="font-size:13px;color:var(--muted);margin-left:4px"></span>
+    <span id="incCount" style="font-size:12px;color:var(--muted);font-weight:600"></span>
   </div>
-  <div class="ld" id="incLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading...</div></div>
-  <div id="incCards" style="display:flex;flex-direction:column;gap:14px"></div>
-  <div class="es" id="incES" style="display:none"><div style="font-size:40px;margin-bottom:12px">📋</div><div>No incidents found.</div></div>
+  <div class="ld" id="incLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px;font-weight:500">Loading...</div></div>
+  <div id="incCards"></div>
+  <div class="es" id="incES" style="display:none"><div class="ei">📋</div><div style="font-size:14px;font-weight:600">No incidents found.</div></div>
 </div>
 
-<!-- INCIDENT DETAIL MODAL -->
-<div class="mo" id="incModal">
-  <div class="md" style="width:820px">
-    <div class="mh">
-      <div>
-        <div class="mt" id="incModalTitle">Incident Details</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:2px" id="incModalRef"></div>
-      </div>
-      <button class="mc" onclick="closeIncModal()">✕</button>
-    </div>
-    <div class="mb" id="incModalBody"></div>
-  </div>
-</div>
-
-<!-- WORKERS -->
+<!-- ════ WORKERS ════ -->
 <div id="sec-workers" class="sec">
-  <div class="ph"><div class="pt">Registered Workers</div><div class="ps">All mine workers registered on the portal</div></div>
-  <div class="ld" id="wkLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px">Loading...</div></div>
-  <div class="tw"><table class="dt"><thead><tr><th>Worker ID</th><th>Name</th><th>Department</th><th>Role</th><th>Registered</th></tr></thead><tbody id="wkTB"></tbody></table></div>
-  <div class="es" id="wkES" style="display:none"><div style="font-size:40px;margin-bottom:12px">👷</div><div>No workers registered yet.</div></div>
+  <div class="ph"><div class="pt">Mine Workers</div><div class="ps">All registered on the portal</div></div>
+  <div class="ld" id="wkLD"><div class="sp2"></div><div style="color:var(--muted);font-size:14px;font-weight:500">Loading...</div></div>
+  <div class="tw"><table class="dt"><thead><tr><th>ID / NEIS</th><th>Name</th><th>Department</th><th>Role</th><th>Registered</th></tr></thead><tbody id="wkTB"></tbody></table></div>
+  <div class="es" id="wkES" style="display:none"><div class="ei">👷</div><div style="font-size:14px;font-weight:600">No mine workers registered yet.</div></div>
 </div>
 
 </main>
 
-<!-- FULLSCREEN PHOTO VIEWER -->
-<div id="photoFullscreen" onclick="closeFullscreen()">
-  <button onclick="closeFullscreen()">✕</button>
-  <img id="fsImg" src="" alt="Full size photo"/>
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottomNav"></nav>
+
+<!-- INCIDENT DETAIL MODAL -->
+<div class="mo" id="incModal">
+  <div class="md">
+    <div class="mh">
+      <div>
+        <div class="mt2" id="incModalTitle">Incident Details</div>
+        <div class="ms2" id="incModalRef"></div>
+      </div>
+      <button class="mc" onclick="closeIncModal()">✕</button>
+    </div>
+    <div class="mb2" id="incModalBody"></div>
+  </div>
 </div>
 
 <!-- SOP MODAL -->
 <div class="mo" id="sopModal">
   <div class="md">
     <div class="mh">
-      <div class="mt" id="mTitle"></div>
+      <div class="mt2" id="mTitle"></div>
       <button class="mc" onclick="closeSOP()">✕</button>
     </div>
-    <div class="mb">
-      <div class="ms" id="mSub"></div>
+    <div class="mb2">
+      <div class="ms2" id="mSub"></div>
       <div id="mBody"></div>
     </div>
   </div>
 </div>
 
+<!-- FULLSCREEN PHOTO -->
+<div id="photoFullscreen" onclick="closeFullscreen()">
+  <button onclick="closeFullscreen()">✕</button>
+  <img id="fsImg" src="" alt="Photo"/>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+
+
 const API_BASE = 'https://mineguard-api.onrender.com';
 
 let token, currentUser;
@@ -617,18 +678,39 @@ function initApp() {
 
 // NAV
 function buildNav() {
-  const wt = [{id:'sec-report',l:'⚠️ Report Incident'},{id:'sec-mine',l:'📋 My Reports'},{id:'sec-sop',l:'📁 SOPs'}];
-  const at = [{id:'sec-dashboard',l:'📊 Dashboard'},{id:'sec-incidents',l:'📋 All Incidents'},{id:'sec-workers',l:'👷 Workers'},{id:'sec-sop',l:'📁 SOPs'}];
-  document.getElementById('appNav').innerHTML = (currentUser.role==='admin'?at:wt).map(t =>
+  const wt = [
+    {id:'sec-report',l:'⚠️ Report',icon:'⚠️',short:'Report'},
+    {id:'sec-mine',l:'📋 My Reports',icon:'📋',short:'My Reports'},
+    {id:'sec-sop',l:'📁 SOPs',icon:'📁',short:'SOPs'}
+  ];
+  const at = [
+    {id:'sec-dashboard',l:'📊 Dashboard',icon:'📊',short:'Dashboard'},
+    {id:'sec-incidents',l:'📋 Incidents',icon:'📋',short:'Incidents'},
+    {id:'sec-workers',l:'👷 Workers',icon:'👷',short:'Workers'},
+    {id:'sec-sop',l:'📁 SOPs',icon:'📁',short:'SOPs'}
+  ];
+  const tabs = currentUser.role==='admin'?at:wt;
+  // Desktop top nav
+  document.getElementById('appNav').innerHTML = tabs.map(t =>
     `<button class="nt" onclick="switchSec('${t.id}',this)">${t.l}</button>`).join('');
+  // Mobile bottom nav
+  document.getElementById('bottomNav').innerHTML = `<div class="bn-items">${tabs.map(t =>
+    `<button class="bn-item" onclick="switchSec('${t.id}',this)"><span class="bn-icon">${t.icon}</span>${t.short}</button>`
+  ).join('')}</div>`;
+}
+
+function syncNavActive(id) {
+  document.querySelectorAll('.nt,.bn-item').forEach(t=>{
+    t.classList.toggle('active', t.getAttribute('onclick')?.includes(`'${id}'`));
+  });
 }
 
 function switchSec(id, btn) {
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nt,.bn-item').forEach(t=>t.classList.remove('active'));
   document.getElementById(id)?.classList.add('active');
-  if (btn) btn.classList.add('active');
-  else document.querySelector(`.nt[onclick*="'${id}'"]`)?.classList.add('active');
+  // Activate all nav buttons matching this section
+  document.querySelectorAll(`.nt[onclick*="'${id}'"],.bn-item[onclick*="'${id}'"]`).forEach(t=>t.classList.add('active'));
   if (id==='sec-mine') loadMyInc();
   if (id==='sec-incidents') loadAdminInc();
   if (id==='sec-workers') loadWorkers();
@@ -1142,10 +1224,11 @@ function showL(id){document.getElementById(id).classList.add('show')}
 function hideL(id){document.getElementById(id).classList.remove('show')}
 function show2(id){document.getElementById(id).style.display='block'}
 function hide2(id){document.getElementById(id).style.display='none'}
-function setB(b,s,t,m){document.getElementById(b).disabled=true;document.getElementById(s).classList.add('show');document.getElementById(t).textContent=m}
-function setI(b,s,t,m){document.getElementById(b).disabled=false;document.getElementById(s).classList.remove('show');document.getElementById(t).textContent=m}
+function setB(b,s,t,m){document.getElementById(b).disabled=true;document.getElementById(s).classList.add('on');document.getElementById(t).textContent=m}
+function setI(b,s,t,m){document.getElementById(b).disabled=false;document.getElementById(s).classList.remove('on');document.getElementById(t).textContent=m}
 function toast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
 function triggerEmergency(){if(confirm('🚨 ACTIVATE EMERGENCY ALERT?\n\nThis will immediately notify the control room.'))alert('🚨 EMERGENCY ALERT ACTIVATED\n\nEvacuate immediately. Proceed to nearest refuge bay.');}
+
 </script>
 </body>
 </html>
