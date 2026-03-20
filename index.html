@@ -4,171 +4,184 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Suraksha Prabandhan Pranali</title>
+
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+
+<script>
 tailwind.config = {
   darkMode: "class",
   theme: {
     extend: {
       colors: {
-        "background": "#131313","surface": "#131313",
-        "surface-container-lowest": "#0e0e0e","surface-container-low": "#1c1b1b",
-        "surface-container": "#201f1f","surface-container-high": "#2a2a2a",
-        "surface-container-highest": "#353534","surface-variant": "#353534",
-        "surface-bright": "#393939",
-        "on-background": "#e5e2e1","on-surface": "#e5e2e1",
-        "on-surface-variant": "#e9bcb6","on-primary": "#690003",
-        "on-primary-container": "#fff7f6","primary": "#ffb4aa",
-        "primary-container": "#e50914","primary-fixed": "#ffdad5",
-        "outline": "#af8782","outline-variant": "#5e3f3b",
-        "secondary": "#ffb4aa","secondary-container": "#921512",
-        "tertiary": "#a7c8ff","error": "#ffb4ab",
+        "primary-container": "#e50914"
       },
-      fontFamily: { "headline": ["Epilogue"], "body": ["Inter"], "label": ["Inter"] },
-      borderRadius: { "DEFAULT": "0.125rem","lg": "0.25rem","xl": "0.5rem","full": "0.75rem" },
-    },
-  },
+      fontFamily: {
+        headline: ["Epilogue"],
+        body: ["Inter"],
+        label: ["Inter"]
+      }
+    }
+  }
 }
 </script>
-<style>
-.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
-.glow-red { box-shadow: 0 0 30px rgba(229,9,20,0.3); }
-.spin { animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
-</head>
-<body class="bg-slate-50 text-slate-900 font-body min-h-screen flex items-center justify-center relative overflow-hidden">
 
-<!-- Background glow -->
-<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
+<style>
+body{
+  font-family: Inter;
+}
+
+/* 🔥 GLASS SYSTEM */
+.glass{
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+/* Inputs */
+.glass-input{
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* Buttons */
+.glass-btn{
+  transition: all 0.25s ease;
+}
+.glass-btn:hover{
+  transform: translateY(-2px) scale(1.02);
+}
+.glass-btn:active{
+  transform: scale(0.96);
+}
+
+/* Focus glow */
+input:focus{
+  box-shadow: 0 0 0 3px rgba(229,9,20,0.15);
+}
+
+/* Smooth */
+*{
+  transition: all 0.2s ease;
+}
+</style>
+
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen flex items-center justify-center relative overflow-hidden">
+
+<!-- Glow -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-red-500/10 blur-3xl pointer-events-none"></div>
 
 <!-- Navbar -->
-<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 md:px-10 py-4 border-b border-slate-200">
-  <div class="text-xl font-black text-primary-container tracking-tighter font-headline">SURAKSHA PRABANDHAN PRANALI</div>
-  <div class="text-xs font-bold uppercase tracking-widest text-slate-400 font-label">Mine Worker Safety Portal</div>
+<nav class="fixed top-0 w-full z-50 glass flex justify-between items-center px-6 md:px-10 py-4">
+  <div class="text-xl font-black text-primary-container tracking-tighter font-headline">
+    SURAKSHA PRABANDHAN PRANALI
+  </div>
+  <div class="text-xs font-bold uppercase tracking-widest text-slate-500">
+    Mine Worker Safety Portal
+  </div>
 </nav>
 
-<!-- Login Card -->
+<!-- Login -->
 <main class="w-full max-w-md px-4 pt-24 pb-12">
-  <div class="bg-white rounded-xl overflow-hidden shadow-2xl relative">
 
-    <!-- Red accent top bar -->
-    <div class="h-1 w-full bg-gradient-to-r from-primary-container via-primary to-primary-container/30"></div>
+  <div class="glass overflow-hidden">
+
+    <!-- Accent -->
+    <div class="h-1 w-full bg-gradient-to-r from-red-600 via-red-400 to-red-600"></div>
 
     <div class="p-8">
-      <!-- Header -->
+
       <div class="mb-8">
-        <span class="text-red-600 font-label text-[0.6rem] uppercase tracking-widest block mb-2">Operational Safety System</span>
-        <h1 class="font-headline text-2xl font-bold tracking-tight text-slate-800">Mine Worker Portal</h1>
-        <p class="text-slate-400 text-xs mt-1 font-label">Sign in or register to continue</p>
+        <span class="text-red-600 text-[0.6rem] uppercase tracking-widest block mb-2">
+          Operational Safety System
+        </span>
+        <h1 class="font-headline text-2xl font-bold">Mine Worker Portal</h1>
+        <p class="text-slate-500 text-xs mt-1">Sign in or register</p>
       </div>
 
       <!-- Tabs -->
-      <div class="flex mb-6 bg-white rounded-lg p-1 gap-1">
-        <button id="tabSignIn" onclick="showTab('signin')"
-          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all bg-slate-50 text-slate-800">
+      <div class="flex mb-6 bg-white/40 backdrop-blur rounded-lg p-1 gap-1">
+        <button id="tabSignIn" onclick="showTab('signin')" class="flex-1 py-2 text-xs font-bold bg-white rounded-md">
           Sign In
         </button>
-        <button id="tabRegister" onclick="showTab('register')"
-          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all text-slate-400">
+        <button id="tabRegister" onclick="showTab('register')" class="flex-1 py-2 text-xs font-bold text-slate-400">
           Register
         </button>
       </div>
 
-      <!-- SIGN IN PANEL -->
+      <!-- SIGN IN -->
       <div id="panelSignin">
         <div class="space-y-4">
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">ID / NEIS Number</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">badge</span>
-              <input id="loginId" type="text"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
-                placeholder="Enter your ID or NEIS number" autocomplete="username"/>
-            </div>
-          </div>
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Password</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">lock</span>
-              <input id="loginPass" type="password"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
-                placeholder="Your password" autocomplete="current-password"/>
-            </div>
-          </div>
+
+          <input id="loginId" class="glass-input w-full rounded-lg pl-4 py-3 text-sm"
+            placeholder="ID / NEIS"/>
+
+          <input id="loginPass" type="password"
+            class="glass-input w-full rounded-lg pl-4 py-3 text-sm"
+            placeholder="Password"/>
+
         </div>
-        <div id="loginErr" class="hidden mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs font-label"></div>
+
+        <div id="loginErr" class="hidden mt-3 text-red-600 text-xs"></div>
+
         <button id="loginBtn" onclick="doLogin()"
-          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
-          <div id="loginSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></div>
+          class="glass-btn mt-6 w-full bg-red-600 text-white py-3 rounded-lg font-bold flex justify-center gap-2">
+
+          <div id="loginSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+
           <span id="loginTxt">SIGN IN</span>
-          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+
         </button>
       </div>
 
-      <!-- REGISTER PANEL -->
+      <!-- REGISTER -->
       <div id="panelRegister" class="hidden">
+
         <div class="space-y-4">
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Full Name</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">person</span>
-              <input id="regName" type="text"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
-                placeholder="Your full name" autocomplete="name"/>
-            </div>
-          </div>
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">ID / NEIS Number</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">badge</span>
-              <input id="regId" type="text"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
-                placeholder="Enter your ID or NEIS number"/>
-            </div>
-          </div>
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Department</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">corporate_fare</span>
-              <select id="regDept"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-10 py-3 text-slate-800 font-body text-sm appearance-none focus:bg-slate-100est transition-colors">
-                <option value="">Select Department</option>
-                <option>Departmental</option>
-                <option>Contractual</option>
-              </select>
-              <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[18px]">expand_more</span>
-            </div>
-          </div>
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Password</label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">lock</span>
-              <input id="regPass" type="password"
-                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
-                placeholder="Create a password (min 6 chars)" autocomplete="new-password"/>
-            </div>
-          </div>
+
+          <input id="regName" class="glass-input w-full rounded-lg py-3 px-4" placeholder="Full Name"/>
+
+          <input id="regId" class="glass-input w-full rounded-lg py-3 px-4" placeholder="ID / NEIS"/>
+
+          <select id="regDept" class="glass-input w-full rounded-lg py-3 px-4">
+            <option value="">Select Department</option>
+            <option>Departmental</option>
+            <option>Contractual</option>
+          </select>
+
+          <input id="regPass" type="password"
+            class="glass-input w-full rounded-lg py-3 px-4"
+            placeholder="Password"/>
+
         </div>
-        <div id="regErr" class="hidden mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs font-label"></div>
+
+        <div id="regErr" class="hidden mt-3 text-red-600 text-xs"></div>
+
         <button id="regBtn" onclick="doRegister()"
-          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
-          <div id="regSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></div>
+          class="glass-btn mt-6 w-full bg-red-600 text-white py-3 rounded-lg font-bold">
+
           <span id="regTxt">CREATE ACCOUNT</span>
-          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+
         </button>
+
       </div>
+
     </div>
 
-    <!-- Footer bar -->
-    <div class="bg-slate-100 px-8 py-3 flex items-center">
-      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse" style="background:#e50914"></div>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Secure Connection Established</span>
+    <div class="bg-white/40 backdrop-blur px-8 py-3 text-xs text-slate-500">
+      Secure Connection Established
     </div>
+
   </div>
+
 </main>
 
 <script>
@@ -179,7 +192,10 @@ window.addEventListener('DOMContentLoaded', () => {
   if (token) {
     try {
       const p = JSON.parse(atob(token.split('.')[1]));
-      if (p.exp * 1000 > Date.now()) { window.location.href = 'app.html'; return; }
+      if (p.exp * 1000 > Date.now()) {
+        window.location.href = 'app.html';
+        return;
+      }
     } catch {}
     localStorage.removeItem('mg_token');
   }
@@ -189,63 +205,56 @@ function showTab(tab) {
   const isSignin = tab === 'signin';
   document.getElementById('panelSignin').classList.toggle('hidden', !isSignin);
   document.getElementById('panelRegister').classList.toggle('hidden', isSignin);
-  const activeClass = 'bg-slate-50 text-slate-800';
-  const inactiveClass = 'text-slate-400';
-  document.getElementById('tabSignIn').className = `flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all ${isSignin ? activeClass : inactiveClass}`;
-  document.getElementById('tabRegister').className = `flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all ${!isSignin ? activeClass : inactiveClass}`;
 }
 
 async function doLogin() {
-  const worker_id = document.getElementById('loginId').value.trim();
-  const password  = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginErr');
-  err.classList.add('hidden');
-  if (!worker_id || !password) { err.textContent = '⚠️ Please enter your ID and password.'; err.classList.remove('hidden'); return; }
-  setBusy('loginBtn','loginSpin','loginTxt','SIGNING IN...');
+  const worker_id = loginId.value.trim();
+  const password = loginPass.value;
+
+  if (!worker_id || !password) return alert("Enter credentials");
+
   try {
-    const res  = await fetch(API_BASE + '/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({worker_id,password}) });
+    const res = await fetch(API_BASE + '/api/auth/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({worker_id,password})
+    });
+
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
+    if (!res.ok) throw new Error(data.error);
+
     localStorage.setItem('mg_token', data.token);
     window.location.href = 'app.html';
-  } catch(e) {
-    err.textContent = '⚠️ ' + e.message;
-    err.classList.remove('hidden');
-    setIdle('loginBtn','loginSpin','loginTxt','SIGN IN');
+
+  } catch(e){
+    alert(e.message);
   }
 }
 
 async function doRegister() {
-  const name       = document.getElementById('regName').value.trim();
-  const worker_id  = document.getElementById('regId').value.trim();
-  const department = document.getElementById('regDept').value;
-  const password   = document.getElementById('regPass').value;
-  const err = document.getElementById('regErr');
-  err.classList.add('hidden');
-  if (!name || !worker_id || !password) { err.textContent = '⚠️ Name, ID and password are required.'; err.classList.remove('hidden'); return; }
-  if (password.length < 6) { err.textContent = '⚠️ Password must be at least 6 characters.'; err.classList.remove('hidden'); return; }
-  setBusy('regBtn','regSpin','regTxt','CREATING...');
+  const name = regName.value;
+  const worker_id = regId.value;
+  const department = regDept.value;
+  const password = regPass.value;
+
   try {
-    const res  = await fetch(API_BASE + '/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,worker_id,department,password}) });
+    const res = await fetch(API_BASE + '/api/auth/register', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,worker_id,department,password})
+    });
+
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    if (!res.ok) throw new Error(data.error);
+
     localStorage.setItem('mg_token', data.token);
     window.location.href = 'app.html';
-  } catch(e) {
-    err.textContent = '⚠️ ' + e.message;
-    err.classList.remove('hidden');
-    setIdle('regBtn','regSpin','regTxt','CREATE ACCOUNT');
+
+  } catch(e){
+    alert(e.message);
   }
 }
-
-function setBusy(b,s,t,msg){ document.getElementById(b).disabled=true; document.getElementById(s).classList.remove('hidden'); document.getElementById(t).textContent=msg; }
-function setIdle(b,s,t,msg){ document.getElementById(b).disabled=false; document.getElementById(s).classList.add('hidden'); document.getElementById(t).textContent=msg; }
-
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  if (!document.getElementById('panelSignin').classList.contains('hidden')) doLogin();
-  else doRegister();
-});
 </script>
+
 </body>
 </html>
