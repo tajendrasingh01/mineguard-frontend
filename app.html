@@ -64,7 +64,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- PAGE LOADER -->
 <div id="PL" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
   <div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-2xl mb-5 shadow-[0_0_40px_rgba(229,9,20,0.4)]">⛏</div>
-  <div class="font-headline font-black text-lg text-center leading-tight mb-1">SURAKSHA<br/><span class="text-primary-container">PRABANDHAN PRANALI</span></div>
+  <div class="font-headline font-black text-lg text-center leading-tight mb-1">SURAKSHA<br/><span class="text-red-600">PRABANDHAN PRANALI</span></div>
   <div class="w-48 h-0.5 bg-slate-200 mt-5 rounded overflow-hidden">
     <div class="h-full bg-primary-container rounded" style="animation:lb 1.5s ease forwards"></div>
   </div>
@@ -75,7 +75,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
 <!-- TOP NAV -->
 <nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 py-3 border-b border-slate-200">
-  <div class="text-base md:text-lg font-black text-primary-container tracking-tighter font-headline">SURAKSHA PRABANDHAN PRANALI</div>
+  <div class="text-base md:text-lg font-black text-red-600 tracking-tighter font-headline">SURAKSHA PRABANDHAN PRANALI</div>
   <div class="flex items-center gap-3 md:gap-4">
     <!-- Desktop nav links injected here -->
     <div id="desktopNav" class="hidden md:flex items-center gap-6 font-headline font-semibold text-sm tracking-tight mr-2"></div>
@@ -87,7 +87,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         <div id="hdrId" class="text-[10px] text-slate-400 font-label"></div>
       </div>
     </div>
-    <span id="rolePill" class="hidden md:inline text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-primary-container/10 text-primary-container"></span>
+    <span id="rolePill" class="hidden md:inline text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-primary-container/10 text-red-600"></span>
     <!-- Emergency -->
     <button onclick="triggerEmergency()" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-bold uppercase tracking-widest px-3 py-2 rounded-lg font-label transition-all">
       <span class="material-symbols-outlined text-base">emergency</span>
@@ -105,9 +105,9 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- ════ REPORT INCIDENT ════ -->
 <div id="sec-report" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Operational Safety</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Report Incident</h1>
-    <p class="text-slate-400 text-xs mt-1">Fill in as much detail as possible</p>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Operational Safety</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">Report Incident</h1>
+    <p class="text-slate-400 text-xs mt-1 font-label">Fill in as much detail as possible</p>
   </div>
 
   <!-- Step indicators -->
@@ -116,7 +116,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.3)]">
         <span class="material-symbols-outlined text-white text-[18px]">person</span>
       </div>
-      <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 text-primary-container">Who</span>
+      <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 text-red-600">Who</span>
     </div>
     <div class="flex flex-col items-center cursor-pointer group">
       <div class="w-9 h-9 rounded-lg bg-slate-100est flex items-center justify-center text-slate-400">
@@ -219,7 +219,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
             <span class="material-symbols-outlined text-[18px]">door_front</span>Portal / Adit
           </button>
           <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
-            <span class="material-symbols-outlined text-[18px]">hard_hat</span>UG – Stope
+            <span class="material-symbols-outlined text-[18px]">landscape</span>UG – Stope
           </button>
           <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">construction</span>UG – Development
@@ -241,7 +241,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         <div class="space-y-1.5">
           <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Level / Zone Detail</label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">explore</span>
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-600 text-[18px]">explore</span>
             <input id="rLocD" type="text" class="w-full bg-white rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="e.g. Level 4 – Block 2A"/>
           </div>
         </div>
@@ -328,8 +328,8 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- ════ MY REPORTS ════ -->
 <div id="sec-mine" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Personnel Records</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">My Reports</h1>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Personnel Records</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">My Reports</h1>
   </div>
   <div class="bg-blue-50 border border-blue-200 rounded-xl px-5 py-3 mb-5 flex items-start gap-3">
     <span class="material-symbols-outlined text-tertiary text-[18px] mt-0.5">info</span>
@@ -363,8 +363,8 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- ════ SOP LIBRARY ════ -->
 <div id="sec-sop" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Safety Protocols</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">SOP Library</h1>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Safety Protocols</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">SOP Library</h1>
   </div>
 
   <!-- Admin Upload -->
@@ -373,7 +373,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       <div class="h-0.5 bg-gradient-to-r from-primary-container to-primary-container/10"></div>
       <div class="p-5 md:p-6">
         <div class="flex items-center gap-2 mb-5">
-          <span class="material-symbols-outlined text-primary-container text-[20px]">upload_file</span>
+          <span class="material-symbols-outlined text-red-600 text-[20px]">upload_file</span>
           <span class="font-headline font-bold text-sm tracking-widest uppercase">Upload New SOP</span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -441,57 +441,140 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- ════ ADMIN DASHBOARD ════ -->
 <div id="sec-dashboard" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Command Overview</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Safety Dashboard</h1>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Command Overview</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">Safety Dashboard</h1>
     <p class="text-slate-400 text-xs mt-1">Real incident data — submitted by mine workers</p>
   </div>
-  <div class="ld items-center justify-center py-12 gap-3" id="dashLD">
-    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+
+  <div class="flex items-center justify-center py-12 gap-3 hidden" id="dashLD">
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-500 rounded-full spin-anim"></div>
     <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading...</span>
   </div>
-  <div id="dashC" class="hidden">
-    <!-- Stat cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-      <div class="bg-white rounded-xl p-4 border border-slate-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-2">Total (30d)</div>
-        <div class="font-headline text-3xl font-black" id="st1">—</div>
-        <div class="text-[10px] text-slate-400 font-label mt-1">Real reports</div>
+
+  <div id="dashC" class="hidden space-y-5">
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-orange-500 text-[20px]">bar_chart</span>
+          </div>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label text-slate-300 bg-slate-50 px-2 py-1 rounded-full">30 days</span>
+        </div>
+        <div class="font-headline text-3xl font-black text-slate-800 leading-none mb-1" id="st1">—</div>
+        <div class="text-xs font-bold text-slate-500 font-label">Total Incidents</div>
+        <div class="mt-3 h-1 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-orange-400 rounded-full w-3/4"></div></div>
       </div>
-      <div class="bg-white rounded-xl p-4 border border-red-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-red-400/60 font-label mb-2">Critical/Fatal</div>
-        <div class="font-headline text-3xl font-black text-red-400" id="st2">—</div>
-        <div class="text-[10px] text-slate-400 font-label mt-1">Needs review</div>
+
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-red-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-red-500 text-[20px]">emergency</span>
+          </div>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label text-red-300 bg-red-50 px-2 py-1 rounded-full">urgent</span>
+        </div>
+        <div class="font-headline text-3xl font-black text-red-500 leading-none mb-1" id="st2">—</div>
+        <div class="text-xs font-bold text-slate-500 font-label">Critical / Fatality</div>
+        <div class="mt-3 h-1 bg-red-100 rounded-full overflow-hidden"><div class="h-full bg-red-400 rounded-full w-1/4"></div></div>
       </div>
-      <div class="bg-white rounded-xl p-4 border border-yellow-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-yellow-400/60 font-label mb-2">Open</div>
-        <div class="font-headline text-3xl font-black text-yellow-400" id="st3">—</div>
-        <div class="text-[10px] text-slate-400 font-label mt-1">Pending</div>
+
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-amber-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-amber-500 text-[20px]">pending</span>
+          </div>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label text-amber-400 bg-amber-50 px-2 py-1 rounded-full">pending</span>
+        </div>
+        <div class="font-headline text-3xl font-black text-amber-500 leading-none mb-1" id="st3">—</div>
+        <div class="text-xs font-bold text-slate-500 font-label">Open Incidents</div>
+        <div class="mt-3 h-1 bg-amber-100 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full w-1/2"></div></div>
       </div>
-      <div class="bg-white rounded-xl p-4 border border-green-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-green-400/60 font-label mb-2">Safe Days</div>
-        <div class="font-headline text-3xl font-black text-green-400" id="st4">—</div>
-        <div class="text-[10px] text-slate-400 font-label mt-1">Since last serious</div>
+
+      <div class="bg-white rounded-2xl p-4 md:p-5 border border-emerald-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-emerald-500 text-[20px]">verified</span>
+          </div>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label text-emerald-400 bg-emerald-50 px-2 py-1 rounded-full">days</span>
+        </div>
+        <div class="font-headline text-3xl font-black text-emerald-500 leading-none mb-1" id="st4">—</div>
+        <div class="text-xs font-bold text-slate-500 font-label">Safe Days Streak</div>
+        <div class="mt-3 h-1 bg-emerald-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-400 rounded-full w-full"></div></div>
       </div>
+
     </div>
-    <!-- Charts -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <div class="md:col-span-2 bg-white rounded-xl p-5 border border-slate-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-4">Severity Breakdown</div>
-        <div id="sevBD" class="space-y-3"></div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+      <!-- Severity Breakdown -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <div class="font-headline font-bold text-slate-800 text-base">Severity Breakdown</div>
+            <div class="text-[11px] text-slate-400 font-label mt-0.5">Last 30 days by severity type</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-slate-400 text-[18px]">donut_large</span>
+          </div>
+        </div>
+        <div id="sevBD" class="space-y-4"></div>
       </div>
-      <div class="bg-white rounded-xl p-5 border border-slate-200">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-4">Zone Split</div>
+
+      <!-- Zone Split -->
+      <div class="bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <div class="font-headline font-bold text-slate-800 text-base">Zone Split</div>
+            <div class="text-[11px] text-slate-400 font-label mt-0.5">Surface vs underground</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center">
+            <span class="material-symbols-outlined text-slate-400 text-[18px]">layers</span>
+          </div>
+        </div>
         <div id="zoneS"></div>
       </div>
+
     </div>
+
+    <!-- Recent Activity placeholder -->
+    <div class="bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="font-headline font-bold text-slate-800 text-base">Quick Actions</div>
+          <div class="text-[11px] text-slate-400 font-label mt-0.5">Navigate to key sections</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button onclick="switchSec('sec-incidents',this)" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-red-500 text-[24px] transition-colors">report</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-500 group-hover:text-red-600">All Incidents</span>
+        </button>
+        <button onclick="switchSec('sec-workers',this)" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-100 transition-all group">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500 text-[24px] transition-colors">group</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-500 group-hover:text-blue-600">Mine Workers</span>
+        </button>
+        <button onclick="switchSec('sec-sop',this)" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 border border-slate-100 transition-all group">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-emerald-500 text-[24px] transition-colors">menu_book</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-500 group-hover:text-emerald-600">SOP Library</span>
+        </button>
+        <button onclick="triggerEmergency()" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-slate-50 hover:bg-red-50 hover:border-red-200 border border-slate-100 transition-all group">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-red-500 text-[24px] transition-colors">emergency</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-500 group-hover:text-red-600">Emergency</span>
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- ════ ALL INCIDENTS ════ -->
 <div id="sec-incidents" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Incident Log</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">All Incidents</h1>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Incident Log</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">All Incidents</h1>
   </div>
   <div class="flex gap-2 mb-4 flex-wrap items-center">
     <select id="fSev" onchange="loadAdminInc()" class="bg-white border-none rounded-lg px-3 py-2 text-slate-800 text-xs font-label appearance-none focus:bg-slate-100est">
@@ -519,8 +602,8 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 <!-- ════ WORKERS ════ -->
 <div id="sec-workers" class="sec pt-6">
   <div class="mb-6">
-    <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Personnel Registry</span>
-    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Mine Workers</h1>
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Personnel Registry</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">Mine Workers</h1>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="wkLD">
     <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
@@ -821,7 +904,7 @@ async function loadMyInc(){
     if(!d.incidents.length){show2('mineES');return;}
     document.getElementById('mineTB').innerHTML=d.incidents.map(i=>`
       <tr class="hover:bg-slate-50 transition-colors">
-        <td class="px-4 py-3 text-[11px] font-mono text-primary-container">${i.incident_ref}</td>
+        <td class="px-4 py-3 text-[11px] font-mono text-red-600">${i.incident_ref}</td>
         <td class="px-4 py-3 text-xs text-slate-800">${i.incident_type}</td>
         <td class="px-4 py-3 text-xs text-slate-500 hidden md:table-cell">${i.location_zone}</td>
         <td class="px-4 py-3 text-[11px] font-mono text-slate-400">${i.date_of_incident}</td>
@@ -851,15 +934,15 @@ function renderIncCards(incidents){
   document.getElementById('incCards').innerHTML=incidents.map(i=>{
     let photos=[];try{if(i.photos)photos=JSON.parse(i.photos);}catch(e){}
     const thumbs=photos.slice(0,3).map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-14 h-14 object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('');
-    const more=photos.length>3?`<div onclick="openIncModal('${i.id}')" class="w-14 h-14 bg-primary-container/10 border border-primary-container/30 rounded-lg flex flex-col items-center justify-center cursor-pointer text-primary-container text-[10px] font-bold">📷 +${photos.length-3}</div>`:'';
+    const more=photos.length>3?`<div onclick="openIncModal('${i.id}')" class="w-14 h-14 bg-primary-container/10 border border-primary-container/30 rounded-lg flex flex-col items-center justify-center cursor-pointer text-red-600 text-[10px] font-bold">📷 +${photos.length-3}</div>`:'';
     return`<div class="bg-white rounded-xl border ${sevColor(i.severity)} p-4 md:p-5 hover:border-slate-300 transition-all">
       <div class="flex items-start justify-between gap-3 mb-3">
         <div>
           <div class="flex items-center gap-2 flex-wrap mb-1">
-            <span class="text-[11px] font-mono text-primary-container font-bold">${i.incident_ref}</span>
+            <span class="text-[11px] font-mono text-red-600 font-bold">${i.incident_ref}</span>
             ${sevBadge(i.severity,sL(i.severity))}
             ${statusBadge(i.status)}
-            ${photos.length?`<span class="text-[10px] font-bold font-label text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full">📷 ${photos.length}</span>`:''}
+            ${photos.length?`<span class="text-[10px] font-bold font-label text-tertiary bg-blue-400/10 px-2 py-0.5 rounded-full">📷 ${photos.length}</span>`:''}
           </div>
           <div class="text-sm font-bold text-slate-800 font-headline">${i.incident_type}</div>
         </div>
@@ -929,10 +1012,13 @@ async function delInc(id){if(!confirm('Delete permanently?'))return;try{await ap
 
 // ── DASHBOARD ─────────────────────────────────────────────────
 async function loadDash(){
-  showL('dashLD');document.getElementById('dashC').classList.add('hidden');
+  // show loader
+  const dld=document.getElementById('dashLD');if(dld)dld.classList.remove('hidden');
+  const dc=document.getElementById('dashC');if(dc)dc.classList.add('hidden');
   try{
     const d=await api('GET','/api/admin/stats');
-    hideL('dashLD');document.getElementById('dashC').classList.remove('hidden');
+    if(dld)dld.classList.add('hidden');
+    if(dc)dc.classList.remove('hidden');
     const c=(d.by_severity?.critical||0)+(d.by_severity?.fatality||0);
     document.getElementById('st1').textContent=d.total_last_30_days;
     document.getElementById('st2').textContent=String(c).padStart(2,'0');
@@ -946,10 +1032,32 @@ async function loadDash(){
     }).join('');
     const su=d.by_zone?.surface||0,ug=d.by_zone?.underground||0,t2=su+ug||1;
     document.getElementById('zoneS').innerHTML=`
-      <div class="space-y-3">
-        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-slate-500">Surface</span><span class="text-[11px] font-bold font-mono text-tertiary">${su}</span></div><div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-tertiary rounded-full" style="width:${Math.round((su/t2)*100)}%"></div></div></div>
-        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-slate-500">Underground</span><span class="text-[11px] font-bold font-mono text-primary-container">${ug}</span></div><div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-primary-container rounded-full" style="width:${Math.round((ug/t2)*100)}%"></div></div></div>
-      </div>`;
+      <div class="space-y-4">
+        <div class="flex justify-center mb-4">
+          <div class="w-24 h-24 rounded-full border-[6px] border-slate-100 flex items-center justify-center">
+            <div class="text-center">
+              <div class="font-headline font-black text-xl text-slate-800">${su+ug}</div>
+              <div class="text-[8px] text-slate-400 font-label uppercase">Total</div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+          <span class="material-symbols-outlined text-blue-500 text-[18px]">factory</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[11px] font-bold text-slate-700 font-label mb-1">Surface</div>
+            <div class="h-1.5 bg-blue-100 rounded-full overflow-hidden"><div class="h-full bg-blue-400 rounded-full transition-all" style="width:${Math.round((su/t2)*100)}%"></div></div>
+          </div>
+          <div class="font-headline font-black text-lg text-blue-500">${su}</div>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-red-50 rounded-xl border border-red-100">
+          <span class="material-symbols-outlined text-red-500 text-[18px]">construction</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[11px] font-bold text-slate-700 font-label mb-1">Underground</div>
+            <div class="h-1.5 bg-red-100 rounded-full overflow-hidden"><div class="h-full bg-red-400 rounded-full transition-all" style="width:${Math.round((ug/t2)*100)}%"></div></div>
+          </div>
+          <div class="font-headline font-black text-lg text-red-500">${ug}</div>
+        </div>
+      </div>`
   }catch(e){
     hideL('dashLD');
     document.getElementById('dashC').classList.remove('hidden');
@@ -965,10 +1073,10 @@ async function loadWorkers(){
     if(!d.users.length){show2('wkES');return;}
     document.getElementById('wkTB').innerHTML=d.users.map(u=>`
       <tr class="hover:bg-slate-50 transition-colors">
-        <td class="px-4 py-3 text-[11px] font-mono text-primary-container">${u.worker_id}</td>
+        <td class="px-4 py-3 text-[11px] font-mono text-red-600">${u.worker_id}</td>
         <td class="px-4 py-3 text-xs font-bold text-slate-800">${u.name}</td>
         <td class="px-4 py-3 text-xs text-slate-400 hidden md:table-cell">${u.department||'—'}</td>
-        <td class="px-4 py-3">${u.role==='admin'?'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-primary-container/10 text-primary-container">ADMIN</span>':'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-tertiary/10 text-tertiary">WORKER</span>'}</td>
+        <td class="px-4 py-3">${u.role==='admin'?'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-primary-container/10 text-red-600">ADMIN</span>':'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-blue-400/10 text-blue-500">WORKER</span>'}</td>
         <td class="px-4 py-3 text-[11px] font-mono text-slate-400 hidden md:table-cell">${new Date(u.created_at).toLocaleDateString()}</td>
       </tr>`).join('');
   }catch(e){hideL('wkLD');toast('⚠️ '+e.message,'error');}
@@ -1048,11 +1156,11 @@ function sopCardHTML(s){
   return`<div class="bg-white rounded-xl p-4 border border-slate-200 hover:border-red-300 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md group" onclick="openSOP('${s.id}')">
     <div class="flex justify-between items-start mb-3">
       <div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center">
-        <span class="material-symbols-outlined text-primary-container text-[20px]">${isPdf?'picture_as_pdf':'image'}</span>
+        <span class="material-symbols-outlined text-red-600 text-[20px]">${isPdf?'picture_as_pdf':'image'}</span>
       </div>
       ${currentUser.role==='admin'?`<button onclick="deleteSOP('${s.id}',event)" class="w-7 h-7 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-100 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
     </div>
-    <div class="text-[9px] font-bold uppercase tracking-widest text-primary-container font-label mb-1">${s.category}</div>
+    <div class="text-[9px] font-bold uppercase tracking-widest text-red-600 font-label mb-1">${s.category}</div>
     <div class="text-sm font-bold text-slate-800 font-headline leading-tight mb-1">${s.title}</div>
     <div class="text-[11px] text-slate-400 font-label line-clamp-2 mb-3">${s.description||''}</div>
     <div class="flex items-center justify-between">
@@ -1145,8 +1253,8 @@ function statusBadge(s){
   return`<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded border ${map[s]||map.open}">${s.replace('_',' ')}</span>`;
 }
 function sL(s){return{nearMiss:'Near Miss',minor:'Minor',serious:'Serious',critical:'Critical',fatality:'Fatality'}[s]||s;}
-function showL(id){const el=document.getElementById(id);if(el)el.classList.add('show');}
-function hideL(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+function showL(id){const el=document.getElementById(id);if(el){el.classList.add('show');el.classList.remove('hidden');}}
+function hideL(id){const el=document.getElementById(id);if(el){el.classList.remove('show');el.classList.add('hidden');}}
 function show2(id){const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
 function hide2(id){const el=document.getElementById(id);if(el)el.classList.add('hidden');}
 function setBusy(b,s,t,msg){const bn=document.getElementById(b);if(bn)bn.disabled=true;const sp=document.getElementById(s);if(sp)sp.classList.remove('hidden');const tx=document.getElementById(t);if(tx)tx.textContent=msg;}
