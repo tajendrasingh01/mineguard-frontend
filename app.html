@@ -990,6 +990,7 @@ async function loadWorkers(){
 
 // ── SOP ──────────────────────────────────────────────────────────
 function sopTab(t){
+  if(t==='up' && currentUser.role!=='admin'){return;}
   const isUp=t==='up';
   $('sopUpPanel').style.display=isUp?'block':'none';
   $('sopBrPanel').style.display=isUp?'none':'block';
@@ -1093,6 +1094,7 @@ function selectCat(v){ set('sopCat',v); hideCatDD(); }
 
 // ── STATUTORY ORDERS ─────────────────────────────────────────────
 function statTab(t){
+  if(t==='up' && currentUser.role!=='admin'){return;}
   const isUp=t==='up';
   $('statUpPanel').style.display=isUp?'block':'none';
   $('statBrPanel').style.display=isUp?'none':'block';
