@@ -4,29 +4,20 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Suraksha Prabandhan Pranali</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
 tailwind.config = {
-  darkMode:"class",
   theme:{
     extend:{
-      colors:{
-        "background":"#f8fafc","surface":"#f8fafc",
-        "surface-container-lowest":"#ffffff","surface-container-low":"#ffffff",
-        "surface-container":"#f8fafc","surface-container-high":"#f1f5f9",
-        "surface-container-highest":"#e2e8f0","surface-variant":"#e2e8f0",
-        "on-background":"#0f172a","on-surface":"#1e293b",
-        "on-surface-variant":"#64748b","on-primary":"#690003",
-        "on-primary-container":"#fff7f6","primary":"#ffb4aa",
-        "primary-container":"#e50914","outline":"#94a3b8","outline-variant":"#e2e8f0",
-        "secondary":"#ffb4aa","tertiary":"#a7c8ff","error":"#ffb4ab",
-      },
-      fontFamily:{"headline":["Epilogue"],"body":["Inter"],"label":["Inter"]},
-      borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},
-    },
-  },
+      fontFamily:{
+        "headline":["Epilogue","sans-serif"],
+        "body":["Inter","sans-serif"],
+        "label":["Inter","sans-serif"]
+      }
+    }
+  }
 }
 </script>
 <style>
@@ -64,10 +55,10 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
 <!-- PAGE LOADER -->
 <div id="PL" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
-  <div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-2xl mb-5 shadow-[0_0_40px_rgba(229,9,20,0.4)]">⛏</div>
+  <div class="w-14 h-14 bg-red-600 rounded-xl flex items-center justify-center text-2xl mb-5 shadow-[0_0_40px_rgba(229,9,20,0.4)]">⛏</div>
   <div class="font-headline font-black text-lg text-center leading-tight mb-1">SURAKSHA<br/><span class="text-red-600">PRABANDHAN PRANALI</span></div>
   <div class="w-48 h-0.5 bg-slate-200 mt-5 rounded overflow-hidden">
-    <div class="h-full bg-primary-container rounded" style="animation:lb 1.5s ease forwards"></div>
+    <div class="h-full bg-red-600 rounded" style="animation:lb 1.5s ease forwards"></div>
   </div>
   <div class="text-[10px] uppercase tracking-widest text-slate-400 mt-3 font-label">Initializing secure connection...</div>
 </div>
@@ -80,13 +71,13 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
     <div id="desktopNav" class="hidden md:flex items-center gap-6 font-headline font-semibold text-sm tracking-tight mr-2"></div>
     <!-- User info -->
     <div class="flex items-center gap-2">
-      <div id="hdrAvatar" class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-white text-xs font-black font-headline cursor-pointer">?</div>
+      <div id="hdrAvatar" class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white text-xs font-black font-headline cursor-pointer">?</div>
       <div class="hidden md:block">
         <div id="hdrName" class="text-xs font-bold text-slate-800 leading-tight"></div>
         <div id="hdrId" class="text-[10px] text-slate-400 font-label"></div>
       </div>
     </div>
-    <span id="rolePill" class="hidden md:inline text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-primary-container/10 text-red-600"></span>
+    <span id="rolePill" class="hidden md:inline text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-red-600/10 text-red-600"></span>
     <!-- Emergency -->
     <button onclick="triggerEmergency()" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-bold uppercase tracking-widest px-3 py-2 rounded-lg font-label transition-all">
       <span class="material-symbols-outlined text-base">emergency</span>
@@ -112,7 +103,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
   <!-- Step indicators -->
   <div class="flex gap-3 mb-6">
     <div class="flex flex-col items-center cursor-pointer group">
-      <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.3)]">
+      <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.3)]">
         <span class="material-symbols-outlined text-white text-[18px]">person</span>
       </div>
       <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 text-red-600">Who</span>
@@ -267,7 +258,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         <div class="space-y-1.5">
           <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">PPE Worn?</label>
           <div class="flex gap-1 bg-white rounded-lg p-1" id="tPPE">
-            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-white transition-all">Yes</button>
+            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-red-600 text-white transition-all">Yes</button>
             <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">No</button>
             <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">Partial</button>
           </div>
@@ -275,7 +266,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         <div class="space-y-1.5">
           <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">SOPs Followed?</label>
           <div class="flex gap-1 bg-white rounded-lg p-1" id="tSOP">
-            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-white transition-all">Yes</button>
+            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-red-600 text-white transition-all">Yes</button>
             <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">No</button>
             <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">Unknown</button>
           </div>
@@ -292,7 +283,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       <div class="space-y-2">
         <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Photos / Evidence</label>
         <div class="flex gap-2 flex-wrap">
-          <button onclick="document.getElementById('photoGallery').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100est rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-tertiary/30 text-tertiary transition-all hover:bg-slate-50">
+          <button onclick="document.getElementById('photoGallery').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100est rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-blue-300 text-blue-500 transition-all hover:bg-slate-50">
             <span class="material-symbols-outlined text-[16px]">photo_library</span>Choose Files
           </button>
           <button onclick="document.getElementById('photoCamera').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100est rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-green-700/30 text-green-400 transition-all hover:bg-slate-50">
@@ -310,7 +301,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         <button type="button" onclick="resetReportForm()" class="flex items-center gap-1.5 text-slate-400 hover:text-slate-800 text-xs font-bold uppercase tracking-widest font-label transition-colors">
           <span class="material-symbols-outlined text-base">close</span>Discard
         </button>
-        <button id="subBtn" onclick="submitInc()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-8 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center gap-2">
+        <button id="subBtn" onclick="submitInc()" class="bg-red-600 hover:scale-[1.02] active:scale-95 text-white px-8 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-lg flex items-center gap-2">
           <div id="subSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="subTxt">SUBMIT REPORT</span>
           <span class="material-symbols-outlined text-[18px]">send</span>
@@ -318,7 +309,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       </div>
     </div>
     <div class="bg-slate-100 px-6 py-3 flex items-center">
-      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse" style="background:#e50914"></div>
+      <div class="w-1.5 h-1.5 rounded-full bg-red-600 mr-2.5 animate-pulse" style="background:#e50914"></div>
       <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Secure Uplink Active</span>
     </div>
   </div>
@@ -331,7 +322,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">My Reports</h1>
   </div>
   <div class="bg-blue-50 border border-blue-200 rounded-xl px-5 py-3 mb-5 flex items-start gap-3">
-    <span class="material-symbols-outlined text-tertiary text-[18px] mt-0.5">info</span>
+    <span class="material-symbols-outlined text-blue-500 text-[18px] mt-0.5">info</span>
     <p class="text-xs text-blue-700 font-label">You can only view your own submitted reports. Other mine workers' details are kept private.</p>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="mineLD">
@@ -424,7 +415,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       </div>
       <div class="px-6 pb-6">
         <button id="sopUpBtn" onclick="uploadSOP()"
-          class="bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_16px_rgba(229,9,20,0.25)] flex items-center gap-2">
+          class="bg-red-600 hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-md flex items-center gap-2">
           <div id="sopUpSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="sopUpTxt">UPLOAD SOP</span>
           <span class="material-symbols-outlined text-[16px]">upload</span>
@@ -440,7 +431,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       <div class="flex items-center gap-3 flex-wrap">
         <div class="sop-tabs flex gap-2 overflow-x-auto flex-1 pb-1">
           <button onclick="filterByCat('__all__',this)"
-            class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm">All SOPs</button>
+            class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm">All SOPs</button>
           <div id="sopCatTabs" class="contents"></div>
         </div>
         <select id="sopSearchDrop" onchange="jumpToSOP(this.value)"
@@ -542,7 +533,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       </div>
       <div class="px-6 pb-6">
         <button id="statUpBtn" onclick="uploadStat()"
-          class="bg-amber-500 hover:bg-amber-600 hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_16px_rgba(245,158,11,0.3)] flex items-center gap-2">
+          class="bg-amber-500 hover:bg-amber-600 hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-md flex items-center gap-2">
           <div id="statUpSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="statUpTxt">UPLOAD ORDER</span>
           <span class="material-symbols-outlined text-[16px]">upload</span>
@@ -928,7 +919,7 @@ function buildNav(){
 
 function switchSec(id,btn){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.dnt').forEach(t=>t.classList.remove('!text-primary-container','border-b','border-primary-container'));
+  document.querySelectorAll('.dnt').forEach(t=>t.classList.remove('!text-red-600','border-b','border-red-500'));
   document.querySelectorAll('.bn-item').forEach(t=>t.classList.remove('active'));
   const sec=document.getElementById(id);
   if(sec)sec.classList.add('active');
@@ -936,7 +927,7 @@ function switchSec(id,btn){
   document.querySelectorAll('.dnt,.bn-item').forEach(t=>{
     if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes(id)){
       t.classList.add('active');
-      if(t.classList.contains('dnt'))t.classList.add('!text-primary-container');
+      if(t.classList.contains('dnt'))t.classList.add('!text-red-600');
     }
   });
   if(id==='sec-mine')loadMyInc();
@@ -973,22 +964,22 @@ function selSev(el,val){
 
 function selLoc(el){
   document.querySelectorAll('.loc-btn').forEach(b=>{
-    b.classList.remove('!border-primary-container','!text-primary-container','!bg-primary-container/10');
+    b.classList.remove('!border-red-500','!text-red-600','!bg-red-600/10');
   });
-  el.classList.add('!border-primary-container','!text-primary-container','!bg-primary-container/10');
+  el.classList.add('!border-red-500','!text-red-600','!bg-red-600/10');
   selLocation=el.innerText.trim().split('\n').pop().trim();
 }
 
 function selT(el,gid){
   document.getElementById(gid).querySelectorAll('.tgl-btn').forEach(b=>{
-    b.classList.remove('bg-primary-container','text-white');
+    b.classList.remove('bg-red-600','text-white');
     b.classList.add('text-slate-400');
   });
-  el.classList.add('bg-primary-container','text-white');
+  el.classList.add('bg-red-600','text-white');
   el.classList.remove('text-slate-400');
 }
 function getT(gid){
-  const a=document.getElementById(gid).querySelector('.bg-primary-container');
+  const a=document.getElementById(gid).querySelector('.bg-red-600');
   return a?a.textContent.toLowerCase().trim():'unknown';
 }
 
@@ -1007,7 +998,7 @@ function renderPhotoPreview(){
     const url=URL.createObjectURL(f);
     return`<div class="relative w-16 h-16 flex-shrink-0">
       <img src="${url}" class="w-full h-full object-cover rounded-lg border border-slate-200"/>
-      <button onclick="removePhoto(${i})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-primary-container rounded-full flex items-center justify-center text-white text-xs font-bold leading-none border-2 border-background">✕</button>
+      <button onclick="removePhoto(${i})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold leading-none border-2 border-slate-50">✕</button>
     </div>`;
   }).join('');
 }
@@ -1052,7 +1043,7 @@ function resetReportForm(){
   document.getElementById('rInj').value='0';
   prefill();
   document.querySelectorAll('.sev-btn').forEach(b=>{b.style.borderColor='';b.style.background='';});
-  document.querySelectorAll('.loc-btn').forEach(b=>b.classList.remove('!border-primary-container','!text-primary-container','!bg-primary-container/10'));
+  document.querySelectorAll('.loc-btn').forEach(b=>b.classList.remove('!border-red-500','!text-red-600','!bg-red-600/10'));
   selSeverity=null;selLocation=null;incidentPhotos=[];
   document.getElementById('photoPreview').innerHTML='';
   document.getElementById('photoCount').textContent='No photos selected';
@@ -1228,10 +1219,10 @@ function openIncModal(id){
     ${photos.length?`
       <div class="border-t border-slate-200 pt-4">
         <div class="flex items-center gap-2 mb-3">
-          <span class="material-symbols-outlined text-tertiary text-[16px]">photo_library</span>
+          <span class="material-symbols-outlined text-blue-500 text-[16px]">photo_library</span>
           <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-400">Photos (${photos.length})</span>
         </div>
-        <div class="grid grid-cols-3 gap-2">${photos.map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-full aspect-square object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('')}</div>
+        <div class="grid grid-cols-3 gap-2">${photos.map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-full aspect-square object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-red-300 transition-all"/>`).join('')}</div>
       </div>`:`<div class="border-t border-slate-200 pt-4 flex items-center gap-2 text-[11px] text-slate-400 font-label"><span class="material-symbols-outlined text-[16px]">photo_camera</span>No photos attached.</div>`}
     <div class="flex gap-2 mt-4 pt-4 border-t border-slate-200 flex-wrap">
       ${i.status!=='under_review'?`<button onclick="updInc('${i.id}','under_review');closeIncModal()" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-yellow-900/20 border border-yellow-800/30 text-yellow-400">Review</button>`:''}
@@ -1296,7 +1287,7 @@ async function loadDash(){
   }catch(e){
     hideL('dashLD');
     document.getElementById('dashC').classList.remove('hidden');
-    document.getElementById('dashC').innerHTML=`<div class="bg-white rounded-xl p-8 text-center border border-slate-200"><span class="material-symbols-outlined text-4xl text-slate-300 block mb-3">cloud_off</span><div class="text-sm font-bold font-headline mb-2">Could not load dashboard</div><div class="text-xs text-slate-400 font-label mb-4">${e.message}</div><button onclick="loadDash()" class="bg-primary-container text-white text-xs font-bold uppercase tracking-widest font-label px-4 py-2 rounded-lg">Try Again</button></div>`;
+    document.getElementById('dashC').innerHTML=`<div class="bg-white rounded-xl p-8 text-center border border-slate-200"><span class="material-symbols-outlined text-4xl text-slate-300 block mb-3">cloud_off</span><div class="text-sm font-bold font-headline mb-2">Could not load dashboard</div><div class="text-xs text-slate-400 font-label mb-4">${e.message}</div><button onclick="loadDash()" class="bg-red-600 text-white text-xs font-bold uppercase tracking-widest font-label px-4 py-2 rounded-lg">Try Again</button></div>`;
   }
 }
 
@@ -1311,7 +1302,7 @@ async function loadWorkers(){
         <td class="px-4 py-3 text-[11px] font-mono text-red-600">${u.worker_id}</td>
         <td class="px-4 py-3 text-xs font-bold text-slate-800">${u.name}</td>
         <td class="px-4 py-3 text-xs text-slate-400 hidden md:table-cell">${u.department||'—'}</td>
-        <td class="px-4 py-3">${u.role==='admin'?'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-primary-container/10 text-red-600">ADMIN</span>':'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-blue-400/10 text-blue-500">WORKER</span>'}</td>
+        <td class="px-4 py-3">${u.role==='admin'?'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-red-600/10 text-red-600">ADMIN</span>':'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-blue-400/10 text-blue-500">WORKER</span>'}</td>
         <td class="px-4 py-3 text-[11px] font-mono text-slate-400 hidden md:table-cell">${new Date(u.created_at).toLocaleDateString()}</td>
       </tr>`).join('');
   }catch(e){hideL('wkLD');toast('⚠️ '+e.message,'error');}
@@ -1388,7 +1379,7 @@ function filterByCat(cat,btn){
   document.querySelectorAll('.sopcattab').forEach(b=>{
     b.className='sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-700 shadow-sm';
   });
-  btn.className='sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm';
+  btn.className='sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm';
   renderGrouped(cat);
 }
 
@@ -1451,7 +1442,7 @@ function openSOP(id){
     const blob=new Blob([byteNums],{type:s.file_type}),blobUrl=URL.createObjectURL(blob);
     if(isPdf){
       body+=`<div class="flex gap-2 mb-4 flex-wrap">
-        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label shadow-md hover:scale-105 transition-all no-underline">
+        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-red-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label shadow-md hover:scale-105 transition-all no-underline">
           <span class="material-symbols-outlined text-[16px]">download</span>Download PDF
         </a>
         <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label hover:bg-slate-200 transition-all no-underline">
@@ -1714,7 +1705,7 @@ function show2(id){const el=document.getElementById(id);if(el)el.classList.remov
 function hide2(id){const el=document.getElementById(id);if(el)el.classList.add('hidden');}
 function setBusy(b,s,t,msg){const bn=document.getElementById(b);if(bn)bn.disabled=true;const sp=document.getElementById(s);if(sp)sp.classList.remove('hidden');const tx=document.getElementById(t);if(tx)tx.textContent=msg;}
 function setIdle(b,s,t,msg){const bn=document.getElementById(b);if(bn)bn.disabled=false;const sp=document.getElementById(s);if(sp)sp.classList.add('hidden');const tx=document.getElementById(t);if(tx)tx.textContent=msg;}
-function escH(str){return str.replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function escH(str){return str.replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 </script>
 </body>
 </html>
