@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -40,20 +40,20 @@ input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
-<body class="bg-background text-on-background font-body min-h-screen flex items-center justify-center relative overflow-hidden">
+<body class="bg-slate-50 text-slate-900 font-body min-h-screen flex items-center justify-center relative overflow-hidden">
 
 <!-- Background glow -->
-<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
 <!-- Navbar -->
-<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-6 md:px-10 py-4 border-b border-white/5">
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 md:px-10 py-4 border-b border-slate-200">
   <div class="text-xl font-black text-primary-container tracking-tighter font-headline">SURAKSHA PRABANDHAN PRANALI</div>
-  <div class="text-xs font-bold uppercase tracking-widest text-on-surface/30 font-label">Mine Worker Safety Portal</div>
+  <div class="text-xs font-bold uppercase tracking-widest text-slate-400 font-label">Mine Worker Safety Portal</div>
 </nav>
 
 <!-- Login Card -->
 <main class="w-full max-w-md px-4 pt-24 pb-12">
-  <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl relative">
+  <div class="bg-white rounded-xl overflow-hidden shadow-2xl relative">
 
     <!-- Red accent top bar -->
     <div class="h-1 w-full bg-gradient-to-r from-primary-container via-primary to-primary-container/30"></div>
@@ -61,19 +61,19 @@ input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
     <div class="p-8">
       <!-- Header -->
       <div class="mb-8">
-        <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-2">Operational Safety System</span>
-        <h1 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Mine Worker Portal</h1>
-        <p class="text-on-surface/40 text-xs mt-1 font-label">Sign in or register to continue</p>
+        <span class="text-red-600 font-label text-[0.6rem] uppercase tracking-widest block mb-2">Operational Safety System</span>
+        <h1 class="font-headline text-2xl font-bold tracking-tight text-slate-800">Mine Worker Portal</h1>
+        <p class="text-slate-400 text-xs mt-1 font-label">Sign in or register to continue</p>
       </div>
 
       <!-- Tabs -->
-      <div class="flex mb-6 bg-surface-container-lowest rounded-lg p-1 gap-1">
+      <div class="flex mb-6 bg-white rounded-lg p-1 gap-1">
         <button id="tabSignIn" onclick="showTab('signin')"
-          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all bg-surface-container text-on-surface">
+          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all bg-slate-50 text-slate-800">
           Sign In
         </button>
         <button id="tabRegister" onclick="showTab('register')"
-          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all text-on-surface/40">
+          class="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all text-slate-400">
           Register
         </button>
       </div>
@@ -82,27 +82,27 @@ input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
       <div id="panelSignin">
         <div class="space-y-4">
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">ID / NEIS Number</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">ID / NEIS Number</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">badge</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">badge</span>
               <input id="loginId" type="text"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm focus:bg-surface-container-highest transition-colors"
+                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
                 placeholder="Enter your ID or NEIS number" autocomplete="username"/>
             </div>
           </div>
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Password</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Password</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">lock</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">lock</span>
               <input id="loginPass" type="password"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm focus:bg-surface-container-highest transition-colors"
+                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
                 placeholder="Your password" autocomplete="current-password"/>
             </div>
           </div>
         </div>
-        <div id="loginErr" class="hidden mt-3 px-4 py-2.5 bg-red-950/50 border border-red-800/50 rounded-lg text-red-300 text-xs font-label"></div>
+        <div id="loginErr" class="hidden mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs font-label"></div>
         <button id="loginBtn" onclick="doLogin()"
-          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
+          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
           <div id="loginSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></div>
           <span id="loginTxt">SIGN IN</span>
           <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -113,49 +113,49 @@ input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
       <div id="panelRegister" class="hidden">
         <div class="space-y-4">
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Full Name</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Full Name</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">person</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">person</span>
               <input id="regName" type="text"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm focus:bg-surface-container-highest transition-colors"
+                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
                 placeholder="Your full name" autocomplete="name"/>
             </div>
           </div>
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">ID / NEIS Number</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">ID / NEIS Number</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">badge</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">badge</span>
               <input id="regId" type="text"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm focus:bg-surface-container-highest transition-colors"
+                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
                 placeholder="Enter your ID or NEIS number"/>
             </div>
           </div>
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Department</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Department</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">corporate_fare</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">corporate_fare</span>
               <select id="regDept"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-10 py-3 text-on-surface font-body text-sm appearance-none focus:bg-surface-container-highest transition-colors">
+                class="w-full bg-white border-none rounded-lg pl-10 pr-10 py-3 text-slate-800 font-body text-sm appearance-none focus:bg-slate-100est transition-colors">
                 <option value="">Select Department</option>
                 <option>Departmental</option>
                 <option>Contractual</option>
               </select>
-              <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface/40 text-[18px]">expand_more</span>
+              <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[18px]">expand_more</span>
             </div>
           </div>
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Password</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Password</label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">lock</span>
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-red-500 text-[18px]">lock</span>
               <input id="regPass" type="password"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm focus:bg-surface-container-highest transition-colors"
+                class="w-full bg-white border-none rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm focus:bg-slate-100est transition-colors"
                 placeholder="Create a password (min 6 chars)" autocomplete="new-password"/>
             </div>
           </div>
         </div>
-        <div id="regErr" class="hidden mt-3 px-4 py-2.5 bg-red-950/50 border border-red-800/50 rounded-lg text-red-300 text-xs font-label"></div>
+        <div id="regErr" class="hidden mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs font-label"></div>
         <button id="regBtn" onclick="doRegister()"
-          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
+          class="mt-6 w-full bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center justify-center gap-2">
           <div id="regSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></div>
           <span id="regTxt">CREATE ACCOUNT</span>
           <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -164,9 +164,9 @@ input:focus, select:focus, textarea:focus { outline: none; box-shadow: none; }
     </div>
 
     <!-- Footer bar -->
-    <div class="bg-surface-container-high px-8 py-3 flex items-center">
-      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse"></div>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface/30">Secure Connection Established</span>
+    <div class="bg-slate-100 px-8 py-3 flex items-center">
+      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse" style="background:#e50914"></div>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Secure Connection Established</span>
     </div>
   </div>
 </main>
@@ -189,8 +189,8 @@ function showTab(tab) {
   const isSignin = tab === 'signin';
   document.getElementById('panelSignin').classList.toggle('hidden', !isSignin);
   document.getElementById('panelRegister').classList.toggle('hidden', isSignin);
-  const activeClass = 'bg-surface-container text-on-surface';
-  const inactiveClass = 'text-on-surface/40';
+  const activeClass = 'bg-slate-50 text-slate-800';
+  const inactiveClass = 'text-slate-400';
   document.getElementById('tabSignIn').className = `flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all ${isSignin ? activeClass : inactiveClass}`;
   document.getElementById('tabRegister').className = `flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest font-headline transition-all ${!isSignin ? activeClass : inactiveClass}`;
 }
