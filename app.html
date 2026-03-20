@@ -33,6 +33,7 @@ tailwind.config = {
 .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
 input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 .spin-anim{animation:spin .7s linear infinite}
+@keyframes lb{from{width:0}to{width:100%}}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Loader */
 #PL{transition:opacity .4s ease}
@@ -70,8 +71,6 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
   </div>
   <div class="text-[10px] uppercase tracking-widest text-slate-400 mt-3 font-label">Initializing secure connection...</div>
 </div>
-@keyframes lb{from{width:0}to{width:100%}}
-<style>@keyframes lb{from{width:0}to{width:100%}}</style>
 
 <!-- TOP NAV -->
 <nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 py-3 border-b border-slate-200">
@@ -845,9 +844,24 @@ window.addEventListener('DOMContentLoaded',()=>{
   }catch{localStorage.removeItem('mg_token');go('index.html');return;}
   setTimeout(()=>{
     const pl=document.getElementById('PL');
-    pl.classList.add('fade');
-    setTimeout(()=>pl.style.display='none',400);
-    initApp();
+    // Always hide loader no matter what
+    const hidePL=()=>{if(pl){pl.classList.add('fade');setTimeout(()=>pl.style.display='none',400);}};
+    try{
+      hidePL();
+      initApp();
+    }catch(err){
+      hidePL();
+      console.error('Startup error:',err);
+      document.body.innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f8fafc;font-family:Inter,sans-serif;padding:20px">
+        <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:32px;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+          <div style="font-size:40px;margin-bottom:12px">⚠️</div>
+          <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:8px">Failed to load portal</div>
+          <div style="font-size:13px;color:#64748b;margin-bottom:20px">${err.message}</div>
+          <button onclick="location.reload()" style="background:#e50914;color:white;border:none;padding:12px 24px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px">Reload Page</button>
+          <br/><a href="index.html" style="display:inline-block;margin-top:12px;font-size:12px;color:#94a3b8">Back to Login</a>
+        </div>
+      </div>`;
+    }
   },1500);
 });
 
@@ -868,23 +882,22 @@ async function api(method,path,body){
 
 // ── INIT ──────────────────────────────────────────────────────
 function initApp(){
-  try{
-    const ini=(currentUser.name||'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-    const av=document.getElementById('hdrAvatar');if(av)av.textContent=ini;
-    const hn=document.getElementById('hdrName');if(hn)hn.textContent=currentUser.name||currentUser.worker_id;
-    const hi=document.getElementById('hdrId');if(hi)hi.textContent=currentUser.worker_id;
-    const rp=document.getElementById('rolePill');
-    if(rp){rp.textContent=currentUser.role.toUpperCase();}
-    buildNav();
-    if(currentUser.role==='admin'){
-      // Show upload tabs for admin
-  const sopUpTab=document.getElementById('sopTabUpload');if(sopUpTab)sopUpTab.classList.remove('hidden');
-  const statUpTab=document.getElementById('statTabUpload');if(statUpTab)statUpTab.classList.remove('hidden');
-      switchSec('sec-dashboard');loadDash();
-    }else{
-      switchSec('sec-report');prefill();
-    }
-  }catch(e){console.error('initApp error:',e);toast('⚠️ Error loading portal: '+e.message,'error');}
+  if(!currentUser){go('index.html');return;}
+  const ini=(currentUser.name||'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const av=document.getElementById('hdrAvatar');if(av)av.textContent=ini;
+  const hn=document.getElementById('hdrName');if(hn)hn.textContent=currentUser.name||currentUser.worker_id;
+  const hi=document.getElementById('hdrId');if(hi)hi.textContent=currentUser.worker_id;
+  const rp=document.getElementById('rolePill');if(rp)rp.textContent=currentUser.role.toUpperCase();
+  buildNav();
+  if(currentUser.role==='admin'){
+    const sopUpTab=document.getElementById('sopTabUpload');if(sopUpTab)sopUpTab.classList.remove('hidden');
+    const statUpTab=document.getElementById('statTabUpload');if(statUpTab)statUpTab.classList.remove('hidden');
+    switchSec('sec-dashboard');
+    loadDash();
+  }else{
+    switchSec('sec-report');
+    prefill();
+  }
 }
 
 // ── NAV ───────────────────────────────────────────────────────
