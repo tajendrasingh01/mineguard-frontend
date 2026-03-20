@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -13,14 +13,14 @@ tailwind.config = {
   theme:{
     extend:{
       colors:{
-        "background":"#131313","surface":"#131313",
-        "surface-container-lowest":"#0e0e0e","surface-container-low":"#1c1b1b",
-        "surface-container":"#201f1f","surface-container-high":"#2a2a2a",
-        "surface-container-highest":"#353534","surface-variant":"#353534",
-        "on-background":"#e5e2e1","on-surface":"#e5e2e1",
-        "on-surface-variant":"#e9bcb6","on-primary":"#690003",
+        "background":"#f8fafc","surface":"#f8fafc",
+        "surface-container-lowest":"#ffffff","surface-container-low":"#ffffff",
+        "surface-container":"#f8fafc","surface-container-high":"#f1f5f9",
+        "surface-container-highest":"#e2e8f0","surface-variant":"#e2e8f0",
+        "on-background":"#0f172a","on-surface":"#1e293b",
+        "on-surface-variant":"#64748b","on-primary":"#690003",
         "on-primary-container":"#fff7f6","primary":"#ffb4aa",
-        "primary-container":"#e50914","outline":"#af8782","outline-variant":"#5e3f3b",
+        "primary-container":"#e50914","outline":"#94a3b8","outline-variant":"#e2e8f0",
         "secondary":"#ffb4aa","tertiary":"#a7c8ff","error":"#ffb4ab",
       },
       fontFamily:{"headline":["Epilogue"],"body":["Inter"],"label":["Inter"]},
@@ -43,11 +43,11 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 /* Scrollbars */
 ::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#1c1b1b}
-::-webkit-scrollbar-thumb{background:#353534;border-radius:3px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
 /* Bottom nav */
-.bn-item.active .bn-icon{color:#e50914}
-.bn-item.active .bn-lbl{color:#e50914}
+.bn-item.active .bn-icon{color:#dc2626}
+.bn-item.active .bn-lbl{color:#dc2626}
 /* Loader bars */
 .ld{display:none}
 .ld.show{display:flex}
@@ -59,41 +59,41 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 .sop-tabs::-webkit-scrollbar{display:none}
 </style>
 </head>
-<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-900 font-body min-h-screen flex flex-col">
 
 <!-- PAGE LOADER -->
-<div id="PL" class="fixed inset-0 bg-background z-[9999] flex flex-col items-center justify-center">
+<div id="PL" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
   <div class="w-14 h-14 bg-primary-container rounded-xl flex items-center justify-center text-2xl mb-5 shadow-[0_0_40px_rgba(229,9,20,0.4)]">⛏</div>
   <div class="font-headline font-black text-lg text-center leading-tight mb-1">SURAKSHA<br/><span class="text-primary-container">PRABANDHAN PRANALI</span></div>
-  <div class="w-48 h-0.5 bg-surface-variant mt-5 rounded overflow-hidden">
+  <div class="w-48 h-0.5 bg-slate-200 mt-5 rounded overflow-hidden">
     <div class="h-full bg-primary-container rounded" style="animation:lb 1.5s ease forwards"></div>
   </div>
-  <div class="text-[10px] uppercase tracking-widest text-on-surface/30 mt-3 font-label">Initializing secure connection...</div>
+  <div class="text-[10px] uppercase tracking-widest text-slate-400 mt-3 font-label">Initializing secure connection...</div>
 </div>
 @keyframes lb{from{width:0}to{width:100%}}
 <style>@keyframes lb{from{width:0}to{width:100%}}</style>
 
 <!-- TOP NAV -->
-<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 py-3 border-b border-white/5">
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 py-3 border-b border-slate-200">
   <div class="text-base md:text-lg font-black text-primary-container tracking-tighter font-headline">SURAKSHA PRABANDHAN PRANALI</div>
   <div class="flex items-center gap-3 md:gap-4">
     <!-- Desktop nav links injected here -->
     <div id="desktopNav" class="hidden md:flex items-center gap-6 font-headline font-semibold text-sm tracking-tight mr-2"></div>
     <!-- User info -->
     <div class="flex items-center gap-2">
-      <div id="hdrAvatar" class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-black font-headline cursor-pointer">?</div>
+      <div id="hdrAvatar" class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-white text-xs font-black font-headline cursor-pointer">?</div>
       <div class="hidden md:block">
-        <div id="hdrName" class="text-xs font-bold text-on-surface leading-tight"></div>
-        <div id="hdrId" class="text-[10px] text-on-surface/40 font-label"></div>
+        <div id="hdrName" class="text-xs font-bold text-slate-800 leading-tight"></div>
+        <div id="hdrId" class="text-[10px] text-slate-400 font-label"></div>
       </div>
     </div>
     <span id="rolePill" class="hidden md:inline text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-primary-container/10 text-primary-container"></span>
     <!-- Emergency -->
-    <button onclick="triggerEmergency()" class="flex items-center gap-1.5 bg-red-900/30 hover:bg-red-800/50 border border-red-800/50 text-red-300 text-xs font-bold uppercase tracking-widest px-3 py-2 rounded-lg font-label transition-all">
+    <button onclick="triggerEmergency()" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-bold uppercase tracking-widest px-3 py-2 rounded-lg font-label transition-all">
       <span class="material-symbols-outlined text-base">emergency</span>
       <span class="hidden sm:inline">Emergency</span>
     </button>
-    <button onclick="doLogout()" class="hidden md:flex items-center gap-1 text-on-surface/40 hover:text-on-surface text-xs font-bold uppercase tracking-widest transition-colors font-label">
+    <button onclick="doLogout()" class="hidden md:flex items-center gap-1 text-slate-400 hover:text-slate-800 text-xs font-bold uppercase tracking-widest transition-colors font-label">
       <span class="material-symbols-outlined text-base">logout</span>
     </button>
   </div>
@@ -107,76 +107,76 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
   <div class="mb-6">
     <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Operational Safety</span>
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Report Incident</h1>
-    <p class="text-on-surface/40 text-xs mt-1">Fill in as much detail as possible</p>
+    <p class="text-slate-400 text-xs mt-1">Fill in as much detail as possible</p>
   </div>
 
   <!-- Step indicators -->
   <div class="flex gap-3 mb-6">
     <div class="flex flex-col items-center cursor-pointer group">
       <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.3)]">
-        <span class="material-symbols-outlined text-on-primary-container text-[18px]">person</span>
+        <span class="material-symbols-outlined text-white text-[18px]">person</span>
       </div>
       <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 text-primary-container">Who</span>
     </div>
     <div class="flex flex-col items-center cursor-pointer group">
-      <div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface/40">
+      <div class="w-9 h-9 rounded-lg bg-slate-100est flex items-center justify-center text-slate-400">
         <span class="material-symbols-outlined text-[18px]">description</span>
       </div>
       <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 opacity-40">What</span>
     </div>
     <div class="flex flex-col items-center cursor-pointer group">
-      <div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface/40">
+      <div class="w-9 h-9 rounded-lg bg-slate-100est flex items-center justify-center text-slate-400">
         <span class="material-symbols-outlined text-[18px]">location_on</span>
       </div>
       <span class="text-[9px] uppercase font-bold tracking-tighter mt-1 opacity-40">Where</span>
     </div>
   </div>
 
-  <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
+  <div class="bg-white rounded-xl overflow-hidden shadow-2xl">
     <div class="h-0.5 bg-gradient-to-r from-primary-container to-primary-container/20"></div>
     <div class="p-5 md:p-7 space-y-5">
 
       <!-- Row 1: Name + ID -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Full Name</label>
-          <input id="rName" type="text" readonly class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface/50 font-body text-sm border-none"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Full Name</label>
+          <input id="rName" type="text" readonly class="w-full bg-white rounded-lg px-4 py-3 text-slate-500 font-body text-sm border-none"/>
         </div>
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">ID / NEIS Number</label>
-          <input id="rId" type="text" readonly class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface/50 font-body text-sm border-none"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">ID / NEIS Number</label>
+          <input id="rId" type="text" readonly class="w-full bg-white rounded-lg px-4 py-3 text-slate-500 font-body text-sm border-none"/>
         </div>
       </div>
 
       <!-- Row 2: Supervisor + Department -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Supervisor on Duty</label>
-          <input id="rSup" type="text" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="Supervisor name"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Supervisor on Duty</label>
+          <input id="rSup" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Supervisor name"/>
         </div>
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Department</label>
-          <input id="rDept" type="text" readonly class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface/50 font-body text-sm border-none"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Department</label>
+          <input id="rDept" type="text" readonly class="w-full bg-white rounded-lg px-4 py-3 text-slate-500 font-body text-sm border-none"/>
         </div>
       </div>
 
       <!-- Row 3: Date + Time -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Date</label>
-          <input id="rDate" type="date" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Date</label>
+          <input id="rDate" type="date" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors"/>
         </div>
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Time</label>
-          <input id="rTime" type="time" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Time</label>
+          <input id="rTime" type="time" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors"/>
         </div>
       </div>
 
       <!-- Incident Type -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Incident Type</label>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Incident Type</label>
         <div class="relative">
-          <select id="rType" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none appearance-none focus:bg-surface-container-highest transition-colors">
+          <select id="rType" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none appearance-none focus:bg-slate-100est transition-colors">
             <option value="">— Select incident type —</option>
             <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
             <option>Equipment / Machinery Accident</option><option>Electrical Incident</option>
@@ -186,51 +186,51 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
             <option>Chemical Exposure / Spill</option><option>Vehicle Collision</option>
             <option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option>
           </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface/40 text-[18px]">expand_more</span>
+          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[18px]">expand_more</span>
         </div>
       </div>
 
       <!-- Severity -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Severity Level</label>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Severity Level</label>
         <div class="flex gap-2 flex-wrap">
-          <button onclick="selSev(this,'nearMiss')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all uppercase tracking-tighter text-blue-400">Near Miss</button>
-          <button onclick="selSev(this,'minor')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all uppercase tracking-tighter text-yellow-400">Minor</button>
-          <button onclick="selSev(this,'serious')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all uppercase tracking-tighter text-orange-400">Serious</button>
-          <button onclick="selSev(this,'critical')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all uppercase tracking-tighter text-red-400">Critical</button>
-          <button onclick="selSev(this,'fatality')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all uppercase tracking-tighter text-red-200 animate-pulse">☠ Fatality</button>
+          <button onclick="selSev(this,'nearMiss')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all uppercase tracking-tighter text-blue-400">Near Miss</button>
+          <button onclick="selSev(this,'minor')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all uppercase tracking-tighter text-yellow-400">Minor</button>
+          <button onclick="selSev(this,'serious')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all uppercase tracking-tighter text-orange-400">Serious</button>
+          <button onclick="selSev(this,'critical')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all uppercase tracking-tighter text-red-400">Critical</button>
+          <button onclick="selSev(this,'fatality')" class="sev-btn flex-1 min-w-[80px] py-2.5 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all uppercase tracking-tighter text-red-200 animate-pulse">☠ Fatality</button>
         </div>
       </div>
 
       <!-- Location -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Location</label>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Location</label>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">factory</span>Surface – General
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">precision_manufacturing</span>Surface – Crusher
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">build</span>Surface – Workshop
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">door_front</span>Portal / Adit
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">hard_hat</span>UG – Stope
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">construction</span>UG – Development
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">local_shipping</span>UG – Haulage
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">air</span>UG – Ventilation
           </button>
-          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-surface-container-lowest text-xs font-bold border-2 border-transparent hover:bg-surface-container-highest transition-all text-on-surface/60 flex flex-col items-center gap-1">
+          <button onclick="selLoc(this)" class="loc-btn py-3 rounded-lg bg-white text-xs font-bold border-2 border-transparent hover:bg-slate-100est transition-all text-slate-500 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">inventory_2</span>UG – Ore Pass
           </button>
         </div>
@@ -239,67 +239,67 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
       <!-- Zone detail + Injured -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Level / Zone Detail</label>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Level / Zone Detail</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-container text-[18px]">explore</span>
-            <input id="rLocD" type="text" class="w-full bg-surface-container-lowest rounded-lg pl-10 pr-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="e.g. Level 4 – Block 2A"/>
+            <input id="rLocD" type="text" class="w-full bg-white rounded-lg pl-10 pr-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="e.g. Level 4 – Block 2A"/>
           </div>
         </div>
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Persons Injured</label>
-          <input id="rInj" type="number" min="0" value="0" inputmode="numeric" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors"/>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Persons Injured</label>
+          <input id="rInj" type="number" min="0" value="0" inputmode="numeric" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors"/>
         </div>
       </div>
 
       <!-- Description -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Operational Description</label>
-        <textarea id="rDesc" rows="4" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors resize-none" placeholder="Describe the sequence of events..."></textarea>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Operational Description</label>
+        <textarea id="rDesc" rows="4" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors resize-none" placeholder="Describe the sequence of events..."></textarea>
       </div>
 
       <!-- Immediate Actions -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Immediate Actions Taken</label>
-        <textarea id="rAct" rows="3" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors resize-none" placeholder="e.g. Area evacuated, first aid given..."></textarea>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Immediate Actions Taken</label>
+        <textarea id="rAct" rows="3" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors resize-none" placeholder="e.g. Area evacuated, first aid given..."></textarea>
       </div>
 
       <!-- PPE + SOP Toggles -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">PPE Worn?</label>
-          <div class="flex gap-1 bg-surface-container-lowest rounded-lg p-1" id="tPPE">
-            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-on-primary-container transition-all">Yes</button>
-            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-on-surface/40 transition-all">No</button>
-            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-on-surface/40 transition-all">Partial</button>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">PPE Worn?</label>
+          <div class="flex gap-1 bg-white rounded-lg p-1" id="tPPE">
+            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-white transition-all">Yes</button>
+            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">No</button>
+            <button onclick="selT(this,'tPPE')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">Partial</button>
           </div>
         </div>
         <div class="space-y-1.5">
-          <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">SOPs Followed?</label>
-          <div class="flex gap-1 bg-surface-container-lowest rounded-lg p-1" id="tSOP">
-            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-on-primary-container transition-all">Yes</button>
-            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-on-surface/40 transition-all">No</button>
-            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-on-surface/40 transition-all">Unknown</button>
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">SOPs Followed?</label>
+          <div class="flex gap-1 bg-white rounded-lg p-1" id="tSOP">
+            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label bg-primary-container text-white transition-all">Yes</button>
+            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">No</button>
+            <button onclick="selT(this,'tSOP')" class="tgl-btn flex-1 py-2 rounded-md text-xs font-bold uppercase tracking-tighter font-label text-slate-400 transition-all">Unknown</button>
           </div>
         </div>
       </div>
 
       <!-- Witnesses -->
       <div class="space-y-1.5">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Witness Names (optional)</label>
-        <input id="rWit" type="text" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="Names of any witnesses"/>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Witness Names (optional)</label>
+        <input id="rWit" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Names of any witnesses"/>
       </div>
 
       <!-- Photo Upload -->
       <div class="space-y-2">
-        <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Photos / Evidence</label>
+        <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Photos / Evidence</label>
         <div class="flex gap-2 flex-wrap">
-          <button onclick="document.getElementById('photoGallery').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-tertiary/30 text-tertiary transition-all hover:bg-surface-container">
+          <button onclick="document.getElementById('photoGallery').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100est rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-tertiary/30 text-tertiary transition-all hover:bg-slate-50">
             <span class="material-symbols-outlined text-[16px]">photo_library</span>Choose Files
           </button>
-          <button onclick="document.getElementById('photoCamera').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-green-700/30 text-green-400 transition-all hover:bg-surface-container">
+          <button onclick="document.getElementById('photoCamera').click()" type="button" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100est rounded-lg text-xs font-bold uppercase tracking-widest font-label border border-green-700/30 text-green-400 transition-all hover:bg-slate-50">
             <span class="material-symbols-outlined text-[16px]">photo_camera</span>Camera
           </button>
-          <span id="photoCount" class="flex items-center text-[10px] text-on-surface/30 font-label uppercase tracking-widest">No photos selected</span>
+          <span id="photoCount" class="flex items-center text-[10px] text-slate-400 font-label uppercase tracking-widest">No photos selected</span>
         </div>
         <input type="file" id="photoGallery" accept="image/*" multiple class="hidden" onchange="handlePhotos(this)"/>
         <input type="file" id="photoCamera" accept="image/*" capture="environment" class="hidden" onchange="handlePhotos(this)"/>
@@ -308,19 +308,19 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
       <!-- Submit -->
       <div class="pt-2 flex items-center justify-between">
-        <button type="button" onclick="resetReportForm()" class="flex items-center gap-1.5 text-on-surface/30 hover:text-on-surface text-xs font-bold uppercase tracking-widest font-label transition-colors">
+        <button type="button" onclick="resetReportForm()" class="flex items-center gap-1.5 text-slate-400 hover:text-slate-800 text-xs font-bold uppercase tracking-widest font-label transition-colors">
           <span class="material-symbols-outlined text-base">close</span>Discard
         </button>
-        <button id="subBtn" onclick="submitInc()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-8 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center gap-2">
+        <button id="subBtn" onclick="submitInc()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-8 py-3.5 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_8px_30px_rgba(229,9,20,0.3)] flex items-center gap-2">
           <div id="subSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="subTxt">SUBMIT REPORT</span>
           <span class="material-symbols-outlined text-[18px]">send</span>
         </button>
       </div>
     </div>
-    <div class="bg-surface-container-high px-6 py-3 flex items-center">
-      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse"></div>
-      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface/30 font-label">Secure Uplink Active</span>
+    <div class="bg-slate-100 px-6 py-3 flex items-center">
+      <div class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2.5 animate-pulse" style="background:#e50914"></div>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Secure Uplink Active</span>
     </div>
   </div>
 </div>
@@ -331,31 +331,31 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
     <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Personnel Records</span>
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">My Reports</h1>
   </div>
-  <div class="bg-blue-950/20 border border-blue-800/30 rounded-xl px-5 py-3 mb-5 flex items-start gap-3">
+  <div class="bg-blue-50 border border-blue-200 rounded-xl px-5 py-3 mb-5 flex items-start gap-3">
     <span class="material-symbols-outlined text-tertiary text-[18px] mt-0.5">info</span>
-    <p class="text-xs text-tertiary/80 font-label">You can only view your own submitted reports. Other mine workers' details are kept private.</p>
+    <p class="text-xs text-blue-700 font-label">You can only view your own submitted reports. Other mine workers' details are kept private.</p>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="mineLD">
-    <div class="w-6 h-6 border-2 border-surface-variant border-t-primary-container rounded-full spin-anim"></div>
-    <span class="text-xs text-on-surface/40 font-label uppercase tracking-widest">Loading...</span>
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading...</span>
   </div>
-  <div class="bg-surface-container-low rounded-xl overflow-hidden">
+  <div class="bg-white rounded-xl overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full min-w-[500px]">
-        <thead><tr class="border-b border-white/5">
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Ref</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Type</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Location</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Date</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Severity</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Status</th>
+        <thead><tr class="border-b border-slate-200">
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Ref</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Type</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Location</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Date</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Severity</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Status</th>
         </tr></thead>
-        <tbody id="mineTB" class="divide-y divide-white/5"></tbody>
+        <tbody id="mineTB" class="divide-y divide-slate-100"></tbody>
       </table>
     </div>
   </div>
-  <div id="mineES" class="hidden text-center py-16 text-on-surface/30">
-    <span class="material-symbols-outlined text-5xl mb-3 block">assignment</span>
+  <div id="mineES" class="hidden text-center py-16 text-slate-400">
+    <span class="material-symbols-outlined text-5xl mb-3 block text-slate-300">assignment</span>
     <div class="text-sm font-bold uppercase tracking-widest font-label">No incidents reported yet</div>
   </div>
 </div>
@@ -369,7 +369,7 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
   <!-- Admin Upload -->
   <div id="sopUploadArea" class="hidden mb-6">
-    <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-xl">
+    <div class="bg-white rounded-xl overflow-hidden shadow-xl">
       <div class="h-0.5 bg-gradient-to-r from-primary-container to-primary-container/10"></div>
       <div class="p-5 md:p-6">
         <div class="flex items-center gap-2 mb-5">
@@ -378,33 +378,33 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">SOP Title *</label>
-            <input id="sopTitle" type="text" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="e.g. Confined Space Entry"/>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">SOP Title *</label>
+            <input id="sopTitle" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="e.g. Confined Space Entry"/>
           </div>
           <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Category Name *</label>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Category Name *</label>
             <div class="relative">
-              <input id="sopCat" type="text" autocomplete="off" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="Type or select..."
+              <input id="sopCat" type="text" autocomplete="off" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Type or select..."
                 oninput="filterCatDropdown(this.value)" onfocus="showCatDropdown()" onblur="setTimeout(hideCatDropdown,200)"/>
-              <div id="catDropdown" class="hidden absolute top-full left-0 right-0 bg-surface-container-highest rounded-b-lg z-50 max-h-40 overflow-y-auto border border-white/10 shadow-xl"></div>
+              <div id="catDropdown" class="hidden absolute top-full left-0 right-0 bg-slate-100est rounded-b-lg z-50 max-h-40 overflow-y-auto border border-slate-200 shadow-xl"></div>
             </div>
           </div>
           <div class="space-y-1.5 md:col-span-2">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Description</label>
-            <input id="sopDesc" type="text" class="w-full bg-surface-container-lowest rounded-lg px-4 py-3 text-on-surface font-body text-sm border-none focus:bg-surface-container-highest transition-colors" placeholder="Brief description of what this SOP covers"/>
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Description</label>
+            <input id="sopDesc" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Brief description of what this SOP covers"/>
           </div>
           <div class="space-y-1.5 md:col-span-2">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-on-surface/60 px-1">Attach File (PDF or Image) *</label>
-            <div onclick="document.getElementById('sopFile').click()" class="border-2 border-dashed border-white/10 hover:border-primary-container/50 rounded-xl p-6 text-center cursor-pointer transition-all hover:bg-primary-container/5">
+            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Attach File (PDF or Image) *</label>
+            <div onclick="document.getElementById('sopFile').click()" class="border-2 border-dashed border-slate-200 hover:border-primary-container/50 rounded-xl p-6 text-center cursor-pointer transition-all hover:bg-primary-container/5">
               <input type="file" id="sopFile" accept=".pdf,image/*" class="hidden" onchange="handleSopFile(this)"/>
-              <span class="material-symbols-outlined text-3xl text-on-surface/20 block mb-2">attach_file</span>
-              <div class="text-xs text-on-surface/40 font-label">Click to attach PDF or image</div>
-              <div class="text-[10px] text-on-surface/20 font-label mt-1">PDF, JPG, PNG — max 10MB</div>
+              <span class="material-symbols-outlined text-3xl text-slate-300 block mb-2">attach_file</span>
+              <div class="text-xs text-slate-400 font-label">Click to attach PDF or image</div>
+              <div class="text-[10px] text-slate-300 font-label mt-1">PDF, JPG, PNG — max 10MB</div>
             </div>
             <div id="sopFP"></div>
           </div>
         </div>
-        <button id="sopUpBtn" onclick="uploadSOP()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-6 py-3 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_20px_rgba(229,9,20,0.3)] flex items-center gap-2">
+        <button id="sopUpBtn" onclick="uploadSOP()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_20px_rgba(229,9,20,0.3)] flex items-center gap-2">
           <div id="sopUpSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="sopUpTxt">UPLOAD SOP</span>
           <span class="material-symbols-outlined text-[18px]">upload</span>
@@ -417,24 +417,24 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
   <div id="sopTabsWrap" class="hidden mb-5">
     <div class="flex items-center gap-3 flex-wrap">
       <div class="sop-tabs flex gap-2 overflow-x-auto flex-1 pb-1">
-        <button onclick="filterByCat('__all__',this)" class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-widest font-label transition-all">All SOPs</button>
+        <button onclick="filterByCat('__all__',this)" class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all">All SOPs</button>
         <div id="sopCatTabs" class="contents"></div>
       </div>
-      <select id="sopSearchDrop" onchange="jumpToSOP(this.value)" class="bg-surface-container-lowest border-none rounded-lg px-3 py-2 text-on-surface text-xs font-label appearance-none min-w-[160px] focus:bg-surface-container-highest">
+      <select id="sopSearchDrop" onchange="jumpToSOP(this.value)" class="bg-white border-none rounded-lg px-3 py-2 text-slate-800 text-xs font-label appearance-none min-w-[160px] focus:bg-slate-100est">
         <option value="">🔍 Search SOP...</option>
       </select>
     </div>
   </div>
 
   <div class="ld items-center justify-center py-12 gap-3" id="sopLD">
-    <div class="w-6 h-6 border-2 border-surface-variant border-t-primary-container rounded-full spin-anim"></div>
-    <span class="text-xs text-on-surface/40 font-label uppercase tracking-widest">Loading SOPs...</span>
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading SOPs...</span>
   </div>
   <div id="sopGroupedContent"></div>
-  <div id="sopES" class="hidden text-center py-16 text-on-surface/30">
-    <span class="material-symbols-outlined text-5xl mb-3 block">folder_open</span>
+  <div id="sopES" class="hidden text-center py-16 text-slate-400">
+    <span class="material-symbols-outlined text-5xl mb-3 block text-slate-300">folder_open</span>
     <div class="text-sm font-bold uppercase tracking-widest font-label mb-1">No SOPs uploaded yet</div>
-    <div class="text-xs text-on-surface/20 font-label">Admin can upload PDFs or images using the form above</div>
+    <div class="text-xs text-slate-300 font-label">Admin can upload PDFs or images using the form above</div>
   </div>
 </div>
 
@@ -443,44 +443,44 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
   <div class="mb-6">
     <span class="text-primary-container font-label text-[0.6rem] uppercase tracking-widest block mb-1">Command Overview</span>
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Safety Dashboard</h1>
-    <p class="text-on-surface/40 text-xs mt-1">Real incident data — submitted by mine workers</p>
+    <p class="text-slate-400 text-xs mt-1">Real incident data — submitted by mine workers</p>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="dashLD">
-    <div class="w-6 h-6 border-2 border-surface-variant border-t-primary-container rounded-full spin-anim"></div>
-    <span class="text-xs text-on-surface/40 font-label uppercase tracking-widest">Loading...</span>
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading...</span>
   </div>
   <div id="dashC" class="hidden">
     <!-- Stat cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-      <div class="bg-surface-container-low rounded-xl p-4 border border-white/5">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label mb-2">Total (30d)</div>
+      <div class="bg-white rounded-xl p-4 border border-slate-200">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-2">Total (30d)</div>
         <div class="font-headline text-3xl font-black" id="st1">—</div>
-        <div class="text-[10px] text-on-surface/30 font-label mt-1">Real reports</div>
+        <div class="text-[10px] text-slate-400 font-label mt-1">Real reports</div>
       </div>
-      <div class="bg-surface-container-low rounded-xl p-4 border border-red-900/30">
+      <div class="bg-white rounded-xl p-4 border border-red-200">
         <div class="text-[10px] font-bold uppercase tracking-widest text-red-400/60 font-label mb-2">Critical/Fatal</div>
         <div class="font-headline text-3xl font-black text-red-400" id="st2">—</div>
-        <div class="text-[10px] text-on-surface/30 font-label mt-1">Needs review</div>
+        <div class="text-[10px] text-slate-400 font-label mt-1">Needs review</div>
       </div>
-      <div class="bg-surface-container-low rounded-xl p-4 border border-yellow-900/30">
+      <div class="bg-white rounded-xl p-4 border border-yellow-200">
         <div class="text-[10px] font-bold uppercase tracking-widest text-yellow-400/60 font-label mb-2">Open</div>
         <div class="font-headline text-3xl font-black text-yellow-400" id="st3">—</div>
-        <div class="text-[10px] text-on-surface/30 font-label mt-1">Pending</div>
+        <div class="text-[10px] text-slate-400 font-label mt-1">Pending</div>
       </div>
-      <div class="bg-surface-container-low rounded-xl p-4 border border-green-900/30">
+      <div class="bg-white rounded-xl p-4 border border-green-200">
         <div class="text-[10px] font-bold uppercase tracking-widest text-green-400/60 font-label mb-2">Safe Days</div>
         <div class="font-headline text-3xl font-black text-green-400" id="st4">—</div>
-        <div class="text-[10px] text-on-surface/30 font-label mt-1">Since last serious</div>
+        <div class="text-[10px] text-slate-400 font-label mt-1">Since last serious</div>
       </div>
     </div>
     <!-- Charts -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <div class="md:col-span-2 bg-surface-container-low rounded-xl p-5 border border-white/5">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label mb-4">Severity Breakdown</div>
+      <div class="md:col-span-2 bg-white rounded-xl p-5 border border-slate-200">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-4">Severity Breakdown</div>
         <div id="sevBD" class="space-y-3"></div>
       </div>
-      <div class="bg-surface-container-low rounded-xl p-5 border border-white/5">
-        <div class="text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label mb-4">Zone Split</div>
+      <div class="bg-white rounded-xl p-5 border border-slate-200">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label mb-4">Zone Split</div>
         <div id="zoneS"></div>
       </div>
     </div>
@@ -494,24 +494,24 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">All Incidents</h1>
   </div>
   <div class="flex gap-2 mb-4 flex-wrap items-center">
-    <select id="fSev" onchange="loadAdminInc()" class="bg-surface-container-lowest border-none rounded-lg px-3 py-2 text-on-surface text-xs font-label appearance-none focus:bg-surface-container-highest">
+    <select id="fSev" onchange="loadAdminInc()" class="bg-white border-none rounded-lg px-3 py-2 text-slate-800 text-xs font-label appearance-none focus:bg-slate-100est">
       <option value="all">All Severities</option>
       <option value="nearMiss">Near Miss</option><option value="minor">Minor</option>
       <option value="serious">Serious</option><option value="critical">Critical</option><option value="fatality">Fatality</option>
     </select>
-    <select id="fLoc" onchange="loadAdminInc()" class="bg-surface-container-lowest border-none rounded-lg px-3 py-2 text-on-surface text-xs font-label appearance-none focus:bg-surface-container-highest">
+    <select id="fLoc" onchange="loadAdminInc()" class="bg-white border-none rounded-lg px-3 py-2 text-slate-800 text-xs font-label appearance-none focus:bg-slate-100est">
       <option value="all">All Locations</option>
       <option value="surface">Surface</option><option value="underground">Underground</option>
     </select>
-    <span id="incCount" class="text-[10px] text-on-surface/30 font-label uppercase tracking-widest"></span>
+    <span id="incCount" class="text-[10px] text-slate-400 font-label uppercase tracking-widest"></span>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="incLD">
-    <div class="w-6 h-6 border-2 border-surface-variant border-t-primary-container rounded-full spin-anim"></div>
-    <span class="text-xs text-on-surface/40 font-label uppercase tracking-widest">Loading...</span>
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading...</span>
   </div>
   <div id="incCards" class="space-y-3"></div>
-  <div id="incES" class="hidden text-center py-16 text-on-surface/30">
-    <span class="material-symbols-outlined text-5xl mb-3 block">assignment</span>
+  <div id="incES" class="hidden text-center py-16 text-slate-400">
+    <span class="material-symbols-outlined text-5xl mb-3 block text-slate-300">assignment</span>
     <div class="text-sm font-bold uppercase tracking-widest font-label">No incidents found</div>
   </div>
 </div>
@@ -523,25 +523,25 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight">Mine Workers</h1>
   </div>
   <div class="ld items-center justify-center py-12 gap-3" id="wkLD">
-    <div class="w-6 h-6 border-2 border-surface-variant border-t-primary-container rounded-full spin-anim"></div>
-    <span class="text-xs text-on-surface/40 font-label uppercase tracking-widest">Loading...</span>
+    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
+    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading...</span>
   </div>
-  <div class="bg-surface-container-low rounded-xl overflow-hidden">
+  <div class="bg-white rounded-xl overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full min-w-[400px]">
-        <thead><tr class="border-b border-white/5">
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">ID / NEIS</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Name</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label hidden md:table-cell">Department</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label">Role</th>
-          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface/40 font-label hidden md:table-cell">Registered</th>
+        <thead><tr class="border-b border-slate-200">
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">ID / NEIS</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Name</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label hidden md:table-cell">Department</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label">Role</th>
+          <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label hidden md:table-cell">Registered</th>
         </tr></thead>
-        <tbody id="wkTB" class="divide-y divide-white/5"></tbody>
+        <tbody id="wkTB" class="divide-y divide-slate-100"></tbody>
       </table>
     </div>
   </div>
-  <div id="wkES" class="hidden text-center py-16 text-on-surface/30">
-    <span class="material-symbols-outlined text-5xl mb-3 block">group</span>
+  <div id="wkES" class="hidden text-center py-16 text-slate-400">
+    <span class="material-symbols-outlined text-5xl mb-3 block text-slate-300">group</span>
     <div class="text-sm font-bold uppercase tracking-widest font-label">No mine workers registered yet</div>
   </div>
 </div>
@@ -549,19 +549,19 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 </main>
 
 <!-- MOBILE BOTTOM NAV -->
-<nav id="bottomNav" class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-low/95 backdrop-blur-xl border-t border-white/5 z-50">
+<nav id="bottomNav" class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 z-50">
   <div class="flex" id="bnItems"></div>
 </nav>
 
 <!-- INCIDENT MODAL -->
 <div id="incModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
-  <div class="bg-surface-container-low w-full md:max-w-2xl max-h-[90vh] overflow-y-auto md:rounded-xl">
-    <div class="sticky top-0 bg-surface-container-low px-5 py-4 flex items-center justify-between border-b border-white/5">
+  <div class="bg-white w-full md:max-w-2xl max-h-[90vh] overflow-y-auto md:rounded-xl">
+    <div class="sticky top-0 bg-white px-5 py-4 flex items-center justify-between border-b border-slate-200">
       <div>
         <div class="font-headline font-bold text-base" id="incModalTitle">Incident Details</div>
-        <div class="text-[10px] text-on-surface/40 font-label mt-0.5" id="incModalRef"></div>
+        <div class="text-[10px] text-slate-400 font-label mt-0.5" id="incModalRef"></div>
       </div>
-      <button onclick="closeIncModal()" class="w-8 h-8 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors">
+      <button onclick="closeIncModal()" class="w-8 h-8 bg-slate-100est rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 transition-colors">
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
     </div>
@@ -571,15 +571,15 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
 <!-- SOP MODAL -->
 <div id="sopModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
-  <div class="bg-surface-container-low w-full md:max-w-2xl max-h-[90vh] overflow-y-auto md:rounded-xl">
-    <div class="sticky top-0 bg-surface-container-low px-5 py-4 flex items-center justify-between border-b border-white/5">
+  <div class="bg-white w-full md:max-w-2xl max-h-[90vh] overflow-y-auto md:rounded-xl">
+    <div class="sticky top-0 bg-white px-5 py-4 flex items-center justify-between border-b border-slate-200">
       <div class="font-headline font-bold text-base" id="mTitle"></div>
-      <button onclick="closeSOP()" class="w-8 h-8 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors">
+      <button onclick="closeSOP()" class="w-8 h-8 bg-slate-100est rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 transition-colors">
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
     </div>
     <div class="p-5">
-      <div class="text-[10px] text-on-surface/40 font-label uppercase tracking-widest mb-4" id="mSub"></div>
+      <div class="text-[10px] text-slate-400 font-label uppercase tracking-widest mb-4" id="mSub"></div>
       <div id="mBody"></div>
     </div>
   </div>
@@ -671,14 +671,14 @@ function buildNav(){
 
   // Desktop nav
   const dn=document.getElementById('desktopNav');
-  if(dn)dn.innerHTML=tabs.map(t=>`<button class="dnt text-on-surface/50 hover:text-on-surface text-sm transition-colors" onclick="switchSec('${t.id}',this)">${t.full}</button>`).join('');
+  if(dn)dn.innerHTML=tabs.map(t=>`<button class="dnt text-slate-500 hover:text-slate-800 text-sm transition-colors" onclick="switchSec('${t.id}',this)">${t.full}</button>`).join('');
 
   // Mobile bottom nav
   const bn=document.getElementById('bnItems');
   if(bn)bn.innerHTML=tabs.map(t=>`
     <button class="bn-item flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors" onclick="switchSec('${t.id}',this)">
-      <span class="bn-icon material-symbols-outlined text-[22px] text-on-surface/30">${t.icon}</span>
-      <span class="bn-lbl text-[9px] font-bold uppercase tracking-tighter text-on-surface/30 font-label">${t.l}</span>
+      <span class="bn-icon material-symbols-outlined text-[22px] text-slate-400">${t.icon}</span>
+      <span class="bn-lbl text-[9px] font-bold uppercase tracking-tighter text-slate-400 font-label">${t.l}</span>
     </button>`).join('');
 }
 
@@ -736,11 +736,11 @@ function selLoc(el){
 
 function selT(el,gid){
   document.getElementById(gid).querySelectorAll('.tgl-btn').forEach(b=>{
-    b.classList.remove('bg-primary-container','text-on-primary-container');
-    b.classList.add('text-on-surface/40');
+    b.classList.remove('bg-primary-container','text-white');
+    b.classList.add('text-slate-400');
   });
-  el.classList.add('bg-primary-container','text-on-primary-container');
-  el.classList.remove('text-on-surface/40');
+  el.classList.add('bg-primary-container','text-white');
+  el.classList.remove('text-slate-400');
 }
 function getT(gid){
   const a=document.getElementById(gid).querySelector('.bg-primary-container');
@@ -761,7 +761,7 @@ function renderPhotoPreview(){
   document.getElementById('photoPreview').innerHTML=incidentPhotos.map((f,i)=>{
     const url=URL.createObjectURL(f);
     return`<div class="relative w-16 h-16 flex-shrink-0">
-      <img src="${url}" class="w-full h-full object-cover rounded-lg border border-white/10"/>
+      <img src="${url}" class="w-full h-full object-cover rounded-lg border border-slate-200"/>
       <button onclick="removePhoto(${i})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-primary-container rounded-full flex items-center justify-center text-white text-xs font-bold leading-none border-2 border-background">✕</button>
     </div>`;
   }).join('');
@@ -820,11 +820,11 @@ async function loadMyInc(){
     const d=await api('GET','/api/incidents/mine');hideL('mineLD');
     if(!d.incidents.length){show2('mineES');return;}
     document.getElementById('mineTB').innerHTML=d.incidents.map(i=>`
-      <tr class="hover:bg-surface-container transition-colors">
+      <tr class="hover:bg-slate-50 transition-colors">
         <td class="px-4 py-3 text-[11px] font-mono text-primary-container">${i.incident_ref}</td>
-        <td class="px-4 py-3 text-xs text-on-surface">${i.incident_type}</td>
-        <td class="px-4 py-3 text-xs text-on-surface/60 hidden md:table-cell">${i.location_zone}</td>
-        <td class="px-4 py-3 text-[11px] font-mono text-on-surface/40">${i.date_of_incident}</td>
+        <td class="px-4 py-3 text-xs text-slate-800">${i.incident_type}</td>
+        <td class="px-4 py-3 text-xs text-slate-500 hidden md:table-cell">${i.location_zone}</td>
+        <td class="px-4 py-3 text-[11px] font-mono text-slate-400">${i.date_of_incident}</td>
         <td class="px-4 py-3">${sevBadge(i.severity,sL(i.severity))}</td>
         <td class="px-4 py-3">${statusBadge(i.status)}</td>
       </tr>`).join('');
@@ -845,14 +845,14 @@ async function loadAdminInc(){
   }catch(e){hideL('incLD');toast('⚠️ '+e.message,'error');}
 }
 
-function sevColor(s){return{nearMiss:'border-blue-800/50',minor:'border-yellow-800/50',serious:'border-orange-800/50',critical:'border-red-800/50',fatality:'border-red-600'}[s]||'border-white/10';}
+function sevColor(s){return{nearMiss:'border-blue-300',minor:'border-yellow-300',serious:'border-orange-300',critical:'border-red-300',fatality:'border-red-400'}[s]||'border-slate-200';}
 
 function renderIncCards(incidents){
   document.getElementById('incCards').innerHTML=incidents.map(i=>{
     let photos=[];try{if(i.photos)photos=JSON.parse(i.photos);}catch(e){}
-    const thumbs=photos.slice(0,3).map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-14 h-14 object-cover rounded-lg border border-white/10 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('');
+    const thumbs=photos.slice(0,3).map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-14 h-14 object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('');
     const more=photos.length>3?`<div onclick="openIncModal('${i.id}')" class="w-14 h-14 bg-primary-container/10 border border-primary-container/30 rounded-lg flex flex-col items-center justify-center cursor-pointer text-primary-container text-[10px] font-bold">📷 +${photos.length-3}</div>`:'';
-    return`<div class="bg-surface-container-low rounded-xl border ${sevColor(i.severity)} p-4 md:p-5 hover:border-white/20 transition-all">
+    return`<div class="bg-white rounded-xl border ${sevColor(i.severity)} p-4 md:p-5 hover:border-slate-300 transition-all">
       <div class="flex items-start justify-between gap-3 mb-3">
         <div>
           <div class="flex items-center gap-2 flex-wrap mb-1">
@@ -861,27 +861,27 @@ function renderIncCards(incidents){
             ${statusBadge(i.status)}
             ${photos.length?`<span class="text-[10px] font-bold font-label text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full">📷 ${photos.length}</span>`:''}
           </div>
-          <div class="text-sm font-bold text-on-surface font-headline">${i.incident_type}</div>
+          <div class="text-sm font-bold text-slate-800 font-headline">${i.incident_type}</div>
         </div>
         <div class="text-right flex-shrink-0">
-          <div class="text-xs font-bold text-on-surface">${i.reporter_name}</div>
-          <div class="text-[10px] text-on-surface/40 font-mono">${i.reporter_worker_id}</div>
+          <div class="text-xs font-bold text-slate-800">${i.reporter_name}</div>
+          <div class="text-[10px] text-slate-400 font-mono">${i.reporter_worker_id}</div>
         </div>
       </div>
-      <div class="flex gap-4 flex-wrap text-[11px] text-on-surface/40 font-label mb-3">
+      <div class="flex gap-4 flex-wrap text-[11px] text-slate-400 font-label mb-3">
         <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span>${i.location_zone}</span>
         <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">calendar_today</span>${i.date_of_incident}</span>
         <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">personal_injury</span>${i.persons_injured} injured</span>
       </div>
-      ${i.description?`<p class="text-xs text-on-surface/50 mb-3 line-clamp-2 font-body">${i.description}</p>`:''}
+      ${i.description?`<p class="text-xs text-slate-500 mb-3 line-clamp-2 font-body">${i.description}</p>`:''}
       ${photos.length?`<div class="flex gap-2 mb-3">${thumbs}${more}</div>`:''}
       <div class="flex gap-2 flex-wrap items-center">
-        <button onclick="openIncModal('${i.id}')" class="flex items-center gap-1.5 bg-primary-container/10 hover:bg-primary-container/20 border border-primary-container/30 text-primary-container text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg transition-all">
+        <button onclick="openIncModal('${i.id}')" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg transition-all">
           <span class="material-symbols-outlined text-[14px]">visibility</span>View Details
         </button>
-        ${i.status!=='under_review'?`<button onclick="updInc('${i.id}','under_review')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-yellow-900/20 border border-yellow-800/30 text-yellow-400 hover:bg-yellow-900/40 transition-all">Review</button>`:''}
-        ${i.status!=='closed'?`<button onclick="updInc('${i.id}','closed')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-green-900/20 border border-green-800/30 text-green-400 hover:bg-green-900/40 transition-all">Close</button>`:''}
-        <button onclick="delInc('${i.id}')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-red-900/20 border border-red-800/30 text-red-400 hover:bg-red-900/40 transition-all">Delete</button>
+        ${i.status!=='under_review'?`<button onclick="updInc('${i.id}','under_review')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-700 hover:bg-yellow-100 transition-all">Review</button>`:''}
+        ${i.status!=='closed'?`<button onclick="updInc('${i.id}','closed')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 hover:bg-green-100 transition-all">Close</button>`:''}
+        <button onclick="delInc('${i.id}')" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 transition-all">Delete</button>
       </div>
     </div>`;
   }).join('');
@@ -902,23 +902,23 @@ function openIncModal(id){
   ];
   document.getElementById('incModalBody').innerHTML=`
     <div class="grid grid-cols-2 gap-2 mb-4">
-      ${fields.map(([l,v])=>`<div class="bg-surface-container-lowest rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-on-surface/30 font-label mb-1">${l}</div><div class="text-xs font-bold text-on-surface capitalize">${v}</div></div>`).join('')}
-      ${i.description?`<div class="col-span-2 bg-surface-container-lowest rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-on-surface/30 font-label mb-1">Description</div><div class="text-xs text-on-surface/70 leading-relaxed">${i.description}</div></div>`:''}
-      ${i.immediate_actions?`<div class="col-span-2 bg-surface-container-lowest rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-on-surface/30 font-label mb-1">Immediate Actions</div><div class="text-xs text-on-surface/70 leading-relaxed">${i.immediate_actions}</div></div>`:''}
-      ${i.witnesses?`<div class="col-span-2 bg-surface-container-lowest rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-on-surface/30 font-label mb-1">Witnesses</div><div class="text-xs text-on-surface/70">${i.witnesses}</div></div>`:''}
+      ${fields.map(([l,v])=>`<div class="bg-white rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-slate-400 font-label mb-1">${l}</div><div class="text-xs font-bold text-slate-800 capitalize">${v}</div></div>`).join('')}
+      ${i.description?`<div class="col-span-2 bg-white rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-slate-400 font-label mb-1">Description</div><div class="text-xs text-slate-600 leading-relaxed">${i.description}</div></div>`:''}
+      ${i.immediate_actions?`<div class="col-span-2 bg-white rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-slate-400 font-label mb-1">Immediate Actions</div><div class="text-xs text-slate-600 leading-relaxed">${i.immediate_actions}</div></div>`:''}
+      ${i.witnesses?`<div class="col-span-2 bg-white rounded-lg p-3"><div class="text-[9px] font-bold uppercase tracking-widest text-slate-400 font-label mb-1">Witnesses</div><div class="text-xs text-slate-600">${i.witnesses}</div></div>`:''}
     </div>
     ${photos.length?`
-      <div class="border-t border-white/5 pt-4">
+      <div class="border-t border-slate-200 pt-4">
         <div class="flex items-center gap-2 mb-3">
           <span class="material-symbols-outlined text-tertiary text-[16px]">photo_library</span>
-          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-on-surface/40">Photos (${photos.length})</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest font-label text-slate-400">Photos (${photos.length})</span>
         </div>
-        <div class="grid grid-cols-3 gap-2">${photos.map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-full aspect-square object-cover rounded-lg border border-white/10 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('')}</div>
-      </div>`:`<div class="border-t border-white/5 pt-4 flex items-center gap-2 text-[11px] text-on-surface/30 font-label"><span class="material-symbols-outlined text-[16px]">photo_camera</span>No photos attached.</div>`}
-    <div class="flex gap-2 mt-4 pt-4 border-t border-white/5 flex-wrap">
+        <div class="grid grid-cols-3 gap-2">${photos.map((p,idx)=>`<img src="${p.data}" onclick="openFullscreen(this.src)" class="w-full aspect-square object-cover rounded-lg border border-slate-200 cursor-pointer hover:border-primary-container/50 transition-all"/>`).join('')}</div>
+      </div>`:`<div class="border-t border-slate-200 pt-4 flex items-center gap-2 text-[11px] text-slate-400 font-label"><span class="material-symbols-outlined text-[16px]">photo_camera</span>No photos attached.</div>`}
+    <div class="flex gap-2 mt-4 pt-4 border-t border-slate-200 flex-wrap">
       ${i.status!=='under_review'?`<button onclick="updInc('${i.id}','under_review');closeIncModal()" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-yellow-900/20 border border-yellow-800/30 text-yellow-400">Review</button>`:''}
       ${i.status!=='closed'?`<button onclick="updInc('${i.id}','closed');closeIncModal()" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-green-900/20 border border-green-800/30 text-green-400">Close</button>`:''}
-      <button onclick="delInc('${i.id}');closeIncModal()" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-red-900/20 border border-red-800/30 text-red-400">Delete</button>
+      <button onclick="delInc('${i.id}');closeIncModal()" class="text-[10px] font-bold uppercase tracking-widest font-label px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700">Delete</button>
     </div>`;
   document.getElementById('incModal').classList.remove('hidden');
 }
@@ -942,18 +942,18 @@ async function loadDash(){
     const sevs=[{k:'nearMiss',l:'Near Miss',c:'#3b82f6'},{k:'minor',l:'Minor',c:'#f59e0b'},{k:'serious',l:'Serious',c:'#f97316'},{k:'critical',l:'Critical',c:'#ef4444'},{k:'fatality',l:'Fatality',c:'#7f1d1d'}];
     document.getElementById('sevBD').innerHTML=sevs.map(s=>{
       const n=d.by_severity?.[s.k]||0,p=Math.round((n/tot)*100);
-      return`<div><div class="flex justify-between items-center mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-on-surface/60">${s.l}</span><span class="text-[11px] font-bold font-mono" style="color:${s.c}">${n}</span></div><div class="h-1 bg-surface-variant rounded-full overflow-hidden"><div class="h-full rounded-full transition-all" style="width:${p}%;background:${s.c}"></div></div></div>`;
+      return`<div><div class="flex justify-between items-center mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-slate-500">${s.l}</span><span class="text-[11px] font-bold font-mono" style="color:${s.c}">${n}</span></div><div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div class="h-full rounded-full transition-all" style="width:${p}%;background:${s.c}"></div></div></div>`;
     }).join('');
     const su=d.by_zone?.surface||0,ug=d.by_zone?.underground||0,t2=su+ug||1;
     document.getElementById('zoneS').innerHTML=`
       <div class="space-y-3">
-        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-on-surface/60">Surface</span><span class="text-[11px] font-bold font-mono text-tertiary">${su}</span></div><div class="h-1 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-tertiary rounded-full" style="width:${Math.round((su/t2)*100)}%"></div></div></div>
-        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-on-surface/60">Underground</span><span class="text-[11px] font-bold font-mono text-primary-container">${ug}</span></div><div class="h-1 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-primary-container rounded-full" style="width:${Math.round((ug/t2)*100)}%"></div></div></div>
+        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-slate-500">Surface</span><span class="text-[11px] font-bold font-mono text-tertiary">${su}</span></div><div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-tertiary rounded-full" style="width:${Math.round((su/t2)*100)}%"></div></div></div>
+        <div><div class="flex justify-between mb-1"><span class="text-[11px] font-bold font-label uppercase tracking-widest text-slate-500">Underground</span><span class="text-[11px] font-bold font-mono text-primary-container">${ug}</span></div><div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-primary-container rounded-full" style="width:${Math.round((ug/t2)*100)}%"></div></div></div>
       </div>`;
   }catch(e){
     hideL('dashLD');
     document.getElementById('dashC').classList.remove('hidden');
-    document.getElementById('dashC').innerHTML=`<div class="bg-surface-container-low rounded-xl p-8 text-center border border-white/5"><span class="material-symbols-outlined text-4xl text-on-surface/20 block mb-3">cloud_off</span><div class="text-sm font-bold font-headline mb-2">Could not load dashboard</div><div class="text-xs text-on-surface/40 font-label mb-4">${e.message}</div><button onclick="loadDash()" class="bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-widest font-label px-4 py-2 rounded-lg">Try Again</button></div>`;
+    document.getElementById('dashC').innerHTML=`<div class="bg-white rounded-xl p-8 text-center border border-slate-200"><span class="material-symbols-outlined text-4xl text-slate-300 block mb-3">cloud_off</span><div class="text-sm font-bold font-headline mb-2">Could not load dashboard</div><div class="text-xs text-slate-400 font-label mb-4">${e.message}</div><button onclick="loadDash()" class="bg-primary-container text-white text-xs font-bold uppercase tracking-widest font-label px-4 py-2 rounded-lg">Try Again</button></div>`;
   }
 }
 
@@ -964,12 +964,12 @@ async function loadWorkers(){
     const d=await api('GET','/api/admin/users');hideL('wkLD');
     if(!d.users.length){show2('wkES');return;}
     document.getElementById('wkTB').innerHTML=d.users.map(u=>`
-      <tr class="hover:bg-surface-container transition-colors">
+      <tr class="hover:bg-slate-50 transition-colors">
         <td class="px-4 py-3 text-[11px] font-mono text-primary-container">${u.worker_id}</td>
-        <td class="px-4 py-3 text-xs font-bold text-on-surface">${u.name}</td>
-        <td class="px-4 py-3 text-xs text-on-surface/40 hidden md:table-cell">${u.department||'—'}</td>
+        <td class="px-4 py-3 text-xs font-bold text-slate-800">${u.name}</td>
+        <td class="px-4 py-3 text-xs text-slate-400 hidden md:table-cell">${u.department||'—'}</td>
         <td class="px-4 py-3">${u.role==='admin'?'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-primary-container/10 text-primary-container">ADMIN</span>':'<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-1 rounded bg-tertiary/10 text-tertiary">WORKER</span>'}</td>
-        <td class="px-4 py-3 text-[11px] font-mono text-on-surface/40 hidden md:table-cell">${new Date(u.created_at).toLocaleDateString()}</td>
+        <td class="px-4 py-3 text-[11px] font-mono text-slate-400 hidden md:table-cell">${new Date(u.created_at).toLocaleDateString()}</td>
       </tr>`).join('');
   }catch(e){hideL('wkLD');toast('⚠️ '+e.message,'error');}
 }
@@ -978,7 +978,7 @@ async function loadWorkers(){
 function handleSopFile(input){
   const f=input.files[0];if(!f)return;uploadedFile=f;
   const ico=f.type==='application/pdf'?'picture_as_pdf':'image';
-  document.getElementById('sopFP').innerHTML=`<div class="flex items-center gap-2 mt-3 px-4 py-2.5 bg-green-900/20 border border-green-800/30 rounded-lg text-green-400 text-xs font-bold font-label"><span class="material-symbols-outlined text-[16px]">${ico}</span>${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
+  document.getElementById('sopFP').innerHTML=`<div class="flex items-center gap-2 mt-3 px-4 py-2.5 bg-green-50 border border-green-200 rounded-lg text-green-700 text-xs font-bold font-label"><span class="material-symbols-outlined text-[16px]">${ico}</span>${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
 }
 
 async function uploadSOP(){
@@ -1014,7 +1014,7 @@ async function loadDBSOPs(){
 function buildSopCatUI(){
   const cats=[...new Set(dbSOPs.map(s=>s.category))];
   document.getElementById('sopCatTabs').innerHTML=cats.map(cat=>
-    `<button class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface/50 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-on-surface" onclick="filterByCat('${escH(cat)}',this)">${cat}</button>`
+    `<button class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100est text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-800" onclick="filterByCat('${escH(cat)}',this)">${cat}</button>`
   ).join('');
   document.getElementById('sopSearchDrop').innerHTML=`<option value="">🔍 Search SOP...</option>`+dbSOPs.map(s=>`<option value="${s.id}">${s.title} (${s.category})</option>`).join('');
   window._existingCats=[...new Set(dbSOPs.map(s=>s.category))];
@@ -1022,21 +1022,21 @@ function buildSopCatUI(){
 }
 
 function filterByCat(cat,btn){
-  document.querySelectorAll('.sopcattab').forEach(b=>{b.classList.remove('bg-primary-container','text-on-primary-container');b.classList.add('bg-surface-container-highest','text-on-surface/50');});
-  btn.classList.add('bg-primary-container','text-on-primary-container');
-  btn.classList.remove('bg-surface-container-highest','text-on-surface/50');
+  document.querySelectorAll('.sopcattab').forEach(b=>{b.classList.remove('bg-primary-container','text-white');b.classList.add('bg-slate-100est','text-slate-500');});
+  btn.classList.add('bg-primary-container','text-white');
+  btn.classList.remove('bg-slate-100est','text-slate-500');
   renderGrouped(cat);
 }
 
 function renderGrouped(filterCat){
   const container=document.getElementById('sopGroupedContent');
   const sops=filterCat==='__all__'?dbSOPs:dbSOPs.filter(s=>s.category===filterCat);
-  if(!sops.length){container.innerHTML=`<div class="text-center py-12 text-on-surface/30 text-xs font-label uppercase tracking-widest">No SOPs in this category</div>`;return;}
+  if(!sops.length){container.innerHTML=`<div class="text-center py-12 text-slate-400 text-xs font-label uppercase tracking-widest">No SOPs in this category</div>`;return;}
   if(filterCat==='__all__'){
     const cats=[...new Set(dbSOPs.map(s=>s.category))];
     container.innerHTML=cats.map(cat=>{
       const cs=dbSOPs.filter(s=>s.category===cat);
-      return`<div class="mb-6"><div class="flex items-center gap-3 mb-3 pb-2 border-b border-white/5"><span class="font-headline font-bold text-base tracking-tight">${cat}</span><span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded-full bg-primary-container/10 text-primary-container">${cs.length} SOP${cs.length>1?'s':''}</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${cs.map(s=>sopCardHTML(s)).join('')}</div></div>`;
+      return`<div class="mb-6"><div class="flex items-center gap-3 mb-3 pb-2 border-b border-slate-200"><span class="font-headline font-bold text-base tracking-tight">${cat}</span><span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded-full bg-red-50 text-red-600">${cs.length} SOP${cs.length>1?'s':''}</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${cs.map(s=>sopCardHTML(s)).join('')}</div></div>`;
     }).join('');
   }else{
     container.innerHTML=`<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${sops.map(s=>sopCardHTML(s)).join('')}</div>`;
@@ -1045,21 +1045,21 @@ function renderGrouped(filterCat){
 
 function sopCardHTML(s){
   const isPdf=s.file_type==='application/pdf';
-  return`<div class="bg-surface-container-low rounded-xl p-4 border border-white/5 hover:border-primary-container/30 cursor-pointer transition-all hover:-translate-y-0.5 group" onclick="openSOP('${s.id}')">
+  return`<div class="bg-white rounded-xl p-4 border border-slate-200 hover:border-red-300 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md group" onclick="openSOP('${s.id}')">
     <div class="flex justify-between items-start mb-3">
       <div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center">
         <span class="material-symbols-outlined text-primary-container text-[20px]">${isPdf?'picture_as_pdf':'image'}</span>
       </div>
-      ${currentUser.role==='admin'?`<button onclick="deleteSOP('${s.id}',event)" class="w-7 h-7 rounded-lg bg-red-900/20 border border-red-800/20 flex items-center justify-center text-red-400/50 hover:text-red-400 hover:bg-red-900/40 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
+      ${currentUser.role==='admin'?`<button onclick="deleteSOP('${s.id}',event)" class="w-7 h-7 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-100 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
     </div>
     <div class="text-[9px] font-bold uppercase tracking-widest text-primary-container font-label mb-1">${s.category}</div>
-    <div class="text-sm font-bold text-on-surface font-headline leading-tight mb-1">${s.title}</div>
-    <div class="text-[11px] text-on-surface/40 font-label line-clamp-2 mb-3">${s.description||''}</div>
+    <div class="text-sm font-bold text-slate-800 font-headline leading-tight mb-1">${s.title}</div>
+    <div class="text-[11px] text-slate-400 font-label line-clamp-2 mb-3">${s.description||''}</div>
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-1 text-[10px] font-bold font-label text-green-400 bg-green-900/20 px-2 py-0.5 rounded-full">
         <span class="material-symbols-outlined text-[12px]">attach_file</span>${s.file_name}
       </div>
-      <span class="text-[9px] text-on-surface/20 font-label">${new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
+      <span class="text-[9px] text-slate-300 font-label">${new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
     </div>
   </div>`;
 }
@@ -1072,25 +1072,25 @@ function openSOP(id){
   document.getElementById('mTitle').textContent=(isPdf?'📄 ':'🖼️ ')+s.title;
   document.getElementById('mSub').textContent=s.category.toUpperCase()+' — '+new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   let body='';
-  if(s.description)body+=`<p class="text-sm text-on-surface/60 font-body leading-relaxed mb-4">${s.description}</p>`;
+  if(s.description)body+=`<p class="text-sm text-slate-500 font-body leading-relaxed mb-4">${s.description}</p>`;
   if(s.file_data&&s.file_type){
     const byteChars=atob(s.file_data),byteNums=new Uint8Array(byteChars.length);
     for(let i=0;i<byteChars.length;i++)byteNums[i]=byteChars.charCodeAt(i);
     const blob=new Blob([byteNums],{type:s.file_type}),blobUrl=URL.createObjectURL(blob);
     if(isPdf){
       body+=`<div class="flex gap-2 mb-4 flex-wrap">
-        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label shadow-[0_4px_20px_rgba(229,9,20,0.3)] hover:scale-105 transition-all no-underline">
+        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-primary-container text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label shadow-[0_4px_20px_rgba(229,9,20,0.3)] hover:scale-105 transition-all no-underline">
           <span class="material-symbols-outlined text-[16px]">download</span>Download PDF
         </a>
-        <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-surface-container-highest text-tertiary border border-tertiary/30 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label hover:bg-surface-container transition-all no-underline">
+        <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-slate-100est text-tertiary border border-tertiary/30 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label hover:bg-slate-50 transition-all no-underline">
           <span class="material-symbols-outlined text-[16px]">open_in_new</span>Open in Tab
         </a>
       </div>
-      <iframe src="${blobUrl}" type="application/pdf" class="w-full rounded-xl border border-white/10" style="height:520px"></iframe>`;
+      <iframe src="${blobUrl}" type="application/pdf" class="w-full rounded-xl border border-slate-200" style="height:520px"></iframe>`;
     }else{
-      body+=`<img src="${blobUrl}" class="w-full rounded-xl border border-white/10" alt="${s.title}"/>`;
+      body+=`<img src="${blobUrl}" class="w-full rounded-xl border border-slate-200" alt="${s.title}"/>`;
     }
-  }else{body+=`<div class="flex items-center gap-2 text-tertiary/70 text-xs font-label bg-tertiary/5 border border-tertiary/20 rounded-lg px-4 py-3"><span class="material-symbols-outlined text-[16px]">info</span>No file attached.</div>`;}
+  }else{body+=`<div class="flex items-center gap-2 text-blue-600 text-xs font-label bg-blue-50 border border-blue-200 rounded-lg px-4 py-3"><span class="material-symbols-outlined text-[16px]">info</span>No file attached.</div>`;}
   document.getElementById('mBody').innerHTML=body;
   document.getElementById('sopModal').classList.remove('hidden');
 }
@@ -1110,7 +1110,7 @@ function filterCatDropdown(val){
   const cats=window._existingCats||[];const dd=document.getElementById('catDropdown');
   const filtered=val?cats.filter(c=>c.toLowerCase().includes(val.toLowerCase())):cats;
   if(!filtered.length){dd.classList.add('hidden');return;}
-  dd.innerHTML=filtered.map(c=>`<div onclick="selectCat('${escH(c)}')" class="px-4 py-2.5 text-sm text-on-surface hover:bg-surface-container cursor-pointer border-b border-white/5 last:border-0">${c}</div>`).join('');
+  dd.innerHTML=filtered.map(c=>`<div onclick="selectCat('${escH(c)}')" class="px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-50 cursor-pointer border-b border-slate-200 last:border-0">${c}</div>`).join('');
   dd.classList.remove('hidden');
 }
 function selectCat(val){document.getElementById('sopCat').value=val;hideCatDropdown();}
@@ -1130,18 +1130,18 @@ function toast(msg,type='success'){
   const msgEl=document.getElementById('toastMsg');
   msgEl.textContent=msg;
   icon.textContent=type==='success'?'check_circle':'error';
-  t.className=`toast-wrap flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl text-sm font-bold font-label ${type==='success'?'bg-green-900 border border-green-700/50 text-green-200':'bg-red-900 border border-red-700/50 text-red-200'}`;
+  t.className=`toast-wrap flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl text-sm font-bold font-label ${type==='success'?'bg-green-600 border border-green-500 text-white':'bg-red-600 border border-red-500 text-white'}`;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3500);
 }
 
 // ── HELPERS ───────────────────────────────────────────────────
 function sevBadge(s,label){
-  const map={nearMiss:'bg-blue-900/30 border-blue-800/50 text-blue-300',minor:'bg-yellow-900/30 border-yellow-800/50 text-yellow-300',serious:'bg-orange-900/30 border-orange-800/50 text-orange-300',critical:'bg-red-900/30 border-red-800/50 text-red-300',fatality:'bg-red-950/50 border-red-700 text-red-200'};
+  const map={nearMiss:'bg-blue-50 border-blue-200 text-blue-700',minor:'bg-yellow-50 border-yellow-200 text-yellow-700',serious:'bg-orange-50 border-orange-200 text-orange-700',critical:'bg-red-50 border-red-200 text-red-700',fatality:'bg-red-100 border-red-300 text-red-800'};
   return`<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded border ${map[s]||map.nearMiss}">${label}</span>`;
 }
 function statusBadge(s){
-  const map={open:'bg-blue-900/20 border-blue-800/30 text-blue-400',under_review:'bg-yellow-900/20 border-yellow-800/30 text-yellow-400',closed:'bg-green-900/20 border-green-800/30 text-green-400'};
+  const map={open:'bg-blue-50 border-blue-200 text-blue-700',under_review:'bg-yellow-50 border-yellow-200 text-yellow-700',closed:'bg-green-50 border-green-200 text-green-700'};
   return`<span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded border ${map[s]||map.open}">${s.replace('_',' ')}</span>`;
 }
 function sL(s){return{nearMiss:'Near Miss',minor:'Minor',serious:'Serious',critical:'Critical',fatality:'Fatality'}[s]||s;}
