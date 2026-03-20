@@ -362,79 +362,223 @@ input:focus,select:focus,textarea:focus{outline:none;box-shadow:none}
 
 <!-- ════ SOP LIBRARY ════ -->
 <div id="sec-sop" class="sec pt-6">
-  <div class="mb-6">
+  <div class="mb-5">
     <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Safety Protocols</span>
     <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">SOP Library</h1>
+    <p class="text-slate-400 text-xs mt-1 font-label">Standard Operating Procedures — uploaded by administrator</p>
   </div>
 
-  <!-- Admin Upload -->
-  <div id="sopUploadArea" class="hidden mb-6">
-    <div class="bg-white rounded-xl overflow-hidden shadow-xl">
-      <div class="h-0.5 bg-gradient-to-r from-primary-container to-primary-container/10"></div>
-      <div class="p-5 md:p-6">
-        <div class="flex items-center gap-2 mb-5">
-          <span class="material-symbols-outlined text-red-600 text-[20px]">upload_file</span>
-          <span class="font-headline font-bold text-sm tracking-widest uppercase">Upload New SOP</span>
+  <!-- Inner tabs: Upload | Browse -->
+  <div class="flex gap-1 bg-slate-100 rounded-xl p-1 mb-5 w-fit">
+    <button id="sopTabUpload" onclick="sopInnerTab('upload')"
+      class="hidden px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all bg-white text-slate-700 shadow-sm">
+      <span class="material-symbols-outlined text-[14px] align-middle mr-1">upload_file</span>Upload
+    </button>
+    <button id="sopTabBrowse" onclick="sopInnerTab('browse')"
+      class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all bg-white text-slate-700 shadow-sm">
+      <span class="material-symbols-outlined text-[14px] align-middle mr-1">grid_view</span>Browse SOPs
+    </button>
+  </div>
+
+  <!-- UPLOAD PANEL -->
+  <div id="sopPanelUpload" class="hidden mb-2">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center">
+          <span class="material-symbols-outlined text-red-500 text-[18px]">upload_file</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">SOP Title *</label>
-            <input id="sopTitle" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="e.g. Confined Space Entry"/>
-          </div>
-          <div class="space-y-1.5">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Category Name *</label>
-            <div class="relative">
-              <input id="sopCat" type="text" autocomplete="off" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Type or select..."
-                oninput="filterCatDropdown(this.value)" onfocus="showCatDropdown()" onblur="setTimeout(hideCatDropdown,200)"/>
-              <div id="catDropdown" class="hidden absolute top-full left-0 right-0 bg-slate-100est rounded-b-lg z-50 max-h-40 overflow-y-auto border border-slate-200 shadow-xl"></div>
-            </div>
-          </div>
-          <div class="space-y-1.5 md:col-span-2">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Description</label>
-            <input id="sopDesc" type="text" class="w-full bg-white rounded-lg px-4 py-3 text-slate-800 font-body text-sm border-none focus:bg-slate-100est transition-colors" placeholder="Brief description of what this SOP covers"/>
-          </div>
-          <div class="space-y-1.5 md:col-span-2">
-            <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Attach File (PDF or Image) *</label>
-            <div onclick="document.getElementById('sopFile').click()" class="border-2 border-dashed border-slate-200 hover:border-primary-container/50 rounded-xl p-6 text-center cursor-pointer transition-all hover:bg-primary-container/5">
-              <input type="file" id="sopFile" accept=".pdf,image/*" class="hidden" onchange="handleSopFile(this)"/>
-              <span class="material-symbols-outlined text-3xl text-slate-300 block mb-2">attach_file</span>
-              <div class="text-xs text-slate-400 font-label">Click to attach PDF or image</div>
-              <div class="text-[10px] text-slate-300 font-label mt-1">PDF, JPG, PNG — max 10MB</div>
-            </div>
-            <div id="sopFP"></div>
+        <div>
+          <div class="font-headline font-bold text-slate-800 text-sm">Upload New SOP</div>
+          <div class="text-[10px] text-slate-400 font-label">PDF or image — visible to all mine workers</div>
+        </div>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">SOP Title *</label>
+          <input id="sopTitle" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-red-400 focus:bg-white transition-colors" placeholder="e.g. Confined Space Entry Procedure"/>
+        </div>
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Category Name *</label>
+          <div class="relative">
+            <input id="sopCat" type="text" autocomplete="off"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-red-400 focus:bg-white transition-colors"
+              placeholder="Type or select a category..."
+              oninput="filterCatDropdown(this.value)" onfocus="showCatDropdown()" onblur="setTimeout(hideCatDropdown,200)"/>
+            <div id="catDropdown" class="hidden absolute top-full left-0 right-0 bg-white rounded-xl z-50 max-h-40 overflow-y-auto border border-slate-200 shadow-xl mt-1"></div>
           </div>
         </div>
-        <button id="sopUpBtn" onclick="uploadSOP()" class="bg-primary-container hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-lg font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_20px_rgba(229,9,20,0.3)] flex items-center gap-2">
+        <div class="space-y-1.5 md:col-span-2">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Description</label>
+          <input id="sopDesc" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-red-400 focus:bg-white transition-colors" placeholder="Brief description of what this SOP covers"/>
+        </div>
+        <div class="space-y-1.5 md:col-span-2">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Attach File (PDF or Image) *</label>
+          <div onclick="document.getElementById('sopFile').click()"
+            class="border-2 border-dashed border-slate-200 hover:border-red-300 rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-red-50/30 group">
+            <input type="file" id="sopFile" accept=".pdf,image/*" class="hidden" onchange="handleSopFile(this)"/>
+            <span class="material-symbols-outlined text-4xl text-slate-200 group-hover:text-red-300 block mb-2 transition-colors">attach_file</span>
+            <div class="text-sm text-slate-400 font-label font-medium">Click to attach PDF or image</div>
+            <div class="text-xs text-slate-300 font-label mt-1">PDF, JPG, PNG — max 10MB</div>
+          </div>
+          <div id="sopFP"></div>
+        </div>
+      </div>
+      <div class="px-6 pb-6">
+        <button id="sopUpBtn" onclick="uploadSOP()"
+          class="bg-primary-container hover:scale-[1.02] active:scale-95 text-on-primary-container px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_16px_rgba(229,9,20,0.25)] flex items-center gap-2">
           <div id="sopUpSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
           <span id="sopUpTxt">UPLOAD SOP</span>
-          <span class="material-symbols-outlined text-[18px]">upload</span>
+          <span class="material-symbols-outlined text-[16px]">upload</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Tabs + Search -->
-  <div id="sopTabsWrap" class="hidden mb-5">
-    <div class="flex items-center gap-3 flex-wrap">
-      <div class="sop-tabs flex gap-2 overflow-x-auto flex-1 pb-1">
-        <button onclick="filterByCat('__all__',this)" class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all">All SOPs</button>
-        <div id="sopCatTabs" class="contents"></div>
+  <!-- BROWSE PANEL -->
+  <div id="sopPanelBrowse">
+    <!-- Category filter tabs + search -->
+    <div id="sopTabsWrap" class="hidden mb-5">
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="sop-tabs flex gap-2 overflow-x-auto flex-1 pb-1">
+          <button onclick="filterByCat('__all__',this)"
+            class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm">All SOPs</button>
+          <div id="sopCatTabs" class="contents"></div>
+        </div>
+        <select id="sopSearchDrop" onchange="jumpToSOP(this.value)"
+          class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 text-xs font-label appearance-none min-w-[180px] focus:border-red-400 shadow-sm">
+          <option value="">🔍 Search SOP...</option>
+        </select>
       </div>
-      <select id="sopSearchDrop" onchange="jumpToSOP(this.value)" class="bg-white border-none rounded-lg px-3 py-2 text-slate-800 text-xs font-label appearance-none min-w-[160px] focus:bg-slate-100est">
-        <option value="">🔍 Search SOP...</option>
-      </select>
+    </div>
+
+    <div class="flex items-center justify-center py-12 gap-3 hidden" id="sopLD">
+      <div class="w-6 h-6 border-2 border-slate-200 border-t-red-500 rounded-full spin-anim"></div>
+      <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading SOPs...</span>
+    </div>
+    <div id="sopGroupedContent"></div>
+    <div id="sopES" class="hidden text-center py-16">
+      <span class="material-symbols-outlined text-5xl text-slate-200 mb-3 block">folder_open</span>
+      <div class="text-sm font-bold uppercase tracking-widest font-label text-slate-500 mb-1">No SOPs uploaded yet</div>
+      <div class="text-xs text-slate-400 font-label">Use the Upload tab to add your first SOP</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ STATUTORY ORDERS ════ -->
+<div id="sec-statutory" class="sec pt-6">
+  <div class="mb-5">
+    <span class="text-red-500 font-label text-[0.6rem] uppercase tracking-widest block mb-1">Legal & Compliance</span>
+    <h1 class="font-headline text-2xl md:text-3xl font-bold tracking-tight text-slate-800">Statutory Orders</h1>
+    <p class="text-slate-400 text-xs mt-1 font-label">Regulatory orders, circulars and compliance documents</p>
+  </div>
+
+  <!-- Inner tabs: Upload | Browse -->
+  <div class="flex gap-1 bg-slate-100 rounded-xl p-1 mb-5 w-fit">
+    <button id="statTabUpload" onclick="statInnerTab('upload')"
+      class="hidden px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all text-slate-400">
+      <span class="material-symbols-outlined text-[14px] align-middle mr-1">upload_file</span>Upload
+    </button>
+    <button id="statTabBrowse" onclick="statInnerTab('browse')"
+      class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all bg-white text-slate-700 shadow-sm">
+      <span class="material-symbols-outlined text-[14px] align-middle mr-1">grid_view</span>Browse Orders
+    </button>
+  </div>
+
+  <!-- UPLOAD PANEL (admin only) -->
+  <div id="statPanelUpload" class="hidden mb-2">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+          <span class="material-symbols-outlined text-amber-500 text-[18px]">gavel</span>
+        </div>
+        <div>
+          <div class="font-headline font-bold text-slate-800 text-sm">Upload Statutory Order</div>
+          <div class="text-[10px] text-slate-400 font-label">PDF or image — visible to all mine workers</div>
+        </div>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Document Title *</label>
+          <input id="statTitle" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-amber-400 focus:bg-white transition-colors" placeholder="e.g. Mines Act Section 22 Notice"/>
+        </div>
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Category *</label>
+          <div class="relative">
+            <select id="statCat" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm appearance-none focus:border-amber-400 focus:bg-white transition-colors">
+              <option value="">Select category</option>
+              <option>Mines Act</option>
+              <option>Safety Regulations</option>
+              <option>Environment</option>
+              <option>Labour Laws</option>
+              <option>Circulars</option>
+              <option>Notices</option>
+              <option>Other</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[18px]">expand_more</span>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Reference Number</label>
+          <input id="statRef" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-amber-400 focus:bg-white transition-colors" placeholder="e.g. No. 12/2024"/>
+        </div>
+        <div class="space-y-1.5">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Issued Date</label>
+          <input id="statDate" type="date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-amber-400 focus:bg-white transition-colors"/>
+        </div>
+        <div class="space-y-1.5 md:col-span-2">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Description</label>
+          <input id="statDesc" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-body text-sm focus:border-amber-400 focus:bg-white transition-colors" placeholder="Brief summary of this order"/>
+        </div>
+        <div class="space-y-1.5 md:col-span-2">
+          <label class="font-label text-[0.6rem] uppercase tracking-widest text-slate-500 px-1">Attach File (PDF or Image) *</label>
+          <div onclick="document.getElementById('statFile').click()"
+            class="border-2 border-dashed border-slate-200 hover:border-amber-300 rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-amber-50/30 group">
+            <input type="file" id="statFile" accept=".pdf,image/*" class="hidden" onchange="handleStatFile(this)"/>
+            <span class="material-symbols-outlined text-4xl text-slate-200 group-hover:text-amber-300 block mb-2 transition-colors">gavel</span>
+            <div class="text-sm text-slate-400 font-label font-medium">Click to attach PDF or image</div>
+            <div class="text-xs text-slate-300 font-label mt-1">PDF, JPG, PNG — max 10MB</div>
+          </div>
+          <div id="statFP"></div>
+        </div>
+      </div>
+      <div class="px-6 pb-6">
+        <button id="statUpBtn" onclick="uploadStat()"
+          class="bg-amber-500 hover:bg-amber-600 hover:scale-[1.02] active:scale-95 text-white px-6 py-3 rounded-xl font-headline font-bold text-sm tracking-widest transition-all shadow-[0_4px_16px_rgba(245,158,11,0.3)] flex items-center gap-2">
+          <div id="statUpSpin" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-anim"></div>
+          <span id="statUpTxt">UPLOAD ORDER</span>
+          <span class="material-symbols-outlined text-[16px]">upload</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="ld items-center justify-center py-12 gap-3" id="sopLD">
-    <div class="w-6 h-6 border-2 border-slate-200 border-t-red-600 rounded-full spin-anim"></div>
-    <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading SOPs...</span>
-  </div>
-  <div id="sopGroupedContent"></div>
-  <div id="sopES" class="hidden text-center py-16 text-slate-400">
-    <span class="material-symbols-outlined text-5xl mb-3 block text-slate-300">folder_open</span>
-    <div class="text-sm font-bold uppercase tracking-widest font-label mb-1">No SOPs uploaded yet</div>
-    <div class="text-xs text-slate-300 font-label">Admin can upload PDFs or images using the form above</div>
+  <!-- BROWSE PANEL -->
+  <div id="statPanelBrowse">
+    <!-- Category filter tabs -->
+    <div id="statTabsWrap" class="hidden mb-5">
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="sop-tabs flex gap-2 overflow-x-auto flex-1 pb-1">
+          <button onclick="filterStatByCat('__all__',this)"
+            class="statcattab whitespace-nowrap px-4 py-2 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm">All Orders</button>
+          <div id="statCatTabs" class="contents"></div>
+        </div>
+        <select id="statSearchDrop" onchange="jumpToStat(this.value)"
+          class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 text-xs font-label appearance-none min-w-[180px] focus:border-amber-400 shadow-sm">
+          <option value="">🔍 Search Order...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center py-12 gap-3 hidden" id="statLD">
+      <div class="w-6 h-6 border-2 border-slate-200 border-t-amber-500 rounded-full spin-anim"></div>
+      <span class="text-xs text-slate-400 font-label uppercase tracking-widest">Loading orders...</span>
+    </div>
+    <div id="statGroupedContent"></div>
+    <div id="statES" class="hidden text-center py-16">
+      <span class="material-symbols-outlined text-5xl text-slate-200 mb-3 block">gavel</span>
+      <div class="text-sm font-bold uppercase tracking-widest font-label text-slate-500 mb-1">No statutory orders uploaded yet</div>
+      <div class="text-xs text-slate-400 font-label">Use the Upload tab to add regulatory documents</div>
+    </div>
   </div>
 </div>
 
@@ -733,7 +877,9 @@ function initApp(){
     if(rp){rp.textContent=currentUser.role.toUpperCase();}
     buildNav();
     if(currentUser.role==='admin'){
-      const ua=document.getElementById('sopUploadArea');if(ua)ua.classList.remove('hidden');
+      // Show upload tabs for admin
+  const sopUpTab=document.getElementById('sopTabUpload');if(sopUpTab)sopUpTab.classList.remove('hidden');
+  const statUpTab=document.getElementById('statTabUpload');if(statUpTab)statUpTab.classList.remove('hidden');
       switchSec('sec-dashboard');loadDash();
     }else{
       switchSec('sec-report');prefill();
@@ -745,11 +891,13 @@ function initApp(){
 function buildNav(){
   const wt=[{id:'sec-report',l:'Report',icon:'warning',full:'Report Incident'},
             {id:'sec-mine',l:'Mine',icon:'assignment',full:'My Reports'},
-            {id:'sec-sop',l:'SOPs',icon:'menu_book',full:'SOPs'}];
+            {id:'sec-sop',l:'SOPs',icon:'menu_book',full:'SOPs'},
+            {id:'sec-statutory',l:'Orders',icon:'gavel',full:'Statutory Orders'}];
   const at=[{id:'sec-dashboard',l:'Dashboard',icon:'dashboard',full:'Dashboard'},
             {id:'sec-incidents',l:'Incidents',icon:'report',full:'All Incidents'},
             {id:'sec-workers',l:'Workers',icon:'group',full:'Mine Workers'},
-            {id:'sec-sop',l:'SOPs',icon:'menu_book',full:'SOPs'}];
+            {id:'sec-sop',l:'SOPs',icon:'menu_book',full:'SOPs'},
+            {id:'sec-statutory',l:'Orders',icon:'gavel',full:'Statutory Orders'}];
   const tabs=currentUser.role==='admin'?at:wt;
 
   // Desktop nav
@@ -783,6 +931,7 @@ function switchSec(id,btn){
   if(id==='sec-workers')loadWorkers();
   if(id==='sec-dashboard')loadDash();
   if(id==='sec-sop')loadDBSOPs();
+  if(id==='sec-statutory')loadStatutory();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1155,11 +1304,22 @@ async function loadWorkers(){
   }catch(e){hideL('wkLD');toast('⚠️ '+e.message,'error');}
 }
 
-// ── SOP ───────────────────────────────────────────────────────
+// ── SOP INNER TABS ───────────────────────────────────────────
+function sopInnerTab(tab) {
+  const isUpload = tab === 'upload';
+  document.getElementById('sopPanelUpload').classList.toggle('hidden', !isUpload);
+  document.getElementById('sopPanelBrowse').classList.toggle('hidden', isUpload);
+  const activeClass = 'bg-white text-slate-700 shadow-sm';
+  const inactiveClass = 'text-slate-400';
+  document.getElementById('sopTabUpload').className = `px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all ${isUpload ? activeClass : inactiveClass}`;
+  document.getElementById('sopTabBrowse').className = `px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all ${!isUpload ? activeClass : inactiveClass}`;
+}
+
+// ── SOP FILE UPLOAD ───────────────────────────────────────────
 function handleSopFile(input){
   const f=input.files[0];if(!f)return;uploadedFile=f;
   const ico=f.type==='application/pdf'?'picture_as_pdf':'image';
-  document.getElementById('sopFP').innerHTML=`<div class="flex items-center gap-2 mt-3 px-4 py-2.5 bg-green-50 border border-green-200 rounded-lg text-green-700 text-xs font-bold font-label"><span class="material-symbols-outlined text-[16px]">${ico}</span>${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
+  document.getElementById('sopFP').innerHTML=`<div class="flex items-center gap-2 mt-3 px-4 py-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-600 text-xs font-bold font-label"><span class="material-symbols-outlined text-[16px]">${ico}</span>${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
 }
 
 async function uploadSOP(){
@@ -1177,35 +1337,45 @@ async function uploadSOP(){
     document.getElementById('sopFP').innerHTML='';
     document.getElementById('sopFile').value='';
     uploadedFile=null;
+    sopInnerTab('browse');
     await loadDBSOPs();
   }catch(e){toast('⚠️ '+e.message,'error');}
   setIdle('sopUpBtn','sopUpSpin','sopUpTxt','UPLOAD SOP');
 }
 
 async function loadDBSOPs(){
-  showL('sopLD');document.getElementById('sopGroupedContent').innerHTML='';hide2('sopES');
+  const ldEl=document.getElementById('sopLD');
+  if(ldEl)ldEl.classList.remove('hidden');
+  document.getElementById('sopGroupedContent').innerHTML='';
+  hide2('sopES');
   document.getElementById('sopTabsWrap').classList.add('hidden');
   try{
-    const d=await api('GET','/api/sops');dbSOPs=d.sops||[];hideL('sopLD');
+    const d=await api('GET','/api/sops');
+    dbSOPs=d.sops||[];
+    if(ldEl)ldEl.classList.add('hidden');
     if(!dbSOPs.length){show2('sopES');return;}
     buildSopCatUI();renderGrouped('__all__');
-  }catch(e){hideL('sopLD');show2('sopES');}
+  }catch(e){
+    if(ldEl)ldEl.classList.add('hidden');
+    show2('sopES');
+  }
 }
 
 function buildSopCatUI(){
   const cats=[...new Set(dbSOPs.map(s=>s.category))];
   document.getElementById('sopCatTabs').innerHTML=cats.map(cat=>
-    `<button class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100est text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-800" onclick="filterByCat('${escH(cat)}',this)">${cat}</button>`
+    `<button class="sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-700 shadow-sm" onclick="filterByCat('${escH(cat)}',this)">${cat}</button>`
   ).join('');
-  document.getElementById('sopSearchDrop').innerHTML=`<option value="">🔍 Search SOP...</option>`+dbSOPs.map(s=>`<option value="${s.id}">${s.title} (${s.category})</option>`).join('');
+  document.getElementById('sopSearchDrop').innerHTML=`<option value="">🔍 Search SOP...</option>`+dbSOPs.map(s=>`<option value="${s.id}">${s.title} — ${s.category}</option>`).join('');
   window._existingCats=[...new Set(dbSOPs.map(s=>s.category))];
   document.getElementById('sopTabsWrap').classList.remove('hidden');
 }
 
 function filterByCat(cat,btn){
-  document.querySelectorAll('.sopcattab').forEach(b=>{b.classList.remove('bg-primary-container','text-white');b.classList.add('bg-slate-100est','text-slate-500');});
-  btn.classList.add('bg-primary-container','text-white');
-  btn.classList.remove('bg-slate-100est','text-slate-500');
+  document.querySelectorAll('.sopcattab').forEach(b=>{
+    b.className='sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-700 shadow-sm';
+  });
+  btn.className='sopcattab whitespace-nowrap px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm';
   renderGrouped(cat);
 }
 
@@ -1217,7 +1387,15 @@ function renderGrouped(filterCat){
     const cats=[...new Set(dbSOPs.map(s=>s.category))];
     container.innerHTML=cats.map(cat=>{
       const cs=dbSOPs.filter(s=>s.category===cat);
-      return`<div class="mb-6"><div class="flex items-center gap-3 mb-3 pb-2 border-b border-slate-200"><span class="font-headline font-bold text-base tracking-tight">${cat}</span><span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded-full bg-red-50 text-red-600">${cs.length} SOP${cs.length>1?'s':''}</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${cs.map(s=>sopCardHTML(s)).join('')}</div></div>`;
+      return`<div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-px flex-1 bg-slate-100"></div>
+          <span class="font-headline font-bold text-slate-700 text-sm px-3">${cat}</span>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded-full bg-red-50 text-red-500 border border-red-100">${cs.length} SOP${cs.length>1?'s':''}</span>
+          <div class="h-px flex-1 bg-slate-100"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${cs.map(s=>sopCardHTML(s)).join('')}</div>
+      </div>`;
     }).join('');
   }else{
     container.innerHTML=`<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${sops.map(s=>sopCardHTML(s)).join('')}</div>`;
@@ -1226,20 +1404,20 @@ function renderGrouped(filterCat){
 
 function sopCardHTML(s){
   const isPdf=s.file_type==='application/pdf';
-  return`<div class="bg-white rounded-xl p-4 border border-slate-200 hover:border-red-300 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md group" onclick="openSOP('${s.id}')">
+  return`<div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md cursor-pointer transition-all hover:-translate-y-0.5 group" onclick="openSOP('${s.id}')">
     <div class="flex justify-between items-start mb-3">
-      <div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center">
-        <span class="material-symbols-outlined text-red-600 text-[20px]">${isPdf?'picture_as_pdf':'image'}</span>
+      <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-red-400 text-[20px]">${isPdf?'picture_as_pdf':'image'}</span>
       </div>
-      ${currentUser.role==='admin'?`<button onclick="deleteSOP('${s.id}',event)" class="w-7 h-7 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-100 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
+      ${currentUser.role==='admin'?`<button onclick="deleteSOP('${s.id}',event)" class="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-300 hover:text-red-400 hover:bg-red-50 hover:border-red-200 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
     </div>
-    <div class="text-[9px] font-bold uppercase tracking-widest text-red-600 font-label mb-1">${s.category}</div>
-    <div class="text-sm font-bold text-slate-800 font-headline leading-tight mb-1">${s.title}</div>
-    <div class="text-[11px] text-slate-400 font-label line-clamp-2 mb-3">${s.description||''}</div>
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-1 text-[10px] font-bold font-label text-green-400 bg-green-900/20 px-2 py-0.5 rounded-full">
-        <span class="material-symbols-outlined text-[12px]">attach_file</span>${s.file_name}
-      </div>
+    <div class="text-[9px] font-bold uppercase tracking-widest text-red-500 font-label mb-1">${s.category}</div>
+    <div class="text-sm font-bold text-slate-800 font-headline leading-snug mb-1">${s.title}</div>
+    <div class="text-[11px] text-slate-400 font-label line-clamp-2 mb-3 leading-relaxed">${s.description||''}</div>
+    <div class="flex items-center justify-between pt-2 border-t border-slate-50">
+      <span class="flex items-center gap-1 text-[10px] font-bold font-label text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">
+        <span class="material-symbols-outlined text-[11px]">${isPdf?'picture_as_pdf':'image'}</span>${isPdf?'PDF':'Image'}
+      </span>
       <span class="text-[9px] text-slate-300 font-label">${new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
     </div>
   </div>`;
@@ -1260,18 +1438,18 @@ function openSOP(id){
     const blob=new Blob([byteNums],{type:s.file_type}),blobUrl=URL.createObjectURL(blob);
     if(isPdf){
       body+=`<div class="flex gap-2 mb-4 flex-wrap">
-        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-primary-container text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label shadow-[0_4px_20px_rgba(229,9,20,0.3)] hover:scale-105 transition-all no-underline">
+        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label shadow-md hover:scale-105 transition-all no-underline">
           <span class="material-symbols-outlined text-[16px]">download</span>Download PDF
         </a>
-        <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-slate-100est text-tertiary border border-tertiary/30 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest font-label hover:bg-slate-50 transition-all no-underline">
+        <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label hover:bg-slate-200 transition-all no-underline">
           <span class="material-symbols-outlined text-[16px]">open_in_new</span>Open in Tab
         </a>
       </div>
-      <iframe src="${blobUrl}" type="application/pdf" class="w-full rounded-xl border border-slate-200" style="height:520px"></iframe>`;
+      <iframe src="${blobUrl}" type="application/pdf" class="w-full rounded-2xl border border-slate-200 shadow-sm" style="height:520px"></iframe>`;
     }else{
-      body+=`<img src="${blobUrl}" class="w-full rounded-xl border border-slate-200" alt="${s.title}"/>`;
+      body+=`<img src="${blobUrl}" class="w-full rounded-2xl border border-slate-200 shadow-sm" alt="${s.title}"/>`;
     }
-  }else{body+=`<div class="flex items-center gap-2 text-blue-600 text-xs font-label bg-blue-50 border border-blue-200 rounded-lg px-4 py-3"><span class="material-symbols-outlined text-[16px]">info</span>No file attached.</div>`;}
+  }else{body+=`<div class="flex items-center gap-2 text-blue-600 text-xs font-label bg-blue-50 border border-blue-200 rounded-xl px-4 py-3"><span class="material-symbols-outlined text-[16px]">info</span>No file attached.</div>`;}
   document.getElementById('mBody').innerHTML=body;
   document.getElementById('sopModal').classList.remove('hidden');
 }
@@ -1291,10 +1469,191 @@ function filterCatDropdown(val){
   const cats=window._existingCats||[];const dd=document.getElementById('catDropdown');
   const filtered=val?cats.filter(c=>c.toLowerCase().includes(val.toLowerCase())):cats;
   if(!filtered.length){dd.classList.add('hidden');return;}
-  dd.innerHTML=filtered.map(c=>`<div onclick="selectCat('${escH(c)}')" class="px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-50 cursor-pointer border-b border-slate-200 last:border-0">${c}</div>`).join('');
+  dd.innerHTML=filtered.map(c=>`<div onclick="selectCat('${escH(c)}')" class="px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0">${c}</div>`).join('');
   dd.classList.remove('hidden');
 }
 function selectCat(val){document.getElementById('sopCat').value=val;hideCatDropdown();}
+
+// ── STATUTORY ORDERS ──────────────────────────────────────────
+let dbStatutory=[], uploadedStatFile=null;
+
+function statInnerTab(tab){
+  const isUpload=tab==='upload';
+  document.getElementById('statPanelUpload').classList.toggle('hidden',!isUpload);
+  document.getElementById('statPanelBrowse').classList.toggle('hidden',isUpload);
+  const activeClass='bg-white text-slate-700 shadow-sm';
+  const inactiveClass='text-slate-400';
+  document.getElementById('statTabUpload').className=`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all ${isUpload?activeClass:inactiveClass}`;
+  document.getElementById('statTabBrowse').className=`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest font-label transition-all ${!isUpload?activeClass:inactiveClass}`;
+}
+
+function handleStatFile(input){
+  const f=input.files[0];if(!f)return;uploadedStatFile=f;
+  const ico=f.type==='application/pdf'?'picture_as_pdf':'image';
+  document.getElementById('statFP').innerHTML=`<div class="flex items-center gap-2 mt-3 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-600 text-xs font-bold font-label"><span class="material-symbols-outlined text-[16px]">${ico}</span>${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;
+}
+
+async function uploadStat(){
+  const title=document.getElementById('statTitle').value.trim();
+  const cat=document.getElementById('statCat').value;
+  if(!title){toast('⚠️ Document title is required.','error');return;}
+  if(!cat){toast('⚠️ Category is required.','error');return;}
+  if(!uploadedStatFile){toast('⚠️ Please attach a PDF or image.','error');return;}
+  setBusy('statUpBtn','statUpSpin','statUpTxt','UPLOADING...');
+  try{
+    const file_data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(uploadedStatFile);});
+    // Store as SOP with special category prefix "STAT: "
+    await api('POST','/api/sops',{
+      title:title,
+      category:'[STAT] '+cat,
+      description:(document.getElementById('statDesc').value.trim()||'')+(document.getElementById('statRef').value.trim()?' | Ref: '+document.getElementById('statRef').value.trim():'')+(document.getElementById('statDate').value?' | Issued: '+document.getElementById('statDate').value:''),
+      file_name:uploadedStatFile.name,
+      file_data,
+      file_type:uploadedStatFile.type
+    });
+    toast('✅ Statutory order uploaded!','success');
+    ['statTitle','statDesc','statRef','statDate'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('statCat').value='';
+    document.getElementById('statFP').innerHTML='';
+    document.getElementById('statFile').value='';
+    uploadedStatFile=null;
+    statInnerTab('browse');
+    await loadStatutory();
+  }catch(e){toast('⚠️ '+e.message,'error');}
+  setIdle('statUpBtn','statUpSpin','statUpTxt','UPLOAD ORDER');
+}
+
+async function loadStatutory(){
+  const ldEl=document.getElementById('statLD');
+  if(ldEl)ldEl.classList.remove('hidden');
+  document.getElementById('statGroupedContent').innerHTML='';
+  hide2('statES');
+  document.getElementById('statTabsWrap').classList.add('hidden');
+  try{
+    const d=await api('GET','/api/sops');
+    // Filter only statutory items (category starts with [STAT])
+    dbStatutory=(d.sops||[]).filter(s=>s.category.startsWith('[STAT] '));
+    if(ldEl)ldEl.classList.add('hidden');
+    if(!dbStatutory.length){show2('statES');return;}
+    buildStatCatUI();renderStatGrouped('__all__');
+  }catch(e){
+    if(ldEl)ldEl.classList.add('hidden');
+    show2('statES');
+  }
+}
+
+function buildStatCatUI(){
+  const cats=[...new Set(dbStatutory.map(s=>s.category.replace('[STAT] ','']))];
+  document.getElementById('statCatTabs').innerHTML=cats.map(cat=>
+    `<button class="statcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-700 shadow-sm" onclick="filterStatByCat('${escH(cat)}',this)">${cat}</button>`
+  ).join('');
+  document.getElementById('statSearchDrop').innerHTML=`<option value="">🔍 Search Order...</option>`+dbStatutory.map(s=>`<option value="${s.id}">${s.title} — ${s.category.replace('[STAT] ','')}</option>`).join('');
+  document.getElementById('statTabsWrap').classList.remove('hidden');
+}
+
+function filterStatByCat(cat,btn){
+  document.querySelectorAll('.statcattab').forEach(b=>{
+    b.className='statcattab whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest font-label transition-all hover:text-slate-700 shadow-sm';
+  });
+  btn.className='statcattab whitespace-nowrap px-4 py-2 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-widest font-label transition-all shadow-sm';
+  renderStatGrouped(cat);
+}
+
+function renderStatGrouped(filterCat){
+  const container=document.getElementById('statGroupedContent');
+  const items=filterCat==='__all__'?dbStatutory:dbStatutory.filter(s=>s.category===('[STAT] '+filterCat));
+  if(!items.length){container.innerHTML=`<div class="text-center py-12 text-slate-400 text-xs font-label uppercase tracking-widest">No orders in this category</div>`;return;}
+  if(filterCat==='__all__'){
+    const cats=[...new Set(dbStatutory.map(s=>s.category.replace('[STAT] ','')))];
+    container.innerHTML=cats.map(cat=>{
+      const cs=dbStatutory.filter(s=>s.category==='[STAT] '+cat);
+      return`<div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-px flex-1 bg-amber-100"></div>
+          <span class="font-headline font-bold text-slate-700 text-sm px-3">${cat}</span>
+          <span class="text-[9px] font-bold uppercase tracking-widest font-label px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100">${cs.length}</span>
+          <div class="h-px flex-1 bg-amber-100"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${cs.map(s=>statCardHTML(s)).join('')}</div>
+      </div>`;
+    }).join('');
+  }else{
+    container.innerHTML=`<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">${items.map(s=>statCardHTML(s)).join('')}</div>`;
+  }
+}
+
+function statCardHTML(s){
+  const isPdf=s.file_type==='application/pdf';
+  const catLabel=s.category.replace('[STAT] ','');
+  const parts=s.description?s.description.split(' | '):[]; 
+  const desc=parts[0]||'';
+  const ref=parts.find(p=>p.startsWith('Ref:'));
+  const issued=parts.find(p=>p.startsWith('Issued:'));
+  return`<div class="bg-white rounded-2xl p-4 border border-amber-100 shadow-sm hover:shadow-md cursor-pointer transition-all hover:-translate-y-0.5 group" onclick="openStat('${s.id}')">
+    <div class="flex justify-between items-start mb-3">
+      <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-amber-500 text-[20px]">${isPdf?'gavel':'image'}</span>
+      </div>
+      ${currentUser.role==='admin'?`<button onclick="deleteStat('${s.id}',event)" class="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-300 hover:text-red-400 hover:bg-red-50 hover:border-red-200 transition-all"><span class="material-symbols-outlined text-[14px]">delete</span></button>`:''}
+    </div>
+    <div class="text-[9px] font-bold uppercase tracking-widest text-amber-600 font-label mb-1">${catLabel}</div>
+    <div class="text-sm font-bold text-slate-800 font-headline leading-snug mb-2">${s.title}</div>
+    ${ref?`<div class="text-[10px] text-slate-500 font-label mb-1">${ref}</div>`:''}
+    ${issued?`<div class="text-[10px] text-slate-400 font-label mb-1">${issued}</div>`:''}
+    ${desc?`<div class="text-[11px] text-slate-400 font-label line-clamp-2 leading-relaxed mb-3">${desc}</div>`:''}
+    <div class="flex items-center justify-between pt-2 border-t border-amber-50">
+      <span class="flex items-center gap-1 text-[10px] font-bold font-label text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full">
+        <span class="material-symbols-outlined text-[11px]">${isPdf?'picture_as_pdf':'image'}</span>${isPdf?'PDF':'Image'}
+      </span>
+      <span class="text-[9px] text-slate-300 font-label">${new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
+    </div>
+  </div>`;
+}
+
+function jumpToStat(id){if(!id)return;openStat(id);document.getElementById('statSearchDrop').value='';}
+
+function openStat(id){
+  const s=dbStatutory.find(x=>x.id===id);if(!s)return;
+  const isPdf=s.file_type==='application/pdf';
+  const catLabel=s.category.replace('[STAT] ','');
+  document.getElementById('mTitle').textContent=(isPdf?'⚖️ ':'🖼️ ')+s.title;
+  document.getElementById('mSub').textContent='STATUTORY ORDER · '+catLabel+' — '+new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  let body='';
+  if(s.description){
+    const parts=s.description.split(' | ');
+    parts.forEach(p=>{
+      if(p)body+=`<div class="text-xs font-label text-slate-500 mb-1">${p}</div>`;
+    });
+    body+='<div class="mb-4"></div>';
+  }
+  if(s.file_data&&s.file_type){
+    const byteChars=atob(s.file_data),byteNums=new Uint8Array(byteChars.length);
+    for(let i=0;i<byteChars.length;i++)byteNums[i]=byteChars.charCodeAt(i);
+    const blob=new Blob([byteNums],{type:s.file_type}),blobUrl=URL.createObjectURL(blob);
+    if(isPdf){
+      body+=`<div class="flex gap-2 mb-4 flex-wrap">
+        <a href="${blobUrl}" download="${s.file_name}" class="flex items-center gap-2 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label shadow-md hover:scale-105 transition-all no-underline">
+          <span class="material-symbols-outlined text-[16px]">download</span>Download PDF
+        </a>
+        <a href="${blobUrl}" target="_blank" class="flex items-center gap-2 bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest font-label hover:bg-slate-200 transition-all no-underline">
+          <span class="material-symbols-outlined text-[16px]">open_in_new</span>Open in Tab
+        </a>
+      </div>
+      <iframe src="${blobUrl}" type="application/pdf" class="w-full rounded-2xl border border-slate-200 shadow-sm" style="height:520px"></iframe>`;
+    }else{
+      body+=`<img src="${blobUrl}" class="w-full rounded-2xl border border-slate-200 shadow-sm" alt="${s.title}"/>`;
+    }
+  }
+  document.getElementById('mBody').innerHTML=body;
+  document.getElementById('sopModal').classList.remove('hidden');
+}
+
+async function deleteStat(id,event){
+  event.stopPropagation();
+  if(!confirm('Delete this order permanently?'))return;
+  try{await api('DELETE',`/api/sops/${id}`);toast('✅ Order deleted','success');await loadStatutory();}
+  catch(e){toast('⚠️ '+e.message,'error');}
+}
 
 // ── FULLSCREEN ────────────────────────────────────────────────
 function openFullscreen(src){document.getElementById('fsImg').src=src;document.getElementById('photoFullscreen').classList.remove('hidden');}
