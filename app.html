@@ -554,6 +554,29 @@ tr:hover td{background:var(--slate-50)}
     </div>
   </div>
   <div id="sopBrPanel">
+    <!-- View All SOPs Banner -->
+    <a href="https://shorturl.at/V0HNE" target="_blank" rel="noopener"
+      style="display:flex;align-items:center;justify-content:space-between;gap:16px;
+             background:linear-gradient(135deg,#fff5f5 0%,#fff 100%);
+             border:1.5px solid #fecaca;border-radius:16px;
+             padding:16px 20px;margin-bottom:18px;text-decoration:none;
+             box-shadow:0 2px 8px rgba(229,9,20,.07);
+             transition:all .2s;cursor:pointer"
+      onmouseover="this.style.borderColor='var(--red)';this.style.boxShadow='0 4px 16px rgba(229,9,20,.15)';this.style.transform='translateY(-1px)'"
+      onmouseout="this.style.borderColor='#fecaca';this.style.boxShadow='0 2px 8px rgba(229,9,20,.07)';this.style.transform='translateY(0)'">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--red),#ff6b6b);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(229,9,20,.3)">
+          <span style="font-family:'Material Symbols Outlined';font-size:22px;color:#fff">menu_book</span>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#1e293b;font-family:'Inter',sans-serif;margin-bottom:2px">View All SOPs</div>
+          <div style="font-size:12px;color:#64748b;font-weight:500">Complete SOP reference library — tap to open</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:var(--red);color:#fff;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0;box-shadow:0 2px 8px rgba(229,9,20,.3)">
+        Open <span style="font-family:'Material Symbols Outlined';font-size:16px">open_in_new</span>
+      </div>
+    </a>
     <div id="sopTabsWrap" style="display:none;margin-bottom:16px">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="cat-tabs" style="flex:1"><button class="cat-tab active" onclick="filterSOPs('__all__',this)">All SOPs</button><div id="sopCatTabs" style="display:contents"></div></div>
