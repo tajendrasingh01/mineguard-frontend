@@ -190,11 +190,29 @@ select.glass-input option{background:#1c1c2e;color:#fff}
         <input id="regId" class="glass-input" type="text" placeholder="Enter your ID or NEIS number"/>
       </div>
       <div>
-        <div class="field-label">Department</div>
+        <div class="field-label">Employment Type</div>
         <select id="regDept" class="glass-input">
-          <option value="">Select Department</option>
+          <option value="">Select Employment Type</option>
           <option>Departmental</option>
           <option>Contractual</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">Department</div>
+        <select id="regDeptType" class="glass-input">
+          <option value="">Select Department</option>
+          <option>Electrical</option>
+          <option>Mechanical</option>
+          <option>Mining</option>
+          <option>Civil</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">Work Place</div>
+        <select id="regWorkplace" class="glass-input">
+          <option value="">Select Work Place</option>
+          <option>Below Ground</option>
+          <option>Surface</option>
         </select>
       </div>
       <div>
@@ -260,17 +278,21 @@ async function doLogin() {
   } catch(e) { err.textContent=e.message; err.classList.add('on'); setIdle('loginBtn','loginSpin','loginTxt','Sign In'); }
 }
 async function doRegister() {
-  const name=document.getElementById('regName').value.trim();
-  const id=document.getElementById('regId').value.trim();
-  const dept=document.getElementById('regDept').value;
-  const pw=document.getElementById('regPass').value;
-  const err=document.getElementById('regErr');
+  const name      = document.getElementById('regName').value.trim();
+  const id        = document.getElementById('regId').value.trim();
+  const empType   = document.getElementById('regDept').value;
+  const deptType  = document.getElementById('regDeptType').value;
+  const workplace = document.getElementById('regWorkplace').value;
+  const pw        = document.getElementById('regPass').value;
+  const err       = document.getElementById('regErr');
   err.classList.remove('on');
   if (!name||!id||!pw){err.textContent='Name, ID and password are required.';err.classList.add('on');return;}
   if (pw.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('on');return;}
   setBusy('regBtn','regSpin','regTxt','Creating...');
+  // Combine fields into department string for storage
+  const deptStr = [empType, deptType, workplace].filter(Boolean).join(' | ');
   try {
-    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,worker_id:id,department:dept,password:pw})});
+    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,worker_id:id,department:deptStr,password:pw})});
     const d=await r.json();
     if (!r.ok) throw new Error(d.error||'Registration failed');
     localStorage.setItem('mg_token',d.token);
