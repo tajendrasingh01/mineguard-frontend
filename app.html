@@ -455,102 +455,182 @@ tr:hover td{background:var(--slate-50)}
 
 <!-- ═══ REPORT INCIDENT ═══ -->
 <div id="sec-report" class="sec">
-  <div class="pg-eyebrow">Operational Safety</div>
-  <div class="pg-title">Report Incident</div>
-  <div class="pg-sub">Fill in as much detail as possible</div>
 
-  <div class="card">
-    <div class="step-hdr"><div class="step-num">1</div><div class="step-title">Your Details</div></div>
-    <div class="form-grid">
-      <div class="form-group"><label class="form-label">Full Name</label><input id="rName" class="form-input" type="text" readonly/></div>
-      <div class="form-group"><label class="form-label">ID / NEIS Number</label><input id="rId" class="form-input" type="text" readonly/></div>
-      <div class="form-group"><label class="form-label">Supervisor on Duty</label><input id="rSup" class="form-input" type="text" placeholder="Supervisor name"/></div>
-      <div class="form-group"><label class="form-label">Department</label><input id="rDept" class="form-input" type="text" readonly/></div>
+  <!-- Page header + language toggle -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+    <div>
+      <div class="pg-eyebrow" id="lbl-eyebrow">Operational Safety</div>
+      <div class="pg-title" id="lbl-title">Report Incident</div>
+      <div class="pg-sub" id="lbl-sub">Fill in as much detail as possible</div>
+    </div>
+    <!-- Language Toggle -->
+    <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--slate-200);border-radius:12px;padding:5px 6px;box-shadow:var(--shadow-sm);flex-shrink:0;margin-top:4px">
+      <button id="lang-en" onclick="setLang('en')"
+        style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:var(--red);color:#fff;font-family:var(--font)">
+        EN
+      </button>
+      <button id="lang-hi" onclick="setLang('hi')"
+        style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:none;color:var(--slate-400);font-family:var(--font)">
+        हिं
+      </button>
     </div>
   </div>
 
+  <!-- Section 1: Your Details -->
   <div class="card">
-    <div class="step-hdr"><div class="step-num">2</div><div class="step-title">Incident Details</div></div>
+    <div class="step-hdr">
+      <div class="step-num">1</div>
+      <div class="step-title" id="lbl-s1">Your Details</div>
+    </div>
     <div class="form-grid">
-      <div class="form-group"><label class="form-label">Date</label><input id="rDate" class="form-input" type="date"/></div>
-      <div class="form-group"><label class="form-label">Time</label><input id="rTime" class="form-input" type="time"/></div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-name">Full Name</label>
+        <input id="rName" class="form-input" type="text" readonly/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-neis">ID / NEIS Number</label>
+        <input id="rId" class="form-input" type="text" readonly/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-sup">Supervisor on Duty</label>
+        <input id="rSup" class="form-input" type="text" id="rSup" placeholder="Supervisor name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-dept">Department</label>
+        <input id="rDept" class="form-input" type="text" readonly/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Incident Details -->
+  <div class="card">
+    <div class="step-hdr">
+      <div class="step-num">2</div>
+      <div class="step-title" id="lbl-s2">Incident Details</div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" id="lbl-date">Date</label>
+        <input id="rDate" class="form-input" type="date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-time">Time</label>
+        <input id="rTime" class="form-input" type="time"/>
+      </div>
       <div class="form-group form-span">
-        <label class="form-label">Incident Type</label>
+        <label class="form-label" id="lbl-type">Incident Type</label>
         <select id="rType" class="form-input">
-          <option value="">— Select —</option>
-          <option>Rock Fall / Ground Failure</option><option>Blasting Accident</option>
-          <option>Equipment / Machinery Accident</option><option>Electrical Incident</option>
-          <option>Fire / Explosion</option><option>Gas / Fume Exposure</option>
-          <option>Fall from Height</option><option>Slip, Trip or Fall</option>
-          <option>Flooding / Inrush</option><option>Entrapment / Entanglement</option>
-          <option>Chemical Exposure / Spill</option><option>Vehicle Collision</option>
-          <option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option>
+          <option value="" id="opt-type-0">— Select —</option>
+          <option id="opt-type-1">Rock Fall / Ground Failure</option>
+          <option id="opt-type-2">Blasting Accident</option>
+          <option id="opt-type-3">Equipment / Machinery Accident</option>
+          <option id="opt-type-4">Electrical Incident</option>
+          <option id="opt-type-5">Fire / Explosion</option>
+          <option id="opt-type-6">Gas / Fume Exposure</option>
+          <option id="opt-type-7">Fall from Height</option>
+          <option id="opt-type-8">Slip, Trip or Fall</option>
+          <option id="opt-type-9">Flooding / Inrush</option>
+          <option id="opt-type-10">Entrapment / Entanglement</option>
+          <option id="opt-type-11">Chemical Exposure / Spill</option>
+          <option id="opt-type-12">Vehicle Collision</option>
+          <option id="opt-type-13">Lifting / Manual Handling Injury</option>
+          <option id="opt-type-14">Near Miss</option>
+          <option id="opt-type-15">Other</option>
         </select>
       </div>
       <div class="form-group form-span">
-        <label class="form-label">Location</label>
+        <label class="form-label" id="lbl-loc">Location</label>
         <div class="loc-grid">
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">factory</span>Surface – General</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">build</span>Surface – Workshop</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">terrain</span>UG – Stope</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">construction</span>UG – Development</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">local_shipping</span>UG – Haulage</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">air</span>UG – Ventilation</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">linear_scale</span>Conveyor Belt</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">trending_down</span>Incline</button>
-          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">local_shipping</span>Dispatch</button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">factory</span><span class="loc-lbl" id="loc-0">Surface – General</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">build</span><span class="loc-lbl" id="loc-1">Surface – Workshop</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">terrain</span><span class="loc-lbl" id="loc-2">UG – Stope</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">construction</span><span class="loc-lbl" id="loc-3">UG – Development</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">local_shipping</span><span class="loc-lbl" id="loc-4">UG – Haulage</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">air</span><span class="loc-lbl" id="loc-5">UG – Ventilation</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">linear_scale</span><span class="loc-lbl" id="loc-6">Conveyor Belt</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">trending_down</span><span class="loc-lbl" id="loc-7">Incline</span></button>
+          <button class="loc-btn" onclick="selLoc(this)"><span class="ms">local_shipping</span><span class="loc-lbl" id="loc-8">Dispatch</span></button>
         </div>
       </div>
-      <div class="form-group"><label class="form-label">Level / Zone Detail</label><input id="rLocD" class="form-input" type="text" placeholder="e.g. Level 4 – Block 2A"/></div>
-      <div class="form-group"><label class="form-label">Persons Injured</label><input id="rInj" class="form-input" type="number" min="0" value="0" inputmode="numeric"/></div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-locdetail">Level / Zone Detail</label>
+        <input id="rLocD" class="form-input" type="text" placeholder="e.g. Level 4 – Block 2A"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="lbl-inj">Persons Injured</label>
+        <input id="rInj" class="form-input" type="number" min="0" value="0" inputmode="numeric"/>
+      </div>
     </div>
   </div>
 
+  <!-- Section 3: Severity -->
   <div class="card">
-    <div class="step-hdr"><div class="step-num">3</div><div class="step-title">Severity Level</div></div>
+    <div class="step-hdr">
+      <div class="step-num">3</div>
+      <div class="step-title" id="lbl-s3">Severity Level</div>
+    </div>
     <div class="sev-row">
-      <button class="sev-btn" onclick="selSev(this,'none')" style="color:var(--slate-400)">⚪ None</button>
-      <button class="sev-btn nm" onclick="selSev(this,'nearMiss')">🔵 Near Miss</button>
-      <button class="sev-btn mi" onclick="selSev(this,'minor')">🟡 Minor</button>
-      <button class="sev-btn se" onclick="selSev(this,'serious')">🟠 Serious</button>
-      <button class="sev-btn cr" onclick="selSev(this,'critical')">🔴 Critical</button>
-      <button class="sev-btn fa" onclick="selSev(this,'fatality')">☠️ Fatality</button>
+      <button class="sev-btn" onclick="selSev(this,'none')" style="color:var(--slate-400)">⚪ <span id="sev-none">None</span></button>
+      <button class="sev-btn nm" onclick="selSev(this,'nearMiss')">🔵 <span id="sev-nm">Near Miss</span></button>
+      <button class="sev-btn mi" onclick="selSev(this,'minor')">🟡 <span id="sev-mi">Minor</span></button>
+      <button class="sev-btn se" onclick="selSev(this,'serious')">🟠 <span id="sev-se">Serious</span></button>
+      <button class="sev-btn cr" onclick="selSev(this,'critical')">🔴 <span id="sev-cr">Critical</span></button>
+      <button class="sev-btn fa" onclick="selSev(this,'fatality')">☠️ <span id="sev-fa">Fatality</span></button>
     </div>
   </div>
 
+  <!-- Section 4: Description -->
   <div class="card">
-    <div class="step-hdr"><div class="step-num">4</div><div class="step-title">Description</div></div>
+    <div class="step-hdr">
+      <div class="step-num">4</div>
+      <div class="step-title" id="lbl-s4">Description</div>
+    </div>
     <div class="form-grid">
-      <div class="form-group form-span"><label class="form-label">What Happened?</label><textarea id="rDesc" class="form-input" placeholder="Describe the sequence of events..."></textarea></div>
-      <div class="form-group form-span"><label class="form-label">Immediate Actions Taken</label><textarea id="rAct" class="form-input" placeholder="e.g. Area evacuated, first aid given..."></textarea></div>
+      <div class="form-group form-span">
+        <label class="form-label" id="lbl-desc">What Happened?</label>
+        <textarea id="rDesc" class="form-input" id="rDesc" placeholder="Describe the sequence of events..."></textarea>
+      </div>
+      <div class="form-group form-span">
+        <label class="form-label" id="lbl-act">Immediate Actions Taken</label>
+        <textarea id="rAct" class="form-input" placeholder="e.g. Area evacuated, first aid given..."></textarea>
+      </div>
       <div class="form-group">
-        <label class="form-label">PPE Worn?</label>
+        <label class="form-label" id="lbl-ppe">PPE Worn?</label>
         <div class="tgl" id="tPPE">
-          <button class="tgl-btn active" onclick="selT(this,'tPPE')">Yes</button>
-          <button class="tgl-btn" onclick="selT(this,'tPPE')">No</button>
-          <button class="tgl-btn" onclick="selT(this,'tPPE')">Partial</button>
+          <button class="tgl-btn active" onclick="selT(this,'tPPE')" id="ppe-yes">Yes</button>
+          <button class="tgl-btn" onclick="selT(this,'tPPE')" id="ppe-no">No</button>
+          <button class="tgl-btn" onclick="selT(this,'tPPE')" id="ppe-partial">Partial</button>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">SOPs Followed?</label>
+        <label class="form-label" id="lbl-sop">SOPs Followed?</label>
         <div class="tgl" id="tSOP">
-          <button class="tgl-btn active" onclick="selT(this,'tSOP')">Yes</button>
-          <button class="tgl-btn" onclick="selT(this,'tSOP')">No</button>
-          <button class="tgl-btn" onclick="selT(this,'tSOP')">Unknown</button>
+          <button class="tgl-btn active" onclick="selT(this,'tSOP')" id="sop-yes">Yes</button>
+          <button class="tgl-btn" onclick="selT(this,'tSOP')" id="sop-no">No</button>
+          <button class="tgl-btn" onclick="selT(this,'tSOP')" id="sop-unk">Unknown</button>
         </div>
       </div>
-      <div class="form-group form-span"><label class="form-label">Witnesses</label><input id="rWit" class="form-input" type="text" placeholder="Names of any witnesses (optional)"/></div>
+      <div class="form-group form-span">
+        <label class="form-label" id="lbl-wit">Witnesses</label>
+        <input id="rWit" class="form-input" type="text" placeholder="Names of any witnesses (optional)"/>
+      </div>
     </div>
   </div>
 
+  <!-- Section 5: Photos -->
   <div class="card">
-    <div class="step-hdr"><div class="step-num">5</div><div class="step-title">Photos / Evidence</div></div>
+    <div class="step-hdr">
+      <div class="step-num">5</div>
+      <div class="step-title" id="lbl-s5">Photos / Evidence</div>
+    </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-      <button onclick="document.getElementById('photoGallery').click()" type="button" style="display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--blue-light);border:1.5px solid #bfdbfe;color:var(--blue);border-radius:var(--rs);cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;transition:all .2s">
-        <span class="ms" style="font-size:16px">photo_library</span>Choose Files
+      <button onclick="document.getElementById('photoGallery').click()" type="button"
+        style="display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--blue-light);border:1.5px solid #bfdbfe;color:var(--blue);border-radius:var(--rs);cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">
+        <span class="ms" style="font-size:16px">photo_library</span><span id="btn-gallery">Choose Files</span>
       </button>
-      <button onclick="document.getElementById('photoCamera').click()" type="button" style="display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--green-light);border:1.5px solid #a7f3d0;color:var(--green);border-radius:var(--rs);cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;transition:all .2s">
-        <span class="ms" style="font-size:16px">photo_camera</span>Camera
+      <button onclick="document.getElementById('photoCamera').click()" type="button"
+        style="display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--green-light);border:1.5px solid #a7f3d0;color:var(--green);border-radius:var(--rs);cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">
+        <span class="ms" style="font-size:16px">photo_camera</span><span id="btn-camera">Camera</span>
       </button>
       <span id="photoCount" style="display:flex;align-items:center;font-size:11px;color:var(--slate-400);font-weight:600">No photos selected</span>
     </div>
@@ -560,7 +640,10 @@ tr:hover td{background:var(--slate-50)}
   </div>
 
   <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-    <button class="discard-btn" onclick="resetReportForm()"><span class="ms" style="font-size:16px">close</span>Discard</button>
+    <button class="discard-btn" onclick="resetReportForm()">
+      <span class="ms" style="font-size:16px">close</span>
+      <span id="btn-discard">Discard</span>
+    </button>
     <button class="submit-btn" id="subBtn" onclick="submitInc()">
       <div class="spinner" id="subSpin"></div>
       <span id="subTxt">Submit Report</span>
@@ -1275,6 +1358,150 @@ function idle(b,s,t,msg){const bn=$(b);const sp=$(s);const tx=$(t);if(bn)bn.disa
 function badge(s,label){const m={none:'b-worker',nearMiss:'b-nm',minor:'b-mi',serious:'b-se',critical:'b-cr',fatality:'b-fa'};return`<span class="badge ${m[s]||'b-nm'}">${label}</span>`;}
 function stBadge(s){const m={open:'b-open',under_review:'b-review',closed:'b-closed'};return`<span class="badge ${m[s]||'b-open'}">${s.replace('_',' ')}</span>`;}
 function sL(s){return{none:'None',nearMiss:'Near Miss',minor:'Minor',serious:'Serious',critical:'Critical',fatality:'Fatality'}[s]||s;}
+
+// ── LANGUAGE SYSTEM ───────────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    eyebrow:'Operational Safety', title:'Report Incident', sub:'Fill in as much detail as possible',
+    s1:'Your Details', s2:'Incident Details', s3:'Severity Level', s4:'Description', s5:'Photos / Evidence',
+    name:'Full Name', neis:'ID / NEIS Number', sup:'Supervisor on Duty', dept:'Department',
+    date:'Date', time:'Time', type:'Incident Type', loc:'Location',
+    locdetail:'Level / Zone Detail', inj:'Persons Injured',
+    desc:'What Happened?', act:'Immediate Actions Taken',
+    ppe:'PPE Worn?', sop:'SOPs Followed?', wit:'Witnesses',
+    'sev-none':'None','sev-nm':'Near Miss','sev-mi':'Minor','sev-se':'Serious','sev-cr':'Critical','sev-fa':'Fatality',
+    'ppe-yes':'Yes','ppe-no':'No','ppe-partial':'Partial',
+    'sop-yes':'Yes','sop-no':'No','sop-unk':'Unknown',
+    'btn-gallery':'Choose Files','btn-camera':'Camera','btn-discard':'Discard',
+    'subTxt':'Submit Report',
+    'opt-type-0':'— Select —',
+    'opt-type-1':'Rock Fall / Ground Failure','opt-type-2':'Blasting Accident',
+    'opt-type-3':'Equipment / Machinery Accident','opt-type-4':'Electrical Incident',
+    'opt-type-5':'Fire / Explosion','opt-type-6':'Gas / Fume Exposure',
+    'opt-type-7':'Fall from Height','opt-type-8':'Slip, Trip or Fall',
+    'opt-type-9':'Flooding / Inrush','opt-type-10':'Entrapment / Entanglement',
+    'opt-type-11':'Chemical Exposure / Spill','opt-type-12':'Vehicle Collision',
+    'opt-type-13':'Lifting / Manual Handling Injury','opt-type-14':'Near Miss','opt-type-15':'Other',
+    'loc-0':'Surface – General','loc-1':'Surface – Workshop',
+    'loc-2':'UG – Stope','loc-3':'UG – Development',
+    'loc-4':'UG – Haulage','loc-5':'UG – Ventilation',
+    'loc-6':'Conveyor Belt','loc-7':'Incline','loc-8':'Dispatch',
+    'rLocD-ph':'e.g. Level 4 – Block 2A',
+    'rDesc-ph':'Describe the sequence of events...',
+    'rAct-ph':'e.g. Area evacuated, first aid given...',
+    'rWit-ph':'Names of any witnesses (optional)',
+    'rSup-ph':'Supervisor name',
+    'photoNo':'No photos selected',
+  },
+  hi: {
+    eyebrow:'संचालन सुरक्षा', title:'घटना रिपोर्ट करें', sub:'जितना हो सके उतनी जानकारी भरें',
+    s1:'आपका विवरण', s2:'घटना का विवरण', s3:'गंभीरता स्तर', s4:'विवरण', s5:'फ़ोटो / साक्ष्य',
+    name:'पूरा नाम', neis:'आईडी / NEIS नंबर', sup:'ड्यूटी पर पर्यवेक्षक', dept:'विभाग',
+    date:'दिनांक', time:'समय', type:'घटना का प्रकार', loc:'स्थान',
+    locdetail:'स्तर / क्षेत्र विवरण', inj:'घायल व्यक्तियों की संख्या',
+    desc:'क्या हुआ?', act:'तत्काल की गई कार्रवाई',
+    ppe:'PPE पहना था?', sop:'SOP का पालन किया?', wit:'गवाह',
+    'sev-none':'कोई नहीं','sev-nm':'निकट चूक','sev-mi':'मामूली','sev-se':'गंभीर','sev-cr':'अति गंभीर','sev-fa':'मृत्यु',
+    'ppe-yes':'हाँ','ppe-no':'नहीं','ppe-partial':'आंशिक',
+    'sop-yes':'हाँ','sop-no':'नहीं','sop-unk':'अज्ञात',
+    'btn-gallery':'फ़ाइलें चुनें','btn-camera':'कैमरा','btn-discard':'रद्द करें',
+    'subTxt':'रिपोर्ट जमा करें',
+    'opt-type-0':'— चुनें —',
+    'opt-type-1':'पत्थर गिरना / भूमि विफलता','opt-type-2':'विस्फोट दुर्घटना',
+    'opt-type-3':'उपकरण / मशीनरी दुर्घटना','opt-type-4':'विद्युत घटना',
+    'opt-type-5':'आग / विस्फोट','opt-type-6':'गैस / धुएं का संपर्क',
+    'opt-type-7':'ऊंचाई से गिरना','opt-type-8':'फिसलना, ठोकर या गिरना',
+    'opt-type-9':'बाढ़ / जलप्रवेश','opt-type-10':'फंसना / जकड़ना',
+    'opt-type-11':'रासायनिक संपर्क / रिसाव','opt-type-12':'वाहन टक्कर',
+    'opt-type-13':'उठाने / मैन्युअल हैंडलिंग चोट','opt-type-14':'निकट चूक','opt-type-15':'अन्य',
+    'loc-0':'सतह – सामान्य','loc-1':'सतह – कार्यशाला',
+    'loc-2':'भूमिगत – स्टोप','loc-3':'भूमिगत – विकास',
+    'loc-4':'भूमिगत – हॉलेज','loc-5':'भूमिगत – वेंटिलेशन',
+    'loc-6':'कन्वेयर बेल्ट','loc-7':'ढलान','loc-8':'प्रेषण',
+    'rLocD-ph':'जैसे: स्तर 4 – ब्लॉक 2A',
+    'rDesc-ph':'घटनाओं का क्रम बताएं...',
+    'rAct-ph':'जैसे: क्षेत्र खाली कराया, प्राथमिक उपचार दिया...',
+    'rWit-ph':'किसी भी गवाह के नाम (वैकल्पिक)',
+    'rSup-ph':'पर्यवेक्षक का नाम',
+    'photoNo':'कोई फ़ोटो नहीं चुनी',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+
+  // Toggle button styles
+  const enBtn = document.getElementById('lang-en');
+  const hiBtn = document.getElementById('lang-hi');
+  if (enBtn && hiBtn) {
+    if (lang === 'en') {
+      enBtn.style.cssText = 'padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:var(--red);color:#fff;font-family:var(--font)';
+      hiBtn.style.cssText = 'padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:none;color:var(--slate-400);font-family:var(--font)';
+    } else {
+      hiBtn.style.cssText = 'padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:var(--red);color:#fff;font-family:var(--font)';
+      enBtn.style.cssText = 'padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:none;color:var(--slate-400);font-family:var(--font)';
+    }
+  }
+
+  // Update all labelled elements
+  const textIds = ['eyebrow','title','sub','s1','s2','s3','s4','s5',
+    'name','neis','sup','dept','date','time','type','loc','locdetail','inj',
+    'desc','act','ppe','sop','wit',
+    'sev-none','sev-nm','sev-mi','sev-se','sev-cr','sev-fa',
+    'ppe-yes','ppe-no','ppe-partial','sop-yes','sop-no','sop-unk',
+    'btn-gallery','btn-camera','btn-discard','subTxt'];
+
+  textIds.forEach(id => {
+    const el = document.getElementById('lbl-'+id) || document.getElementById(id);
+    if (el && t[id]) el.textContent = t[id];
+  });
+
+  // Update option elements
+  for (let i = 0; i <= 15; i++) {
+    const el = document.getElementById('opt-type-'+i);
+    if (el && t['opt-type-'+i]) el.textContent = t['opt-type-'+i];
+  }
+
+  // Update location buttons
+  for (let i = 0; i <= 8; i++) {
+    const el = document.getElementById('loc-'+i);
+    if (el && t['loc-'+i]) el.textContent = t['loc-'+i];
+  }
+
+  // Update placeholders
+  const phMap = {
+    'rLocD': 'rLocD-ph', 'rDesc': 'rDesc-ph',
+    'rAct': 'rAct-ph', 'rWit': 'rWit-ph', 'rSup': 'rSup-ph'
+  };
+  Object.entries(phMap).forEach(([inputId, key]) => {
+    const el = document.getElementById(inputId);
+    if (el && t[key]) el.placeholder = t[key];
+  });
+
+  // Update photo count if default
+  const pc = document.getElementById('photoCount');
+  if (pc && (pc.textContent === 'No photos selected' || pc.textContent === 'कोई फ़ोटो नहीं चुनी')) {
+    pc.textContent = t['photoNo'];
+  }
+
+  // Add Noto Sans Devanagari font for Hindi
+  if (lang === 'hi' && !document.getElementById('hindi-font')) {
+    const link = document.createElement('link');
+    link.id = 'hindi-font';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap';
+    document.head.appendChild(link);
+    // Apply Hindi font to report section
+    const sec = document.getElementById('sec-report');
+    if (sec) sec.style.fontFamily = "'Noto Sans Devanagari','Inter',sans-serif";
+  } else if (lang === 'en') {
+    const sec = document.getElementById('sec-report');
+    if (sec) sec.style.fontFamily = '';
+  }
+}
 </script>
 </body>
 </html>
