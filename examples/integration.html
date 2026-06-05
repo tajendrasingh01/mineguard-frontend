@@ -1,0 +1,105 @@
+<!-- name=examples/integration.html
+  Insert the CSS link after your existing CSS so it styles on top.
+  Place the JS helper after your app's main scripts. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Premium</title>
+
+  <!-- Include existing app CSS first, then this file to override visuals -->
+  <link rel="stylesheet" href="/assets/css/app.css">
+  <link rel="stylesheet" href="/assets/css/premium-ui.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">MG</div>
+      <div class="nav-item" data-route="/dashboard" title="Dashboard">🏠</div>
+      <div class="nav-item" data-route="/reports" title="Reports">📊</div>
+      <div class="nav-item" data-route="/settings" title="Settings">⚙️</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="left">
+          <h1>Overview</h1>
+          <div class="search" role="search">
+            <input type="search" placeholder="Search..." aria-label="Search" />
+          </div>
+        </div>
+        <div class="right">
+          <button class="btn btn-ghost" aria-label="Profile">AJ</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <h2 style="margin:0; font-size:28px;">Welcome back — here's your dashboard</h2>
+          <p class="hint" style="margin-top:8px;">Key metrics and quick actions, tailored for executive review.</p>
+        </div>
+        <div class="space-between">
+          <button class="btn btn-primary">Primary Action</button>
+          <button class="btn btn-secondary">Secondary</button>
+        </div>
+      </section>
+
+      <section class="kpi-grid" style="margin-top:6px;">
+        <div class="kpi">
+          <div class="title">Active Projects</div>
+          <div class="value">129</div>
+        </div>
+        <div class="kpi">
+          <div class="title">Open Alerts</div>
+          <div class="value">18</div>
+        </div>
+        <div class="kpi">
+          <div class="title">Uptime</div>
+          <div class="value">99.98%</div>
+        </div>
+        <div class="kpi">
+          <div class="title">Monthly Spend</div>
+          <div class="value">$12,300</div>
+        </div>
+      </section>
+
+      <section style="display:grid; grid-template-columns:2fr 1fr; gap:18px; margin-top:18px;">
+        <div class="card">
+          <h3 style="margin:0 0 12px 0;">Recent Events</h3>
+          <table class="table" role="table">
+            <thead><tr><th>Event</th><th>User</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>Login</td><td>alice</td><td>2m ago</td></tr>
+              <tr><td>Policy Updated</td><td>bob</td><td>1h ago</td></tr>
+              <tr><td>New Report</td><td>carol</td><td>3h ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 12px 0;">Quick Actions</h3>
+          <div class="form-row">
+            <button class="btn btn-primary">Create Report</button>
+            <button class="btn btn-secondary">Export CSV</button>
+          </div>
+          <hr style="margin:14px 0; border:none; border-top:1px solid var(--border);" />
+          <form>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <input type="text" placeholder="Filter by name" />
+              <select><option>All projects</option></select>
+              <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <footer class="page-footer">© Company • Premium Dashboard</footer>
+    </main>
+  </div>
+
+  <!-- Keep your existing app scripts and include the helper afterwards -->
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/premium-ui.js"></script>
+</body>
+</html>
