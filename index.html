@@ -27,13 +27,23 @@
 html,body{height:100%;font-family:var(--font)}
 body{
   min-height:100dvh;
-  background:#F5F7FA;
+  background:linear-gradient(135deg, #F5F7FA 0%, #EEFBFF 50%, #F5F7FA 100%);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   padding:24px 16px;
-  position:relative
+  position:relative;
+  overflow:hidden
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at 20% 50%, rgba(37,99,235,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(0,32,107,0.06) 0%, transparent 50%);
+  pointer-events:none;
+  z-index:0
 }
 .wrap{
   position:relative;
@@ -49,19 +59,25 @@ body{
 .brand-icon{
   width:72px;
   height:72px;
-  background:var(--navy);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
   border-radius:16px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:32px;
-  box-shadow:0 4px 12px rgba(0,32,107,0.15);
-  margin-bottom:16px
+  box-shadow:0 8px 32px rgba(0,32,107,0.25),
+             inset -2px -2px 8px rgba(0,0,0,0.1),
+             inset 2px 2px 8px rgba(255,255,255,0.3);
+  margin-bottom:16px;
+  backdrop-filter:blur(10px)
 }
 .brand-name{
   font-size:22px;
   font-weight:700;
-  color:var(--text-primary);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
   letter-spacing:-0.3px;
   line-height:1.3;
   margin-bottom:8px
@@ -83,7 +99,7 @@ body{
 .divider-line{
   flex:1;
   height:1px;
-  background:var(--border)
+  background:linear-gradient(90deg, transparent 0%, rgba(0,32,107,0.2) 50%, transparent 100%)
 }
 .divider-txt{
   font-size:11px;
@@ -109,19 +125,40 @@ body{
   cursor:pointer;
   text-decoration:none;
   border:1.5px solid;
-  transition:all 0.25s ease;
+  transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   position:relative;
   overflow:hidden;
-  background:var(--white)
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.1),
+             inset 1px 1px 0 rgba(255,255,255,0.6),
+             inset -1px -1px 2px rgba(0,0,0,0.05)
+}
+.opt-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+  opacity:0;
+  transition:opacity 0.3s ease
 }
 .opt-card:hover{
   border-color:var(--navy);
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,32,107,0.12)
+  transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(0,32,107,0.2),
+             inset 1px 1px 0 rgba(255,255,255,0.8),
+             inset -1px -1px 4px rgba(0,32,107,0.1)
 }
-.opt-card:active{transform:scale(0.98)}
-.opt-sop{border-color:var(--border)}
-.opt-report{border-color:var(--danger);background:rgba(220,38,38,0.02)}
+.opt-card:hover::before{opacity:1}
+.opt-card:active{transform:scale(0.96)}
+.opt-sop{border-color:rgba(0,32,107,0.2)}
+.opt-report{
+  border-color:rgba(220,38,38,0.3);
+  background:linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(220,38,38,0.04) 100%);
+  box-shadow:0 8px 32px rgba(220,38,38,0.08),
+             inset 1px 1px 0 rgba(255,255,255,0.6),
+             inset -1px -1px 2px rgba(220,38,38,0.05)
+}
 .opt-icon{
   width:48px;
   height:48px;
@@ -133,14 +170,20 @@ body{
   border:1.5px solid
 }
 .opt-sop .opt-icon{
-  background:var(--bg);
-  border-color:var(--border);
-  color:var(--text-secondary)
+  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
+  border-color:rgba(0,32,107,0.1);
+  color:var(--text-secondary);
+  box-shadow:0 4px 12px rgba(0,0,0,0.05),
+             inset 1px 1px 2px rgba(255,255,255,0.5),
+             inset -1px -1px 2px rgba(0,32,107,0.05)
 }
 .opt-report .opt-icon{
-  background:rgba(220,38,38,0.1);
-  border-color:var(--danger);
-  color:var(--danger)
+  background:linear-gradient(135deg, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0.08) 100%);
+  border-color:rgba(220,38,38,0.3);
+  color:var(--danger);
+  box-shadow:0 4px 12px rgba(220,38,38,0.1),
+             inset 1px 1px 2px rgba(255,255,255,0.3),
+             inset -1px -1px 2px rgba(220,38,38,0.1)
 }
 .opt-text{text-align:left;flex:1;min-width:0}
 .opt-title{
@@ -160,18 +203,24 @@ body{
   width:32px;
   height:32px;
   border-radius:10px;
-  background:var(--bg);
-  border:1.5px solid var(--border);
+  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
+  border:1.5px solid rgba(0,32,107,0.1);
   display:flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
-  color:var(--text-secondary)
+  color:var(--text-secondary);
+  box-shadow:0 4px 12px rgba(0,0,0,0.05),
+             inset 1px 1px 2px rgba(255,255,255,0.5),
+             inset -1px -1px 2px rgba(0,32,107,0.05)
 }
 .opt-report .opt-arrow{
-  background:rgba(220,38,38,0.08);
+  background:linear-gradient(135deg, rgba(220,38,38,0.1) 0%, rgba(220,38,38,0.04) 100%);
   border-color:rgba(220,38,38,0.2);
-  color:var(--danger)
+  color:var(--danger);
+  box-shadow:0 4px 12px rgba(220,38,38,0.1),
+             inset 1px 1px 2px rgba(255,255,255,0.3),
+             inset -1px -1px 2px rgba(220,38,38,0.08)
 }
 .footer-row{
   display:flex;
@@ -184,10 +233,11 @@ body{
   width:6px;
   height:6px;
   border-radius:50%;
-  background:var(--navy);
-  animation:pulse 2s ease-in-out infinite
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
+  animation:pulse 2s ease-in-out infinite;
+  box-shadow:0 0 12px rgba(0,32,107,0.6)
 }
-@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
 .footer-txt{
   font-size:10px;
   font-weight:600;
@@ -198,12 +248,23 @@ body{
 /* LOGIN PAGE */
 #loginPage{display:none;width:100%;max-width:440px;position:relative;z-index:10}
 .glass-card{
-  background:var(--white);
-  border:1.5px solid var(--border);
+  background:rgba(255,255,255,0.85);
+  border:1.5px solid rgba(255,255,255,0.6);
   border-radius:16px;
   padding:32px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.08);
+  box-shadow:0 16px 48px rgba(0,0,0,0.12),
+             inset 1px 1px 0 rgba(255,255,255,0.8),
+             inset -1px -1px 2px rgba(0,32,107,0.05);
+  backdrop-filter:blur(20px);
   position:relative
+}
+.glass-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 100%);
+  border-radius:16px;
+  pointer-events:none
 }
 .back-btn{
   display:flex;
@@ -215,12 +276,17 @@ body{
   font-size:13px;
   font-weight:600;
   cursor:pointer;
-  padding:0;
-  margin-bottom:20px;
+  padding:8px 12px;
+  margin:-8px -12px 20px;
   font-family:var(--font);
-  transition:color 0.2s ease
+  transition:all 0.2s ease;
+  border-radius:10px
 }
-.back-btn:hover{color:var(--navy)}
+.back-btn:hover{
+  color:var(--navy);
+  background:linear-gradient(135deg, rgba(0,32,107,0.08) 0%, rgba(37,99,235,0.04) 100%);
+  box-shadow:inset 0 0 8px rgba(0,32,107,0.1)
+}
 .login-brand{
   display:flex;
   align-items:center;
@@ -230,18 +296,24 @@ body{
 .login-brand-icon{
   width:40px;
   height:40px;
-  background:var(--navy);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
   border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:18px;
-  flex-shrink:0
+  flex-shrink:0;
+  box-shadow:0 4px 16px rgba(0,32,107,0.2),
+             inset 1px 1px 4px rgba(255,255,255,0.3),
+             inset -1px -1px 4px rgba(0,0,0,0.1)
 }
 .login-brand-name{
   font-size:13px;
   font-weight:700;
-  color:var(--text-primary);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
   line-height:1.2
 }
 .login-brand-sub{
@@ -252,7 +324,10 @@ body{
 .login-title{
   font-size:22px;
   font-weight:700;
-  color:var(--text-primary);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
   letter-spacing:-0.3px;
   margin-bottom:6px
 }
@@ -264,11 +339,13 @@ body{
 .tab-row{
   display:flex;
   gap:2px;
-  background:var(--bg);
-  border:1.5px solid var(--border);
+  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
+  border:1.5px solid rgba(0,32,107,0.1);
   border-radius:12px;
   padding:4px;
-  margin-bottom:22px
+  margin-bottom:22px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.02),
+             inset 0 -2px 8px rgba(255,255,255,0.3)
 }
 .tab{
   flex:1;
@@ -279,16 +356,18 @@ body{
   color:var(--text-secondary);
   cursor:pointer;
   border-radius:10px;
-  transition:all 0.2s ease;
+  transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   background:none;
   border:none;
   font-family:var(--font);
   text-transform:capitalize
 }
 .tab.active{
-  background:var(--white);
+  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,250,0.9) 100%);
   color:var(--navy);
-  box-shadow:0 2px 8px rgba(0,0,0,0.06)
+  box-shadow:0 4px 12px rgba(0,0,0,0.08),
+             inset 1px 1px 0 rgba(255,255,255,0.8),
+             inset -1px -1px 2px rgba(0,32,107,0.05)
 }
 .panel{display:none;flex-direction:column;gap:14px}
 .panel.active{display:flex}
@@ -302,22 +381,26 @@ body{
 }
 .glass-input{
   width:100%;
-  background:var(--bg);
-  border:1.5px solid var(--border);
+  background:linear-gradient(135deg, rgba(245,247,250,0.9) 0%, rgba(229,237,245,0.9) 100%);
+  border:1.5px solid rgba(0,32,107,0.15);
   border-radius:12px;
   padding:12px 14px;
   font-size:15px;
   font-weight:400;
   color:var(--text-primary);
   font-family:var(--font);
-  transition:all 0.2s ease;
-  outline:none
+  transition:all 0.3s ease;
+  outline:none;
+  box-shadow:inset 1px 1px 2px rgba(0,32,107,0.05),
+             inset -1px -1px 2px rgba(255,255,255,0.3)
 }
 .glass-input::placeholder{color:var(--text-secondary)}
 .glass-input:focus{
-  background:var(--white);
+  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,250,0.95) 100%);
   border-color:var(--navy);
-  box-shadow:0 0 0 3px rgba(0,32,107,0.08)
+  box-shadow:0 0 0 3px rgba(0,32,107,0.1),
+             inset 1px 1px 2px rgba(0,32,107,0.05),
+             inset -1px -1px 2px rgba(255,255,255,0.4)
 }
 select.glass-input option{background:var(--white);color:var(--text-primary)}
 .glass-btn{
@@ -332,25 +415,30 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
   align-items:center;
   justify-content:center;
   gap:8px;
-  transition:all 0.25s ease;
+  transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-family:var(--font);
-  background:var(--navy);
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
   color:var(--white);
   text-transform:uppercase;
   letter-spacing:0.5px;
-  margin-top:4px
+  margin-top:4px;
+  box-shadow:0 8px 24px rgba(0,32,107,0.25),
+             inset 1px 1px 2px rgba(255,255,255,0.2),
+             inset -1px -1px 2px rgba(0,0,0,0.2)
 }
 .glass-btn:hover{
-  background:var(--navy-hover);
   transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,32,107,0.25)
+  box-shadow:0 12px 32px rgba(0,32,107,0.35),
+             inset 1px 1px 4px rgba(255,255,255,0.3),
+             inset -1px -1px 4px rgba(0,0,0,0.15)
 }
 .glass-btn:active{transform:scale(0.98)}
 .glass-btn:disabled{
   opacity:0.6;
   cursor:not-allowed;
   transform:none;
-  background:var(--border)
+  background:linear-gradient(135deg, #cbd5e1 0%, #a0aec0 100%);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1)
 }
 .spin{
   width:16px;
@@ -365,13 +453,15 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
 .spin.on{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err-box{
-  background:rgba(220,38,38,0.1);
-  border:1.5px solid rgba(220,38,38,0.2);
+  background:linear-gradient(135deg, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0.08) 100%);
+  border:1.5px solid rgba(220,38,38,0.3);
   border-radius:10px;
   padding:10px 14px;
   font-size:13px;
   color:var(--danger);
-  display:none
+  display:none;
+  box-shadow:inset 1px 1px 2px rgba(255,255,255,0.2),
+             inset -1px -1px 2px rgba(220,38,38,0.1)
 }
 .err-box.on{display:block}
 .secure-row{
@@ -385,8 +475,9 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
   width:6px;
   height:6px;
   border-radius:50%;
-  background:var(--navy);
-  animation:pulse 2s ease-in-out infinite
+  background:linear-gradient(135deg, #00206B 0%, #00308F 100%);
+  animation:pulse 2s ease-in-out infinite;
+  box-shadow:0 0 12px rgba(0,32,107,0.6)
 }
 .s-txt{
   font-size:10px;
