@@ -55,32 +55,6 @@ body::before{
   align-items:center;
   text-align:center
 }
-.partner-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:24px;
-  padding:8px 16px;
-  background:linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(245,247,250,0.85) 100%);
-  border:1.5px solid rgba(0,32,107,0.15);
-  border-radius:20px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 4px 16px rgba(0,0,0,0.08),
-             inset 1px 1px 0 rgba(255,255,255,0.6),
-             inset -1px -1px 2px rgba(0,32,107,0.05)
-}
-.partner-logo{
-  height:24px;
-  display:flex;
-  align-items:center;
-}
-.partner-text{
-  font-size:10px;
-  font-weight:600;
-  color:var(--text-secondary);
-  text-transform:uppercase;
-  letter-spacing:0.5px
-}
 .brand{margin-bottom:40px}
 .brand-icon{
   width:72px;
@@ -525,9 +499,6 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
   .opt-card{padding:14px}
   .opt-icon{width:44px;height:44px}
   .glass-card{padding:24px}
-  .partner-badge{padding:6px 12px}
-  .partner-logo{height:20px}
-  .partner-text{font-size:9px}
 }
 </style>
 </head>
@@ -535,20 +506,6 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
 
 <!-- LANDING -->
 <div class="wrap" id="landingPage">
-  <div class="partner-badge">
-    <svg class="partner-logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-      <!-- NCPH Logo - Navy background with white text -->
-      <rect width="200" height="80" rx="20" fill="#00206B"/>
-      <!-- Double chevron -->
-      <g fill="#FFFFFF">
-        <path d="M 30 25 L 50 45 L 30 65 M 50 25 L 70 45 L 50 65"/>
-      </g>
-      <!-- NCPH Text -->
-      <text x="95" y="55" font-family="Inter, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="2">ncph</text>
-    </svg>
-    <span class="partner-text">National Council for Mine Safety</span>
-  </div>
-
   <div class="brand">
     <div class="brand-icon">⛏</div>
     <div class="brand-name">Suraksha Prabandhan Pranali</div>
