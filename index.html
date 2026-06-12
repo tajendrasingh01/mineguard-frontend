@@ -716,7 +716,7 @@ function setBusy(b,s,t,m){document.getElementById(b).disabled=true;document.getE
 function setIdle(b,s,t,m){document.getElementById(b).disabled=false;document.getElementById(s).classList.remove('on');document.getElementById(t).textContent=m;}
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
-  if(document.getElementById('loginPage').style.display==='none')return;
+  if( document.getElementById('loginPage').style.display==='none')return;
   document.querySelector('.panel.active')?.id==='panelSignin'?doLogin():doRegister();
 });
 </script>
