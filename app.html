@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Suraksha Prabandhan Pranali</title>
+<title>NCPH — Incident Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#00206B;--navy-dark:#00164A;--navy-hover:#00308F;
+  --navy:#0F2D69;--navy-dark:#091f4a;--navy-hover:#1a3d82;
   --red:#DC2626;--red-light:#fef2f2;--red-mid:#fca5a5;--red-dark:#b91c1c;
   --orange:#f97316;--orange-light:#fff7ed;
   --amber:#f59e0b;--amber-light:#fffbeb;
@@ -44,50 +44,52 @@ input,select,textarea,button{font-family:var(--font)}
 input:focus,select:focus,textarea:focus{outline:none}
 
 /* ── PAGE LOADER ── */
-#PL{position:fixed;inset:0;background:linear-gradient(135deg,#F5F7FA 0%,#EEFBFF 50%,#F5F7FA 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+#PL{position:fixed;inset:0;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #PL.fade{opacity:0;pointer-events:none}
-.pl-icon{width:56px;height:56px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 28px rgba(0,32,107,.3);margin-bottom:18px}
-.pl-name{font-size:18px;font-weight:800;text-align:center;line-height:1.3;margin-bottom:20px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.pl-name span{color:var(--navy)}
-.pl-bar{width:180px;height:3px;background:rgba(0,32,107,.15);border-radius:4px;overflow:hidden}
-.pl-fill{height:100%;background:linear-gradient(135deg,#00206B,#00308F);border-radius:4px;animation:plbar 1.8s ease forwards}
+.pl-icon{margin-bottom:14px}
+.pl-wordmark{display:flex;align-items:center;gap:7px;margin-bottom:24px}
+.pl-wordmark-text{font-size:26px;font-weight:800;color:#0F2D69;letter-spacing:-1px;line-height:1}
+.pl-wordmark-dot{width:7px;height:7px;border-radius:50%;background:#FF7A00;flex-shrink:0}
+.pl-bar{width:140px;height:2px;background:#e2e8f0;border-radius:2px;overflow:hidden}
+.pl-fill{height:100%;background:#0F2D69;border-radius:2px;animation:plbar 1.8s ease forwards}
 @keyframes plbar{from{width:0}to{width:100%}}
-.pl-txt{margin-top:10px;font-size:11px;color:var(--slate-400);font-weight:500;letter-spacing:.5px}
+.pl-txt{margin-top:12px;font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:1px;text-transform:uppercase}
 
 /* ── HEADER ── */
-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,32,107,0.12);height:54px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 14px;box-shadow:0 4px 20px rgba(0,32,107,0.08)}
+header{background:#fff;border-bottom:1px solid #e2e8f0;height:56px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;box-shadow:0 1px 0 #e2e8f0}
 .hdr-brand{display:flex;align-items:center;gap:10px}
-.hdr-icon{width:34px;height:34px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,32,107,0.25)}
-.hdr-title{font-size:12px;font-weight:800;color:var(--slate-800);line-height:1.2}
-.hdr-title span{background:linear-gradient(135deg,#00206B,#00308F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-icon{display:flex;align-items:center;flex-shrink:0}
+.hdr-wordmark{display:flex;align-items:center;gap:5px}
+.hdr-wordmark-text{font-size:17px;font-weight:800;color:#0F2D69;letter-spacing:-0.5px;line-height:1}
+.hdr-wordmark-dot{width:5px;height:5px;border-radius:50%;background:#FF7A00;flex-shrink:0}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.hdr-avatar{width:32px;height:32px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0;box-shadow:0 4px 12px rgba(0,32,107,0.25)}
+.hdr-avatar{width:32px;height:32px;background:#0F2D69;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0}
 .hdr-info{display:none}
 .hdr-name{font-size:12px;font-weight:700;color:var(--slate-800);line-height:1.2}
 .hdr-id{font-size:10px;color:var(--slate-400)}
 .role-tag{display:none;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(0,32,107,0.1);color:var(--navy)}
 .emr-btn{display:flex;align-items:center;gap:5px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);color:#dc2626;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;transition:all .2s;white-space:nowrap}
-.emr-btn:hover{background:rgba(220,38,38,.2)}
+.emr-btn:hover{background:rgba(220,38,38,.15)}
 .logout-btn{display:flex;background:none;border:none;color:var(--slate-400);cursor:pointer;padding:6px;border-radius:var(--rs);align-items:center;justify-content:center}
 .logout-btn:hover{color:#dc2626}
 @media(min-width:640px){.hdr-info{display:block}.role-tag{display:inline-block}}
 @media(max-width:767px){.logout-btn{display:none}}
 .bn-logout{color:#dc2626!important;border-left:1px solid rgba(0,32,107,0.12);flex-shrink:0}
-@media(min-width:768px){.hdr-title{font-size:15px}}
+@media(min-width:768px){.hdr-wordmark-text{font-size:18px}}
 
 /* ── DESKTOP NAV ── */
-.top-nav{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,32,107,0.12);display:none;padding:0 16px;overflow-x:auto}
+.top-nav{background:#fff;border-bottom:1px solid #e2e8f0;display:none;padding:0 16px;overflow-x:auto}
 .top-nav::-webkit-scrollbar{display:none}
 .nav-btn{padding:14px 16px;background:none;border:none;border-bottom:2.5px solid transparent;font-family:var(--font);font-size:13px;font-weight:600;color:var(--slate-400);cursor:pointer;white-space:nowrap;transition:all .2s}
 .nav-btn:hover{color:var(--navy)}
-.nav-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
+.nav-btn.active{color:#0F2D69;border-bottom-color:#FF7A00}
 @media(min-width:768px){.top-nav{display:flex}}
 
 /* ── MOBILE BOTTOM NAV ── */
-.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-top:1px solid rgba(0,32,107,0.12);z-index:200;box-shadow:0 -4px 20px rgba(0,32,107,0.08);padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:auto}
+.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;z-index:200;box-shadow:0 -1px 0 #e2e8f0;padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:auto}
 .bottom-nav::-webkit-scrollbar{display:none}
 .bn-btn{flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 4px;background:none;border:none;cursor:pointer;color:var(--slate-400);font-family:var(--font);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;white-space:nowrap}
-.bn-btn.active{color:var(--navy)}
+.bn-btn.active{color:#0F2D69}
 .bn-btn .ms{font-size:22px}
 @media(min-width:768px){.bottom-nav{display:none}}
 
@@ -129,7 +131,7 @@ textarea.form-input{resize:vertical;min-height:88px;line-height:1.6}
 
 /* ── STEP HEADER ── */
 .step-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--slate-100)}
-.step-num{width:26px;height:26px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;box-shadow:0 4px 10px rgba(0,32,107,0.25)}
+.step-num{width:26px;height:26px;background:#0F2D69;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
 .step-title{font-size:14px;font-weight:700;color:var(--slate-800)}
 
 /* ── SEV BUTTONS ── */
@@ -155,11 +157,11 @@ textarea.form-input{resize:vertical;min-height:88px;line-height:1.6}
 .tgl-btn.active{background:#fff;color:var(--navy);box-shadow:var(--shadow-sm)}
 
 /* ── SUBMIT BUTTON ── */
-.submit-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00206B 0%,#00308F 100%);color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-radius:var(--rs);cursor:pointer;transition:all .2s;box-shadow:0 8px 24px rgba(0,32,107,0.25),inset 1px 1px 2px rgba(255,255,255,0.2)}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,32,107,0.35)}
-.submit-btn:disabled{background:linear-gradient(135deg,#cbd5e1 0%,#a0aec0 100%);color:var(--slate-500);cursor:not-allowed;transform:none;box-shadow:none}
-.submit-btn.amber{background:linear-gradient(135deg,#d97706,#f59e0b);box-shadow:0 4px 14px rgba(245,158,11,.3)}
-.submit-btn.amber:hover{box-shadow:0 8px 20px rgba(245,158,11,.35)}
+.submit-btn{display:inline-flex;align-items:center;gap:8px;background:#0F2D69;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-radius:var(--rs);cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(15,45,105,0.25)}
+.submit-btn:hover{background:#1a3d82;transform:translateY(-1px);box-shadow:0 8px 20px rgba(15,45,105,0.3)}
+.submit-btn:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none;box-shadow:none}
+.submit-btn.amber{background:#d97706;box-shadow:0 4px 14px rgba(245,158,11,.3)}
+.submit-btn.amber:hover{background:#b45309}
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0}
 .spinner.on{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -261,7 +263,7 @@ tr:hover td{background:var(--slate-50)}
 .cat-tabs::-webkit-scrollbar{display:none}
 .cat-tab{padding:7px 16px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;border:1.5px solid var(--slate-200);background:#fff;color:var(--slate-400);white-space:nowrap;transition:all .2s}
 .cat-tab:hover{border-color:var(--red);color:var(--red)}
-.cat-tab.active{background:linear-gradient(135deg,#00206B,#00308F);color:#fff;border-color:var(--navy)}
+.cat-tab.active{background:#0F2D69;color:#fff;border-color:#0F2D69}
 .cat-tab.amber.active{background:var(--amber);border-color:var(--amber)}
 
 /* ── INNER TABS ── */
@@ -435,8 +437,17 @@ tr:hover td{background:var(--slate-50)}
 
 <!-- PAGE LOADER -->
 <div id="PL">
-  <div class="pl-icon">⛏</div>
-  <div class="pl-name">Suraksha <span>Prabandhan Pranali</span></div>
+  <div class="pl-icon">
+    <svg width="48" height="48" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="56" height="56" rx="12" fill="#0F2D69"/>
+      <path d="M10 42V14H17L28 32V14H35V42H28L17 24V42H10Z" fill="white"/>
+      <circle cx="43" cy="38" r="4" fill="#FF7A00"/>
+    </svg>
+  </div>
+  <div class="pl-wordmark">
+    <span class="pl-wordmark-text">ncph</span>
+    <span class="pl-wordmark-dot"></span>
+  </div>
   <div class="pl-bar"><div class="pl-fill"></div></div>
   <div class="pl-txt">Loading portal...</div>
 </div>
@@ -444,9 +455,16 @@ tr:hover td{background:var(--slate-50)}
 <!-- HEADER -->
 <header>
   <div class="hdr-brand">
-    <div class="hdr-icon">⛏</div>
-    <div>
-      <div class="hdr-title">Suraksha <span>Prabandhan Pranali</span></div>
+    <div class="hdr-icon">
+      <svg width="28" height="28" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="56" height="56" rx="10" fill="#0F2D69"/>
+        <path d="M10 42V14H17L28 32V14H35V42H28L17 24V42H10Z" fill="white"/>
+        <circle cx="43" cy="38" r="4" fill="#FF7A00"/>
+      </svg>
+    </div>
+    <div class="hdr-wordmark">
+      <span class="hdr-wordmark-text">ncph</span>
+      <span class="hdr-wordmark-dot"></span>
     </div>
   </div>
   <div class="hdr-right">
