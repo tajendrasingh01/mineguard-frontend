@@ -46,10 +46,10 @@ input:focus,select:focus,textarea:focus{outline:none}
 /* ── PAGE LOADER ── */
 #PL{position:fixed;inset:0;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #PL.fade{opacity:0;pointer-events:none}
-.pl-icon{margin-bottom:14px}
-.pl-wordmark{display:flex;align-items:center;gap:7px;margin-bottom:24px}
-.pl-wordmark-text{font-size:16px;font-weight:700;color:#0F2D69;letter-spacing:-0.3px;line-height:1.3;text-align:center}
-.pl-wordmark-dot{width:7px;height:7px;border-radius:50%;background:#FF7A00;flex-shrink:0}
+.pl-icon{margin-bottom:16px;width:36px;height:36px;background:#0F2D69;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.pl-wordmark{display:flex;align-items:center;gap:6px;margin-bottom:24px}
+.pl-wordmark-text{font-size:18px;font-weight:700;color:#0F2D69;letter-spacing:-0.5px;line-height:1}
+.pl-wordmark-dot{width:6px;height:6px;border-radius:50%;background:#FF7A00;flex-shrink:0}
 .pl-bar{width:140px;height:2px;background:#e2e8f0;border-radius:2px;overflow:hidden}
 .pl-fill{height:100%;background:#0F2D69;border-radius:2px;animation:plbar 1.8s ease forwards}
 @keyframes plbar{from{width:0}to{width:100%}}
@@ -58,10 +58,10 @@ input:focus,select:focus,textarea:focus{outline:none}
 /* ── HEADER ── */
 header{background:#fff;border-bottom:1px solid #e2e8f0;height:56px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;box-shadow:0 1px 0 #e2e8f0}
 .hdr-brand{display:flex;align-items:center;gap:10px}
-.hdr-icon{display:flex;align-items:center;flex-shrink:0}
+.hdr-icon{width:28px;height:28px;background:#0F2D69;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hdr-wordmark{display:flex;align-items:center;gap:5px}
-.hdr-wordmark-text{font-size:13px;font-weight:700;color:#0F2D69;line-height:1.2}
-.hdr-wordmark-dot{display:none}
+.hdr-wordmark-text{font-size:15px;font-weight:700;color:#0F2D69;letter-spacing:-0.5px;line-height:1}
+.hdr-wordmark-dot{width:5px;height:5px;border-radius:50%;background:#FF7A00;flex-shrink:0}
 .hdr-right{display:flex;align-items:center;gap:8px}
 .hdr-avatar{width:32px;height:32px;background:#0F2D69;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0}
 .hdr-info{display:none}
@@ -438,35 +438,29 @@ tr:hover td{background:var(--slate-50)}
 <!-- PAGE LOADER -->
 <div id="PL">
   <div class="pl-icon">
-    <svg width="56" height="56" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="72" height="72" rx="14" fill="#0F2D69"/>
-      <path d="M8 36V16H14L22 30V16H28V36H22L14 22V36H8Z" fill="white"/>
-      <path d="M31 36V16H44C47.3 16 49 17.8 49 21V31C49 34.2 47.3 36 44 36H31ZM37 31H43C43.6 31 44 30.6 44 30V22C44 21.4 43.6 21 43 21H37V31Z" fill="white"/>
-      <text x="8" y="54" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="800" fill="white" letter-spacing="2">ncph</text>
-      <circle cx="62" cy="51" r="3.5" fill="#FF7A00"/>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 16V4H6.5L11 12V4H14.5V16H11L6.5 8V16H3Z" fill="white"/>
     </svg>
   </div>
   <div class="pl-wordmark">
-    <span class="pl-wordmark-text">Suraksha Prabandhan Pranali</span>
+    <span class="pl-wordmark-text">ncph</span>
+    <span class="pl-wordmark-dot"></span>
   </div>
   <div class="pl-bar"><div class="pl-fill"></div></div>
-  <div class="pl-txt">Loading portal...</div>
+  <div class="pl-txt">Suraksha Prabandhan Pranali</div>
 </div>
 
 <!-- HEADER -->
 <header>
   <div class="hdr-brand">
     <div class="hdr-icon">
-      <svg width="32" height="32" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="72" height="72" rx="12" fill="#0F2D69"/>
-        <path d="M8 36V16H14L22 30V16H28V36H22L14 22V36H8Z" fill="white"/>
-        <path d="M31 36V16H44C47.3 16 49 17.8 49 21V31C49 34.2 47.3 36 44 36H31ZM37 31H43C43.6 31 44 30.6 44 30V22C44 21.4 43.6 21 43 21H37V31Z" fill="white"/>
-        <text x="8" y="54" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="800" fill="white" letter-spacing="2">ncph</text>
-        <circle cx="62" cy="51" r="3.5" fill="#FF7A00"/>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 16V4H6.5L11 12V4H14.5V16H11L6.5 8V16H3Z" fill="white"/>
       </svg>
     </div>
     <div class="hdr-wordmark">
-      <span class="hdr-wordmark-text">Suraksha Prabandhan Pranali</span>
+      <span class="hdr-wordmark-text">ncph</span>
+      <span class="hdr-wordmark-dot"></span>
     </div>
   </div>
   <div class="hdr-right">
