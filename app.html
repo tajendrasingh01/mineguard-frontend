@@ -46,11 +46,12 @@ input:focus,select:focus,textarea:focus{outline:none}
 /* ── PAGE LOADER ── */
 #PL{position:fixed;inset:0;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #PL.fade{opacity:0;pointer-events:none}
-.pl-icon{margin-bottom:16px;width:36px;height:36px;background:#0F2D69;border-radius:9px;display:flex;align-items:center;justify-content:center}
-.pl-wordmark{display:flex;align-items:center;gap:6px;margin-bottom:24px}
-.pl-wordmark-text{font-size:18px;font-weight:700;color:#0F2D69;letter-spacing:-0.5px;line-height:1}
-.pl-wordmark-dot{width:6px;height:6px;border-radius:50%;background:#FF7A00;flex-shrink:0}
+.pl-icon{margin-bottom:20px;display:inline-flex;align-items:center;gap:2px;background:#0F2D69;border-radius:10px;padding:10px 16px;line-height:1}
+.pl-icon-text{font-size:18px;font-weight:700;color:#FFFFFF;letter-spacing:0.3px}
+.pl-icon-dot{width:6px;height:6px;border-radius:50%;background:#FF7A00;flex-shrink:0;margin-bottom:2px}
 .pl-bar{width:140px;height:2px;background:#e2e8f0;border-radius:2px;overflow:hidden}
+.pl-wordmark{display:flex;align-items:center;margin-bottom:16px}
+.pl-wordmark-text{font-size:13px;font-weight:500;color:#64748b;letter-spacing:0;line-height:1}
 .pl-fill{height:100%;background:#0F2D69;border-radius:2px;animation:plbar 1.8s ease forwards}
 @keyframes plbar{from{width:0}to{width:100%}}
 .pl-txt{margin-top:12px;font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:1px;text-transform:uppercase}
@@ -58,10 +59,11 @@ input:focus,select:focus,textarea:focus{outline:none}
 /* ── HEADER ── */
 header{background:#fff;border-bottom:1px solid #e2e8f0;height:56px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;box-shadow:0 1px 0 #e2e8f0}
 .hdr-brand{display:flex;align-items:center;gap:10px}
-.hdr-icon{width:28px;height:28px;background:#0F2D69;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hdr-wordmark{display:flex;align-items:center;gap:5px}
-.hdr-wordmark-text{font-size:15px;font-weight:700;color:#0F2D69;letter-spacing:-0.5px;line-height:1}
-.hdr-wordmark-dot{width:5px;height:5px;border-radius:50%;background:#FF7A00;flex-shrink:0}
+.hdr-icon{display:inline-flex;align-items:center;gap:2px;background:#0F2D69;border-radius:6px;padding:5px 9px;line-height:1;flex-shrink:0}
+.hdr-icon-text{font-size:13px;font-weight:700;color:#FFFFFF;letter-spacing:0.3px}
+.hdr-icon-dot{width:4px;height:4px;border-radius:50%;background:#FF7A00;flex-shrink:0;margin-bottom:1px}
+.hdr-wordmark{display:flex;flex-direction:column;justify-content:center}
+.hdr-wordmark-text{font-size:13px;font-weight:700;color:#0F2D69;line-height:1.2}
 .hdr-right{display:flex;align-items:center;gap:8px}
 .hdr-avatar{width:32px;height:32px;background:#0F2D69;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0}
 .hdr-info{display:none}
@@ -438,29 +440,25 @@ tr:hover td{background:var(--slate-50)}
 <!-- PAGE LOADER -->
 <div id="PL">
   <div class="pl-icon">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 16V4H6.5L11 12V4H14.5V16H11L6.5 8V16H3Z" fill="white"/>
-    </svg>
+    <span class="pl-icon-text">ncph</span>
+    <span class="pl-icon-dot"></span>
   </div>
   <div class="pl-wordmark">
-    <span class="pl-wordmark-text">ncph</span>
-    <span class="pl-wordmark-dot"></span>
+    <span class="pl-wordmark-text">Suraksha Prabandhan Pranali</span>
   </div>
   <div class="pl-bar"><div class="pl-fill"></div></div>
-  <div class="pl-txt">Suraksha Prabandhan Pranali</div>
+  <div class="pl-txt">Loading portal...</div>
 </div>
 
 <!-- HEADER -->
 <header>
   <div class="hdr-brand">
     <div class="hdr-icon">
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 16V4H6.5L11 12V4H14.5V16H11L6.5 8V16H3Z" fill="white"/>
-      </svg>
+      <span class="hdr-icon-text">ncph</span>
+      <span class="hdr-icon-dot"></span>
     </div>
     <div class="hdr-wordmark">
-      <span class="hdr-wordmark-text">ncph</span>
-      <span class="hdr-wordmark-dot"></span>
+      <span class="hdr-wordmark-text">Suraksha Prabandhan Pranali</span>
     </div>
   </div>
   <div class="hdr-right">
