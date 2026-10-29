@@ -619,7 +619,7 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
       </div>
       <div>
         <div class="field-label">Password</div>
-        <input id="regPass" class="glass-input" type="password" placeholder="Minimum 6 characters" autocomplete="new-password"/>
+        <input id="regPass" class="glass-input" type="password" placeholder="At least 12 characters" minlength="12" maxlength="128" autocomplete="new-password"/>
       </div>
       <div id="regErr" class="err-box"></div>
       <button id="regBtn" class="glass-btn" onclick="doRegister()">
@@ -689,7 +689,7 @@ async function doRegister() {
   const err       = document.getElementById('regErr');
   err.classList.remove('on');
   if (!name||!id||!pw){err.textContent='Name, ID and password are required.';err.classList.add('on');return;}
-  if (pw.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('on');return;}
+  if (pw.length<12 || pw.length>128){err.textContent='Password must be 12–128 characters.';err.classList.add('on');return;}
   setBusy('regBtn','regSpin','regTxt','Creating...');
   const deptStr = [empType, deptType, workplace].filter(Boolean).join(' | ');
   try {
