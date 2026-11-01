@@ -637,7 +637,7 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
 </div>
 
 <script>
-const API_BASE = 'https://mineguard-test-api.onrender.com';
+const API_BASE = window.MINEGUARD_API_BASE || (location.hostname === 'mineguard-frontend.vercel.app' ? 'https://mineguard-api.onrender.com' : 'https://mineguard-test-api.onrender.com');
 
 window.addEventListener('DOMContentLoaded', () => {
   const t = localStorage.getItem('mg_token');
