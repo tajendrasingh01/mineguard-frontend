@@ -644,7 +644,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (t) {
     try {
       const p = JSON.parse(atob(t.split('.')[1]));
-      if (p.exp * 1000 > Date.now()) { location.href = 'app.html'; return; }
+      if (p.exp * 1000 > Date.now()) { location.href = 'safety.html'; return; }
     } catch {}
     localStorage.removeItem('mg_token');
   }
@@ -676,7 +676,7 @@ async function doLogin() {
     const d = await r.json();
     if (!r.ok) throw new Error(d.error||'Login failed');
     localStorage.setItem('mg_token', d.token);
-    location.href = 'app.html';
+    location.href = 'safety.html';
   } catch(e) { err.textContent=e.message; err.classList.add('on'); setIdle('loginBtn','loginSpin','loginTxt','Sign In'); }
 }
 async function doRegister() {
@@ -697,7 +697,7 @@ async function doRegister() {
     const d=await r.json();
     if (!r.ok) throw new Error(d.error||'Registration failed');
     localStorage.setItem('mg_token',d.token);
-    location.href='app.html';
+    location.href='safety.html';
   } catch(e){err.textContent=e.message;err.classList.add('on');setIdle('regBtn','regSpin','regTxt','Create Account');}
 }
 function setBusy(b,s,t,m){document.getElementById(b).disabled=true;document.getElementById(s).classList.add('on');document.getElementById(t).textContent=m;}
