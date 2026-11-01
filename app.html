@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="refresh" content="0;url=safety.html"><script>location.replace('safety.html');</script>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Suraksha Prabandhan Pranali — NCPH Portal</title>
@@ -912,7 +913,7 @@ tr:hover td{background:var(--slate-50)}
 <div id="toast-wrap"><div class="toast" id="toast"><span class="ms" id="toastIcon">check_circle</span><span id="toastMsg"></span></div></div>
 
 <script>
-const API_BASE = 'https://mineguard-api.onrender.com';
+const API_BASE = 'https://mineguard-test-api.onrender.com';
 let token, currentUser;
 let selSeverity=null, selLocation=null;
 let uploadedSopFile=null, uploadedStatFile=null, dbSOPs=[], dbStat=[], incidentPhotos=[], allInc=[];
@@ -1548,5 +1549,5 @@ function setLang(lang) {
   }
 }
 </script>
-</body>
+<script>(function(){try{const raw=localStorage.getItem('mg_token');if(!raw)return;const p=JSON.parse(atob(raw.split('.')[1]));if(!['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER','AREA_SAFETY_OFFICER','HQ_SAFETY_HEAD'].includes(p.role))return;const a=document.createElement('a');a.href='safety.html';a.textContent='SECL Safety Dashboard';a.style.cssText='position:fixed;right:16px;top:16px;z-index:99999;background:#0f2d69;color:white;padding:10px 14px;border-radius:9px;text-decoration:none;font:600 13px Inter,system-ui,sans-serif;box-shadow:0 4px 16px #0002';document.body.appendChild(a)}catch{}})();</script></body>
 </html>

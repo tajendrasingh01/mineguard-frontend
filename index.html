@@ -619,7 +619,7 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
       </div>
       <div>
         <div class="field-label">Password</div>
-        <input id="regPass" class="glass-input" type="password" placeholder="Minimum 6 characters" autocomplete="new-password"/>
+        <input id="regPass" class="glass-input" type="password" placeholder="At least 12 characters" minlength="12" maxlength="128" autocomplete="new-password"/>
       </div>
       <div id="regErr" class="err-box"></div>
       <button id="regBtn" class="glass-btn" onclick="doRegister()">
@@ -637,14 +637,14 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
 </div>
 
 <script>
-const API_BASE = 'https://mineguard-api.onrender.com';
+const API_BASE = window.MINEGUARD_API_BASE || (location.hostname === 'mineguard-frontend.vercel.app' ? 'https://mineguard-api.onrender.com' : 'https://mineguard-test-api.onrender.com');
 
 window.addEventListener('DOMContentLoaded', () => {
   const t = localStorage.getItem('mg_token');
   if (t) {
     try {
       const p = JSON.parse(atob(t.split('.')[1]));
-      if (p.exp * 1000 > Date.now()) { location.href = 'app.html'; return; }
+      if (p.exp * 1000 > Date.now()) { location.href = 'safety.html'; return; }
     } catch {}
     localStorage.removeItem('mg_token');
   }
@@ -676,7 +676,7 @@ async function doLogin() {
     const d = await r.json();
     if (!r.ok) throw new Error(d.error||'Login failed');
     localStorage.setItem('mg_token', d.token);
-    location.href = 'app.html';
+    location.href = 'safety.html';
   } catch(e) { err.textContent=e.message; err.classList.add('on'); setIdle('loginBtn','loginSpin','loginTxt','Sign In'); }
 }
 async function doRegister() {
@@ -689,7 +689,7 @@ async function doRegister() {
   const err       = document.getElementById('regErr');
   err.classList.remove('on');
   if (!name||!id||!pw){err.textContent='Name, ID and password are required.';err.classList.add('on');return;}
-  if (pw.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('on');return;}
+  if (pw.length<12 || pw.length>128){err.textContent='Password must be 12–128 characters.';err.classList.add('on');return;}
   setBusy('regBtn','regSpin','regTxt','Creating...');
   const deptStr = [empType, deptType, workplace].filter(Boolean).join(' | ');
   try {
@@ -697,7 +697,7 @@ async function doRegister() {
     const d=await r.json();
     if (!r.ok) throw new Error(d.error||'Registration failed');
     localStorage.setItem('mg_token',d.token);
-    location.href='app.html';
+    location.href='safety.html';
   } catch(e){err.textContent=e.message;err.classList.add('on');setIdle('regBtn','regSpin','regTxt','Create Account');}
 }
 function setBusy(b,s,t,m){document.getElementById(b).disabled=true;document.getElementById(s).classList.add('on');document.getElementById(t).textContent=m;}
