@@ -86,7 +86,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
   </div></div>
   <div class="legacy-card"><div class="legacy-step"><span>2</span><b id="r-s2">Incident Details</b></div><div class="legacy-grid">
     <div class="legacy-field"><label id="r-date-label">Date</label><input id="rDate" type="date" required></div><div class="legacy-field"><label id="r-time-label">Time</label><input id="rTime" type="time" required></div>
-    <div class="legacy-field span"><label id="r-cat-label">Report Category</label><select id="rCategory" required><option value="">— Select —</option><option>Unsafe Practice</option><option>Near Miss</option><option>Unsafe Acts</option><option>Incident Reporting</option></select></div>
+    <div class="legacy-field span"><label id="r-cat-label">Report Category</label><select id="rCategory" required><option value="">— Select —</option><option>Unsafe Act</option><option>Unsafe Condition</option><option>Near Miss</option><option>Unsafe Practice</option><option>Unsafe Acts</option><option>Incident Reporting</option></select></div>
     <div class="legacy-field span"><label id="r-type-label">Incident Type</label><select id="rType" required><option value="">— Select —</option><option>Rock Fall / Ground Failure</option><option>Blasting Accident</option><option>Equipment / Machinery Accident</option><option>Electrical Incident</option><option>Fire / Explosion</option><option>Gas / Fume Exposure</option><option>Fall from Height</option><option>Slip, Trip or Fall</option><option>Flooding / Inrush</option><option>Entrapment / Entanglement</option><option>Chemical Exposure / Spill</option><option>Vehicle Collision</option><option>Lifting / Manual Handling Injury</option><option>Near Miss</option><option>Other</option></select></div>
     <div class="legacy-field span"><label id="r-location-label">Location</label><div class="legacy-loc-grid">
       <button type="button" class="legacy-loc" onclick="selectReportLocation(this)">🏭 <span>Surface – General</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">🔧 <span>Surface – Workshop</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">⛏️ <span>UG – Stope</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">🏗️ <span>UG – Development</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">🚚 <span>UG – Haulage</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">💨 <span>UG – Ventilation</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">🔗 <span>Conveyor Belt</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">↘️ <span>Incline</span></button><button type="button" class="legacy-loc" onclick="selectReportLocation(this)">📦 <span>Dispatch</span></button>
@@ -144,7 +144,7 @@ async function loadMyReports(){
  }catch(e){err(e);}
 }
 function detailItem(label,value,wide=false){return '<div class="report-detail-item'+(wide?' report-detail-wide':'')+'"><small>'+esc(label)+'</small><strong>'+esc(value||'—')+'</strong></div>'}
-function renderReportDialog(d){
+function renderReportDialog(d,management=false){
  const i=d.incident;
  $('reportDialogTitle').textContent=i.incident_type||i.category||'Incident report';
  $('reportDialogRef').textContent=(i.incident_ref||'Reference pending')+' · '+nice(i.status);
@@ -221,7 +221,7 @@ async function loadAreaDashboard(){
  $('areaDashboardTitle').textContent=area.name+' · Mine Performance';
  $('areaSummary').innerHTML=metricCard('Total incidents',d.total_incidents,'Across all mines in the selected period')+metricCard('Unresolved incidents',d.unresolved_incidents,'Pending action or closure')+metricCard('Escalated incidents',d.escalated_incidents,'Requiring higher-level attention');
  const mines=d.mine_counts||[];
- $('areaMineCards').innerHTML=mines.map(m=>'<article class="area-mine-card"><h3>'+esc(m.mine_name)+'</h3><p class="area-mine-meta">Mine / Project performance</p><div class="area-mine-total"><strong>'+Number(m.total_incidents||0)+'</strong><span class="muted">Total reported incidents</span></div><div class="area-category-grid">'+areaCategoryCard(m.mine_id,'Unsafe Act',m.unsafe_act,'Unsafe Act')+areaCategoryCard(m.mine_id,'Unsafe Condition',m.unsafe_condition,'Unsafe Condition')+areaCategoryCard(m.mine_id,'Near Miss',m.near_miss,'Near Miss')+'</div><div class="area-mine-foot"><span>'+Number(m.unresolved_incidents||0)+' unresolved</span><span>View category details ↑</span></div></article>').join('');
+ $('areaMineCards').innerHTML=mines.map(m=>'<article class="area-mine-card" data-area-mine-name="'+esc(m.mine_name)+'"><h3>'+esc(m.mine_name)+'</h3><p class="area-mine-meta">Mine / Project performance</p><div class="area-mine-total"><strong>'+Number(m.total_incidents||0)+'</strong><span class="muted">Total reported incidents</span></div><div class="area-category-grid">'+areaCategoryCard(m.mine_id,'Unsafe Act',m.unsafe_act,'Unsafe Act')+areaCategoryCard(m.mine_id,'Unsafe Condition',m.unsafe_condition,'Unsafe Condition')+areaCategoryCard(m.mine_id,'Near Miss',m.near_miss,'Near Miss')+'</div><div class="area-mine-foot"><span>'+Number(m.unresolved_incidents||0)+' unresolved</span><span>View category details ↑</span></div></article>').join('');
  $('areaMinesEmpty').classList.toggle('hidden',mines.length>0);
  $('areaMineCards').querySelectorAll('[data-area-mine]').forEach(btn=>btn.addEventListener('click',()=>loadAreaMineIncidents(btn.dataset.areaMine,btn.dataset.areaCategory)));
 }
@@ -231,7 +231,9 @@ async function loadAreaMineIncidents(mineIdValue,category){
  else q.set('category',category);
  const d=await api('/api/safety/incidents?'+q);
  const rows=(d.incidents||[]).filter(i=>category==='Unsafe Act'?['Unsafe Acts','Unsafe Practice','Unsafe Act'].includes(i.category):category==='Unsafe Condition'?['Unsafe Condition','Unsafe Conditions'].includes(i.category):i.category==='Near Miss');
- $('areaIncidentTitle').textContent=(rows[0]?.mine_name||'Mine')+' · '+category+' reports';
+ const mineCard=[...$('areaMineCards').querySelectorAll('[data-area-mine]')].find(el=>el.querySelector('[data-area-mine]')?.dataset.areaMine===mineIdValue)||null;
+ const mineName=[...$('areaMineCards').querySelectorAll('.area-mine-card')].find(el=>el.querySelector('[data-area-mine]')?.dataset.areaMine===mineIdValue)?.dataset.areaMineName||'Mine';
+ $('areaIncidentTitle').textContent=mineName+' · '+category+' reports';
  $('areaIncidentList').innerHTML=rows.map(i=>'<article class="area-incident-item"><h4>'+esc(i.incident_ref||'Reference pending')+' · '+esc(i.incident_type||i.category)+'</h4><p>'+esc(i.location_zone||'')+' · '+esc(i.date_of_incident||'')+'</p><p>'+esc(nice(i.status))+' · '+esc(i.discipline||'')+'</p><button type="button" class="secondary" data-area-incident="'+esc(i.id)+'">View details</button></article>').join('')||'<p class="muted">No incidents in this category for the selected period.</p>';
  $('areaIncidentList').querySelectorAll('[data-area-incident]').forEach(btn=>btn.addEventListener('click',()=>openIncident(btn.dataset.areaIncident)));
  $('areaIncidentPanel').classList.remove('hidden');
