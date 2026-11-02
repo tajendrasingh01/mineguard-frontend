@@ -14,11 +14,11 @@ button:disabled{cursor:not-allowed;opacity:.55}
 [data-tab-content]:not(.hidden){animation:panel-enter .34s cubic-bezier(.2,.75,.25,1) both;will-change:opacity,transform}
 @keyframes panel-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 .mine-so-metric:hover,.mine-open-card:hover,.report-summary:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,45,105,.09)}
-.report-dialog{opacity:0;transform:translateY(12px) scale(.985);transition:opacity .22s ease,transform .22s cubic-bezier(.2,.75,.25,1),display .22s allow-discrete,overlay .22s allow-discrete}
-.report-dialog[open]{opacity:1;transform:translateY(0) scale(1)}
+.report-dialog{opacity:0;transform:scale(.985);transition:opacity .22s ease,transform .22s cubic-bezier(.2,.75,.25,1),display .22s allow-discrete,overlay .22s allow-discrete}
+.report-dialog[open]{opacity:1;transform:scale(1)}
 .report-dialog::backdrop{background:rgba(11,23,48,0);backdrop-filter:blur(0);transition:background .22s ease,backdrop-filter .22s ease}
 .report-dialog[open]::backdrop{background:rgba(11,23,48,.65);backdrop-filter:blur(3px)}
-@starting-style{.report-dialog[open]{opacity:0;transform:translateY(12px) scale(.985)}.report-dialog[open]::backdrop{background:rgba(11,23,48,0);backdrop-filter:blur(0)}}
+@starting-style{.report-dialog[open]{opacity:0;transform:scale(.985)}.report-dialog[open]::backdrop{background:rgba(11,23,48,0);backdrop-filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
 /* HQ management dashboard visual hierarchy */
@@ -41,9 +41,38 @@ button:disabled{cursor:not-allowed;opacity:.55}
 #incidentRows tr,#areaRows tr,#mineRows tr{transition:background .16s ease}
 #incidentRows tr:hover,#areaRows tr:hover,#mineRows tr:hover{background:#f2f6fd}
 @media(max-width:650px){.hq-dashboard-intro{padding:19px}.hq-dashboard-intro h2{font-size:20px}}
+
+/* Area Safety Officer: mine-first performance cards */
+.area-dashboard{display:grid;gap:18px}
+.area-dashboard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.area-dashboard-head h2{margin:0 0 5px;font-size:22px;color:#102b62}
+.area-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.area-summary-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:17px;box-shadow:0 7px 20px rgba(15,45,105,.045)}
+.area-summary-card small{display:block;color:var(--muted);font-size:11px;font-weight:750}
+.area-summary-card strong{display:block;font-size:28px;color:#102b62;margin-top:7px}
+.area-mine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:14px}
+.area-mine-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:17px;box-shadow:0 7px 22px rgba(15,45,105,.05);transition:transform .22s ease,box-shadow .22s ease}
+.area-mine-card:hover{transform:translateY(-2px);box-shadow:0 13px 28px rgba(15,45,105,.09)}
+.area-mine-card h3{font-size:15px;margin:0 0 5px;color:#16366e}
+.area-mine-meta{font-size:11px;color:var(--muted);margin:0 0 14px}
+.area-mine-total{display:flex;align-items:baseline;gap:7px;margin-bottom:13px}
+.area-mine-total strong{font-size:27px;color:#102b62}
+.area-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.area-category-card{display:block;width:100%;text-align:left;padding:10px 9px;border:1px solid #e5eaf2;border-radius:11px;background:#f8faff;color:#334155;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.area-category-card:hover{background:#eef4ff;border-color:#b9ccef;transform:translateY(-1px)}
+.area-category-card small{display:block;font-size:10px;line-height:1.3;color:#64748b;font-weight:700}
+.area-category-card strong{display:block;font-size:21px;margin-top:5px;color:#173b78}
+.area-mine-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding-top:12px;border-top:1px solid #edf1f7;font-size:11px;color:var(--muted)}
+.area-incident-panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:17px;box-shadow:0 7px 22px rgba(15,45,105,.045)}
+.area-incident-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.area-incident-item{border:1px solid #e6ebf3;border-radius:12px;padding:13px;background:#fbfcff}
+.area-incident-item h4{font-size:13px;margin:0 0 6px;color:#18396f}
+.area-incident-item p{font-size:11px;color:var(--muted);margin:4px 0}
+@media(max-width:540px){.area-category-grid{gap:5px}.area-category-card{padding:8px 6px}.area-category-card small{font-size:9px}}
 </style></head><body>
 <header><div><h1>MineGuard · SECL Safety Management</h1><p id="identity">Verifying account…</p></div><div class="actions"><button onclick="logout()">Sign out</button></div></header><main class="wrap"><div id="message" aria-live="polite"></div><nav class="legacy-tabs" id="roleTabs" aria-label="Workspace sections"><button type="button" class="active" data-tab="report-incident" onclick="switchTab('report-incident')">Report Incident</button><button type="button" data-tab="my-reports" onclick="switchTab('my-reports')">My Reports</button><button type="button" data-tab="dashboard" onclick="switchTab('dashboard')">Safety Dashboard</button></nav>
 <section id="hqDashboardIntro" class="hq-dashboard-intro" data-tab-content="dashboard"><div><span class="hq-kicker">SECL · CENTRAL SAFETY OVERSIGHT</span><h2>Safety Management Dashboard</h2><p>Consolidated incident visibility, area performance and pending management attention across operations.</p></div><div class="hq-live-mark"><span></span> Management view</div></section>
+<section id="areaDashboard" class="hidden area-dashboard" data-tab-content="dashboard"><div class="area-dashboard-head"><div><span class="hq-kicker">AREA SAFETY OVERSIGHT</span><h2 id="areaDashboardTitle">Area Mine Performance</h2><p class="legacy-page-sub">All mines and projects under your assigned area, with incident categories and mine-wise performance</p></div><button type="button" class="secondary" onclick="loadAreaDashboard()">Refresh</button></div><div id="areaSummary" class="area-summary-grid"></div><div><h2 class="title">Mine Performance</h2><div id="areaMineCards" class="area-mine-grid"></div><p id="areaMinesEmpty" class="muted hidden">No mines are mapped to this area.</p></div><section id="areaIncidentPanel" class="area-incident-panel hidden"><div class="area-dashboard-head"><div><h2 id="areaIncidentTitle">Mine incidents</h2><p class="legacy-page-sub">Select an incident to open its full details.</p></div><button type="button" class="secondary" onclick="closeAreaIncidentPanel()">Close</button></div><div id="areaIncidentList" class="area-incident-list"></div></section></section>
 <section id="mineDashboard" class="hidden" data-tab-content="dashboard"><div class="mine-so-head"><div><h2 id="mineDashboardTitle">Mine Safety Dashboard</h2><p class="legacy-page-sub">Mine-specific safety performance and pending incidents</p></div><button type="button" class="secondary" onclick="loadMineDashboard()">Refresh</button></div><div id="mineSoMetrics" class="mine-so-metrics"></div><div class="mine-so-head"><div><h2>Open Incidents</h2><p class="legacy-page-sub">Unresolved reports recorded for this mine</p></div></div><div id="mineOpenIncidents" class="mine-open-grid"></div><p id="mineOpenEmpty" class="muted hidden">There are no open incidents for this mine.</p></section><div class="toolbar" data-tab-content="dashboard"><div class="field"><label for="from">From date</label><input id="from" type="date"></div><div class="field"><label for="to">To date</label><input id="to" type="date"></div><div class="field"><label for="status">Status</label><select id="status"><option value="">All</option><option value="open">Open</option><option value="under_review">Under Review</option><option value="action_assigned">Action Assigned</option><option value="escalated">Escalated</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></div><button onclick="load()">Apply filters</button></div>
 <div id="metrics" class="grid" data-tab-content="dashboard"></div><section id="visuals" class="visual-grid hidden" data-tab-content="dashboard"><article class="visual-card"><h2>Incident trend</h2><p class="visual-sub">Daily reported incidents in the selected period</p><div id="trendChart"></div></article><article class="visual-card"><h2>Incident status</h2><p class="visual-sub">Current workflow distribution</p><div id="statusChart"></div></article><article class="visual-card"><h2>Incident categories</h2><p class="visual-sub">Where safety observations are concentrated</p><div id="categoryChart"></div></article><article class="visual-card"><h2>Safety discipline</h2><p class="visual-sub">Incidents by functional discipline</p><div id="disciplineChart"></div></article><article class="visual-card" style="grid-column:1/-1"><h2>Area performance</h2><p class="visual-sub">Incident volume by operating area · select an area below to drill down</p><div id="areaChart"></div></article></section><section id="areas" class="card hidden" data-tab-content="dashboard"><h2 class="title">HQ Area ranking</h2><div class="table-wrap"><table><thead><tr><th>Area</th><th>Total</th><th>Unresolved</th><th>Escalated</th><th>Resolution %</th><th>Average hours</th><th></th></tr></thead><tbody id="areaRows"></tbody></table></div></section>
 <section id="mines" class="card hidden" data-tab-content="dashboard"><p class="crumb" id="areaCrumb"></p><h2 class="title" id="mineTitle">Mines/Projects</h2><div class="table-wrap"><table><thead><tr><th>Mine/Project</th><th>Incident count</th><th></th></tr></thead><tbody id="mineRows"></tbody></table></div></section>
@@ -93,7 +122,8 @@ function switchTab(tab){
  document.querySelectorAll('[data-tab-content]').forEach(el=>{
   let show=el.dataset.tabContent===tab;
   if(tab==='dashboard'&&isMineSO())show=show&&el.id==='mineDashboard';
-  if(tab==='dashboard'&&!isMineSO())show=show&&el.id!=='mineDashboard';
+  if(tab==='dashboard'&&isAreaSO())show=show&&el.id==='areaDashboard';
+  if(tab==='dashboard'&&!isMineSO()&&!isAreaSO())show=show&&el.id!=='mineDashboard'&&el.id!=='areaDashboard';
   el.classList.toggle('hidden',!show);
   if(show){el.style.animation='none';void el.offsetWidth;el.style.animation='';}
   else el.style.animation='';
@@ -132,9 +162,21 @@ function renderReportDialog(d){
  try{const photos=typeof i.photos==='string'?JSON.parse(i.photos):i.photos;if(Array.isArray(photos)&&photos.length)evidence='<div class="report-dialog-section"><h3>Photos / Evidence</h3><div class="report-evidence">'+photos.filter(p=>p&&typeof p.data==='string'&&p.data.startsWith('data:image/')).map(p=>'<img src="'+p.data+'" alt="Incident evidence">').join('')+'</div></div>';}catch{}
  const comments=(d.comments||[]).map(c=>'<p>'+esc(c.comment_text)+' <small>'+esc(new Date(c.created_at).toLocaleString())+'</small></p>').join('')||'<p class="muted">No comments recorded.</p>';
  const history=(d.forwarding_history||[]).map(h=>'<p>'+esc(nice(h.action))+' · '+esc(h.from_role)+' → '+esc(h.to_role)+' · '+esc(h.comments||'')+' <small>'+esc(new Date(h.created_at).toLocaleString())+'</small></p>').join('')||'<p class="muted">No forwarding history recorded.</p>';
- $('reportDialogBody').innerHTML='<div class="report-detail-grid">'+fields.join('')+'</div>'+evidence+'<div class="report-dialog-section"><h3>Comments</h3>'+comments+'</div><div class="report-dialog-section"><h3>Forwarding history</h3>'+history+'</div><p class="workflow-note">Investigation, resolution and closure are handled by the assigned Mine Manager.</p>';
- $('reportDialog').showModal();
+ $('reportDialogBody').innerHTML='<div class="report-detail-grid">'+fields.join('')+'</div>'+evidence+'<div class="report-dialog-section"><h3>Comments</h3>'+comments+'</div><div class="report-dialog-section"><h3>Forwarding history</h3>'+history+'</div>'+(management?'<div class="report-dialog-section"><form id="dialogCommentForm"><label for="dialogComment">Add comment / management direction</label><textarea id="dialogComment" maxlength="10000" required></textarea><button type="submit">Send comment</button></form></div><div id="workflow" class="actions report-dialog-section"></div>':'<p class="workflow-note">Investigation, resolution and closure are handled by the assigned Mine Manager.</p>');
+ if(management){
+  const form=$('dialogCommentForm');
+  form.addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/safety/incidents/'+i.id+'/comments',{method:'POST',body:JSON.stringify({comment_text:$('dialogComment').value})});const fresh=await api('/api/safety/incidents/'+encodeURIComponent(i.id));renderReportDialog(fresh,true)}catch(e){err(e)}});
+  if(['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(user.role)){
+   const select=document.createElement('select');select.id='dialogNextStatus';
+   ['open','under_review','action_assigned','escalated','resolved','closed'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=nice(v);o.selected=v===i.status;if(v==='escalated'){o.disabled=true;o.textContent='Escalated (use forwarding below)'}select.append(o)});
+   const button=document.createElement('button');button.type='button';button.textContent='Update status';button.onclick=async()=>{try{await api('/api/safety/incidents/'+i.id+'/status',{method:'PATCH',body:JSON.stringify({status:select.value})});const fresh=await api('/api/safety/incidents/'+encodeURIComponent(i.id));renderReportDialog(fresh,true);await load()}catch(e){err(e)}};
+   $('workflow').append(select,button);
+  }
+  await loadRecipients(i);
+ }
+ if(!$('reportDialog').open)$('reportDialog').showModal();
 }
+
 async function openMyReportDialog(id){try{const d=await api('/api/safety/incidents/mine/'+encodeURIComponent(id));renderReportDialog(d)}catch(e){err(e)}}
 async function openMineIncidentDialog(id){try{const d=await api('/api/safety/incidents/'+encodeURIComponent(id));renderReportDialog(d)}catch(e){err(e)}}
 
@@ -158,6 +200,7 @@ async function loadDocuments(){
 function period(){let p=new URLSearchParams();if($('from').value)p.set('from',new Date($('from').value+'T00:00:00').toISOString());if($('to').value)p.set('to',new Date($('to').value+'T23:59:59').toISOString());if($('status').value)p.set('status',$('status').value);return p.toString()}
 const metric=(a,b)=>'<div class="metric"><small>'+esc(a)+'</small><strong>'+esc(b)+'</strong></div>';
 function isMineSO(){return ['MINE_SO_MINING','MINE_SO_EM'].includes(user?.role)}
+function isAreaSO(){return user?.role==='AREA_SAFETY_OFFICER'}
 function metricCard(label,value,caption=''){return '<article class="mine-so-metric"><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong>'+(caption?'<small>'+esc(caption)+'</small>':'')+'</article>'}
 async function loadMineDashboard(){
  const d=await api('/api/safety/analytics/mine');
@@ -168,6 +211,33 @@ async function loadMineDashboard(){
  $('mineOpenIncidents').querySelectorAll('[data-mine-incident-id]').forEach(btn=>btn.addEventListener('click',()=>openMineIncidentDialog(btn.dataset.mineIncidentId)));
  $('mineOpenEmpty').classList.toggle('hidden',rows.length>0);
 }
+function areaCategoryCard(mineId,label,value,category){return '<button type="button" class="area-category-card" data-area-mine="'+esc(mineId)+'" data-area-category="'+esc(category)+'"><small>'+esc(label)+'</small><strong>'+Number(value||0)+'</strong></button>'}
+async function loadAreaDashboard(){
+ const areas=await api('/api/org/areas');
+ const area=(areas.areas||[])[0];
+ if(!area)throw Error('No area is assigned to this Area Safety Officer account.');
+ areaId=area.id;
+ const d=await api('/api/safety/analytics/area/'+encodeURIComponent(area.id)+'?'+period());
+ $('areaDashboardTitle').textContent=area.name+' · Mine Performance';
+ $('areaSummary').innerHTML=metricCard('Total incidents',d.total_incidents,'Across all mines in the selected period')+metricCard('Unresolved incidents',d.unresolved_incidents,'Pending action or closure')+metricCard('Escalated incidents',d.escalated_incidents,'Requiring higher-level attention');
+ const mines=d.mine_counts||[];
+ $('areaMineCards').innerHTML=mines.map(m=>'<article class="area-mine-card"><h3>'+esc(m.mine_name)+'</h3><p class="area-mine-meta">Mine / Project performance</p><div class="area-mine-total"><strong>'+Number(m.total_incidents||0)+'</strong><span class="muted">Total reported incidents</span></div><div class="area-category-grid">'+areaCategoryCard(m.mine_id,'Unsafe Act',m.unsafe_act,'Unsafe Act')+areaCategoryCard(m.mine_id,'Unsafe Condition',m.unsafe_condition,'Unsafe Condition')+areaCategoryCard(m.mine_id,'Near Miss',m.near_miss,'Near Miss')+'</div><div class="area-mine-foot"><span>'+Number(m.unresolved_incidents||0)+' unresolved</span><span>View category details ↑</span></div></article>').join('');
+ $('areaMinesEmpty').classList.toggle('hidden',mines.length>0);
+ $('areaMineCards').querySelectorAll('[data-area-mine]').forEach(btn=>btn.addEventListener('click',()=>loadAreaMineIncidents(btn.dataset.areaMine,btn.dataset.areaCategory)));
+}
+async function loadAreaMineIncidents(mineIdValue,category){
+ const q=new URLSearchParams(period());q.set('limit','100');q.set('mine_id',mineIdValue);q.set('area_id',areaId);
+ if(category==='Unsafe Act'){q.set('category','Unsafe Acts');}
+ else q.set('category',category);
+ const d=await api('/api/safety/incidents?'+q);
+ const rows=(d.incidents||[]).filter(i=>category==='Unsafe Act'?['Unsafe Acts','Unsafe Practice','Unsafe Act'].includes(i.category):category==='Unsafe Condition'?['Unsafe Condition','Unsafe Conditions'].includes(i.category):i.category==='Near Miss');
+ $('areaIncidentTitle').textContent=(rows[0]?.mine_name||'Mine')+' · '+category+' reports';
+ $('areaIncidentList').innerHTML=rows.map(i=>'<article class="area-incident-item"><h4>'+esc(i.incident_ref||'Reference pending')+' · '+esc(i.incident_type||i.category)+'</h4><p>'+esc(i.location_zone||'')+' · '+esc(i.date_of_incident||'')+'</p><p>'+esc(nice(i.status))+' · '+esc(i.discipline||'')+'</p><button type="button" class="secondary" data-area-incident="'+esc(i.id)+'">View details</button></article>').join('')||'<p class="muted">No incidents in this category for the selected period.</p>';
+ $('areaIncidentList').querySelectorAll('[data-area-incident]').forEach(btn=>btn.addEventListener('click',()=>openIncident(btn.dataset.areaIncident)));
+ $('areaIncidentPanel').classList.remove('hidden');
+ $('areaIncidentPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeAreaIncidentPanel(){$('areaIncidentPanel').classList.add('hidden');$('areaIncidentList').innerHTML=''}
 const palette=['#315bd6','#18a999','#f2a541','#e35d6a','#8b6bd6','#4d9de0','#93a4b8'];
 function barList(data){const entries=Object.entries(data||{}).sort((a,b)=>b[1]-a[1]);if(!entries.length)return '<p class="muted">No incidents recorded for this selection.</p>';const max=Math.max(1,...entries.map(x=>x[1]));return '<div class="bar-list">'+entries.map(([k,v],i)=>'<div class="bar-row"><span>'+esc(nice(k))+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,v/max*100)+'%;background:'+palette[i%palette.length]+'"></div></div><b>'+v+'</b></div>').join('')+'</div>'}
 function donut(data){const entries=Object.entries(data||{}).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);const total=entries.reduce((n,x)=>n+x[1],0);if(!total)return '<p class="muted">No incidents recorded for this selection.</p>';let start=0,stops=entries.map((x,i)=>{const end=start+x[1]/total*100,c=palette[i%palette.length],s=c+' '+start+'% '+end+'%';start=end;return s}).join(',');return '<div class="donut-wrap"><div class="donut" style="background:conic-gradient('+stops+')"><div class="donut-center">'+total+'<small>incidents</small></div></div><div class="legend">'+entries.map((x,i)=>'<span><i class="dot" style="background:'+palette[i%palette.length]+'"></i>'+esc(nice(x[0]))+' <b>'+x[1]+'</b></span>').join('')+'</div></div>'}
@@ -183,13 +253,20 @@ async function init(){
   const d=await api('/api/auth/me');user=d.user;
   resetLegacyReport();setReportLang('en');
   $('identity').textContent=(user.name||user.worker_id)+' · '+user.role;
-  const mineSO=isMineSO(), isHQ=user.role==='HQ_SAFETY_HEAD';
+  const mineSO=isMineSO(), areaSO=isAreaSO(), isHQ=user.role==='HQ_SAFETY_HEAD';
   document.body.classList.toggle('mine-so-mode',mineSO);
+  document.body.classList.toggle('area-so-mode',areaSO);
   if(isHQ){$('commentForm').querySelector('label').textContent='Management direction / action request';$('commentSubmit').textContent='Send action request';}
   // Safety Officers get the mine-specific reporting workspace only.
   $('roleTabs').classList.toggle('hidden',!mineSO);
   if(mineSO){
    document.querySelectorAll('[data-tab-content="dashboard"]').forEach(el=>el.classList.toggle('hidden',el.id!=='mineDashboard'));
+   switchTab('dashboard');
+   return;
+  }
+  if(areaSO){
+   document.querySelectorAll('[data-tab-content="report-incident"],[data-tab-content="my-reports"]').forEach(el=>el.classList.add('hidden'));
+   document.querySelectorAll('[data-tab-content="dashboard"]').forEach(el=>el.classList.toggle('hidden',el.id!=='areaDashboard'));
    switchTab('dashboard');
    return;
   }
@@ -203,12 +280,12 @@ async function init(){
   switchTab('dashboard');
  }catch(e){err(e)}
 }
-async function load(){try{$('message').textContent='';if(['MINE_SO_MINING','MINE_SO_EM'].includes(user.role)){await loadMineDashboard();return;}if(user.role==='HQ_SAFETY_HEAD'){const d=await api('/api/safety/analytics/hq?'+period());$('metrics').innerHTML=metric('Total incidents',d.totals.incidents)+metric('Open / unresolved',d.totals.open)+metric('Escalated',d.totals.escalated)+metric('Resolved / closed',Math.max(0,d.totals.incidents-d.totals.open));renderVisuals(d);$('areas').classList.remove('hidden');$('areaRows').innerHTML=d.area_ranking.map(a=>'<tr><td>'+esc(a.area_name)+'</td><td>'+a.total_incidents+'</td><td>'+a.unresolved_incidents+'</td><td>'+a.escalated_incidents+'</td><td>'+(a.resolution_rate_percent===null?'—':a.resolution_rate_percent+'%')+'</td><td>'+(a.average_resolution_hours??'—')+'</td><td><button onclick="openArea(\''+a.area_id+'\')">Open</button></td></tr>').join('')}else $('areas').classList.add('hidden');await incidents()}catch(e){err(e)}}
+async function load(){try{$('message').textContent='';if(['MINE_SO_MINING','MINE_SO_EM'].includes(user.role)){await loadMineDashboard();return;}if(user.role==='AREA_SAFETY_OFFICER'){await loadAreaDashboard();return;}if(user.role==='HQ_SAFETY_HEAD'){const d=await api('/api/safety/analytics/hq?'+period());$('metrics').innerHTML=metric('Total incidents',d.totals.incidents)+metric('Open / unresolved',d.totals.open)+metric('Escalated',d.totals.escalated)+metric('Resolved / closed',Math.max(0,d.totals.incidents-d.totals.open));renderVisuals(d);$('areas').classList.remove('hidden');$('areaRows').innerHTML=d.area_ranking.map(a=>'<tr><td>'+esc(a.area_name)+'</td><td>'+a.total_incidents+'</td><td>'+a.unresolved_incidents+'</td><td>'+a.escalated_incidents+'</td><td>'+(a.resolution_rate_percent===null?'—':a.resolution_rate_percent+'%')+'</td><td>'+(a.average_resolution_hours??'—')+'</td><td><button onclick="openArea(\''+a.area_id+'\')">Open</button></td></tr>').join('')}else $('areas').classList.add('hidden');await incidents()}catch(e){err(e)}}
 async function openArea(id){try{areaId=id;mineId=null;const d=await api('/api/safety/analytics/area/'+encodeURIComponent(id)+'?'+period());$('mines').classList.remove('hidden');$('areaCrumb').textContent='HQ → '+d.area.name+' · '+d.total_incidents+' incidents · '+(d.resolution_rate_percent===null?'—':d.resolution_rate_percent+'% resolved');$('mineTitle').textContent=d.area.name+' · Mines/Projects';$('mineRows').innerHTML=d.mine_counts.map(m=>'<tr><td>'+esc(m.mine_name)+'</td><td>'+m.total_incidents+'</td><td><button onclick="openMine(\''+m.mine_id+'\')">View incidents</button></td></tr>').join('');$('crumb').textContent='HQ → '+d.area.name;await incidents()}catch(e){err(e)}}
 async function openMine(id){mineId=id;await incidents()}
 async function incidents(){const q=new URLSearchParams(period());q.set('limit','100');if(mineId)q.set('mine_id',mineId);else if(areaId)q.set('area_id',areaId);const d=await api('/api/safety/incidents?'+q);let rows=d.incidents||[];if(mineId)rows=rows.filter(i=>i.mine_id===mineId);$('incidentRows').innerHTML=rows.map(i=>'<tr><td>'+esc(i.incident_ref||i.id)+'</td><td>'+esc(i.category||i.incident_type)+'</td><td>'+esc(i.discipline||'—')+'</td><td><span class="status">'+esc(nice(i.status))+'</span></td><td>'+esc(new Date(i.created_at).toLocaleString())+'</td><td><button onclick="openIncident(\''+i.id+'\')">Details</button></td></tr>').join('')||'<tr><td colspan="6">No incidents in this period.</td></tr>';$('total').textContent='Showing '+rows.length+' of '+d.total+' authorized incidents.'}
 async function loadRecipients(incident){if(!['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(user.role))return;try{const d=await api('/api/safety/recipients?incident_id='+encodeURIComponent(incident.id));if(!d.recipients.length)return;const wrap=document.createElement('div');wrap.className='card';wrap.style.width='100%';wrap.innerHTML='<h4>Forward / escalate work</h4><div class="field"><label for="recipient">Authorized recipient</label><select id="recipient"></select></div><div class="field"><label for="forwardAction">Action</label><select id="forwardAction"></select></div><div class="field"><label for="forwardComment">Forwarding comments</label><textarea id="forwardComment" maxlength="5000"></textarea></div><button id="forwardButton">Submit forwarding</button>';$('workflow').append(wrap);const rs=$('recipient');d.recipients.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.name+' ('+r.role+')';rs.append(o)});const acts=user.role==='MINE_MANAGER'?[['FORWARD','Forward locally'],['ASSIGN','Assign corrective action'],['REASSIGN','Reassign action'],['ESCALATE','Escalate to Area Safety Officer']]:[['FORWARD','Forward within Area'],['ASSIGN','Assign work'],['REASSIGN','Reassign work']];acts.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;$('forwardAction').append(o)});const fillRecipients=()=>{const action=$('forwardAction').value, prior=rs.value;rs.innerHTML='';const choices=d.recipients.filter(r=>user.role==='MINE_MANAGER'?(action==='ESCALATE'?r.role==='AREA_SAFETY_OFFICER':['LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r.role)):['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r.role));choices.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.name+' ('+r.role+')';rs.append(o)});if([...rs.options].some(o=>o.value===prior))rs.value=prior};$('forwardAction').addEventListener('change',fillRecipients);fillRecipients();$('forwardButton').onclick=async()=>{try{if(!rs.value)throw Error('No authorized recipient is available for this action');await api('/api/safety/incidents/'+incident.id+'/forward',{method:'POST',body:JSON.stringify({to_user_id:rs.value,action:$('forwardAction').value,comments:$('forwardComment').value})});await openIncident(incident.id);await load()}catch(e){err(e)}}}catch(e){err(e)}}
-async function openIncident(id){try{incidentId=id;const d=await api('/api/safety/incidents/'+id),i=d.incident;$('detail').classList.remove('hidden');$('detailText').innerHTML='<p><b>'+esc(i.incident_ref||i.id)+'</b> · '+esc(nice(i.status))+'</p><p>'+esc(i.description)+'</p><p class="muted">'+esc(new Date(i.created_at).toLocaleString())+'</p>';$('history').innerHTML='<h4>Comments</h4>'+((d.comments||[]).map(c=>'<p>'+esc(c.comment_text)+' <small>'+esc(new Date(c.created_at).toLocaleString())+'</small></p>').join('')||'<p>No comments.</p>')+'<h4>Forwarding history</h4>'+((d.forwarding_history||[]).map(h=>'<p>'+esc(h.action)+' · '+esc(h.from_role)+' → '+esc(h.to_role)+' · '+esc(h.comments||'')+' <small>'+esc(new Date(h.created_at).toLocaleString())+'</small></p>').join('')||'<p>No forwarding events.</p>');$('workflow').innerHTML='';if(['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(user.role)){const s=document.createElement('select');s.id='nextStatus';['open','under_review','action_assigned','escalated','resolved','closed'].forEach(v=>{let o=document.createElement('option');o.value=v;o.textContent=nice(v);o.selected=v===i.status;if(v==='escalated'){o.disabled=true;o.textContent='Escalated (use forwarding below)'}s.append(o)});const b=document.createElement('button');b.textContent='Update status';b.onclick=async()=>{try{await api('/api/safety/incidents/'+id+'/status',{method:'PATCH',body:JSON.stringify({status:s.value})});await openIncident(id);await load()}catch(e){err(e)}};$('workflow').append(s,b)}await loadRecipients(i);$('detail').scrollIntoView({behavior:'smooth'})}catch(e){err(e)}}
+async function openIncident(id){try{incidentId=id;const d=await api('/api/safety/incidents/'+encodeURIComponent(id));renderReportDialog(d,true)}catch(e){err(e)}}
 $('commentForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/safety/incidents/'+incidentId+'/comments',{method:'POST',body:JSON.stringify({comment_text:$('comment').value})});$('comment').value='';await openIncident(incidentId)}catch(e){err(e)}});
 let reportLocation=null,reportSeverity='nearMiss',reportPhotos=[],reportLang='en';
 const reportText={en:{eyebrow:'Operational Safety',title:'Report Incident',sub:'Fill in as much detail as possible',s1:'Your Details',s2:'Incident Details',s3:'Severity Level',s4:'Description',s5:'Photos / Evidence',name:'Full Name',id:'ID / NEIS Number',sup:'Supervisor on Duty',dept:'Department',date:'Date',time:'Time',cat:'Report Category',type:'Incident Type',location:'Location',locdetail:'Level / Zone Detail',inj:'Persons Injured',desc:'What Happened?',act:'Immediate Actions Taken',ppe:'PPE Worn?',sop:'SOPs Followed?',wit:'Witnesses',submit:'Submit Report',discard:'✕ Discard'},hi:{eyebrow:'परिचालन सुरक्षा',title:'घटना की रिपोर्ट करें',sub:'यथासंभव पूरी जानकारी भरें',s1:'आपका विवरण',s2:'घटना का विवरण',s3:'गंभीरता का स्तर',s4:'विवरण',s5:'फोटो / साक्ष्य',name:'पूरा नाम',id:'आईडी / NEIS नंबर',sup:'ड्यूटी पर पर्यवेक्षक',dept:'विभाग',date:'दिनांक',time:'समय',cat:'रिपोर्ट श्रेणी',type:'घटना का प्रकार',location:'स्थान',locdetail:'लेवल / क्षेत्र का विवरण',inj:'घायल व्यक्ति',desc:'क्या हुआ?',act:'तत्काल की गई कार्रवाई',ppe:'PPE पहना था?',sop:'SOP का पालन किया गया?',wit:'गवाह',submit:'रिपोर्ट जमा करें',discard:'✕ हटाएं'}};
