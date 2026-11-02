@@ -53,9 +53,7 @@ function switchTab(tab){
  document.querySelectorAll('[data-tab-content]').forEach(el=>el.classList.toggle('hidden',el.dataset.tabContent!==tab));
  document.querySelectorAll('.legacy-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
  $('detail').classList.add('hidden');
- if(tab==='my-incidents'&&!['MINE_SO_MINING','MINE_SO_EM'].includes(user?.role)){
-  $('report').innerHTML='<h2 class="title">My Incidents</h2><p class="muted">Incident submission is available to the authorized Safety Officer assigned to this mine.</p>';
- }
+
  if(tab==='my-reports')loadMyReports();
  if(tab==='dashboard')load();
  if(tab==='sops'||tab==='statutory')loadDocuments();
