@@ -227,11 +227,10 @@ async function loadAreaDashboard(){
 }
 async function loadAreaMineIncidents(mineIdValue,category){
  const q=new URLSearchParams(period());q.set('limit','100');q.set('mine_id',mineIdValue);q.set('area_id',areaId);
- if(category==='Unsafe Act'){q.set('category','Unsafe Acts');}
+ if(category==='Unsafe Act'){q.set('category','Unsafe Act');}
  else q.set('category',category);
  const d=await api('/api/safety/incidents?'+q);
  const rows=(d.incidents||[]).filter(i=>category==='Unsafe Act'?['Unsafe Acts','Unsafe Practice','Unsafe Act'].includes(i.category):category==='Unsafe Condition'?['Unsafe Condition','Unsafe Conditions'].includes(i.category):i.category==='Near Miss');
- const mineCard=[...$('areaMineCards').querySelectorAll('[data-area-mine]')].find(el=>el.querySelector('[data-area-mine]')?.dataset.areaMine===mineIdValue)||null;
  const mineName=[...$('areaMineCards').querySelectorAll('.area-mine-card')].find(el=>el.querySelector('[data-area-mine]')?.dataset.areaMine===mineIdValue)?.dataset.areaMineName||'Mine';
  $('areaIncidentTitle').textContent=mineName+' · '+category+' reports';
  $('areaIncidentList').innerHTML=rows.map(i=>'<article class="area-incident-item"><h4>'+esc(i.incident_ref||'Reference pending')+' · '+esc(i.incident_type||i.category)+'</h4><p>'+esc(i.location_zone||'')+' · '+esc(i.date_of_incident||'')+'</p><p>'+esc(nice(i.status))+' · '+esc(i.discipline||'')+'</p><button type="button" class="secondary" data-area-incident="'+esc(i.id)+'">View details</button></article>').join('')||'<p class="muted">No incidents in this category for the selected period.</p>';
