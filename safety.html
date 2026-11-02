@@ -91,7 +91,9 @@ function switchTab(tab){
  const active=[...document.querySelectorAll('[data-tab-content]')].find(el=>el.dataset.tabContent===tab);
  if(!active)return;
  document.querySelectorAll('[data-tab-content]').forEach(el=>{
-  const show=el.dataset.tabContent===tab;
+  let show=el.dataset.tabContent===tab;
+  if(tab==='dashboard'&&isMineSO())show=show&&el.id==='mineDashboard';
+  if(tab==='dashboard'&&!isMineSO())show=show&&el.id!=='mineDashboard';
   el.classList.toggle('hidden',!show);
   if(show){el.style.animation='none';void el.offsetWidth;el.style.animation='';}
   else el.style.animation='';
