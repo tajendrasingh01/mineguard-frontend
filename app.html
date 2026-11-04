@@ -973,7 +973,8 @@ function buildNav() {
               {id:'sec-workers',l:'Workers',icon:'group',full:'Mine Workers'},
               {id:'sec-sop',l:'SOPs',icon:'menu_book',full:'SOPs'},
               {id:'sec-statutory',l:'Orders',icon:'gavel',full:'Statutory Orders'}];
-  const tabs = currentUser.role==='admin' ? at : wt;
+  const canViewNCPHSops=['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER'].includes(currentUser.role) && currentUser.assigned_mine_id==='7bb6efc1-77b7-4a5e-9dc5-dc9596dc7c3e';
+  const tabs = (currentUser.role==='admin' ? at : wt).filter(t=>t.id!=='sec-sop'||canViewNCPHSops);
   const topNav = $('topNav');
   if (topNav) topNav.innerHTML = tabs.map(t=>`<button class="nav-btn" onclick="switchSec('${t.id}')">${t.full}</button>`).join('');
   const botNav = $('botNav');
@@ -989,7 +990,7 @@ function switchSec(id) {
   if(id==='sec-incidents') loadAdminInc();
   if(id==='sec-workers') loadWorkers();
   if(id==='sec-dashboard') loadDash();
-  if(id==='sec-sop') loadSOPs();
+  if(id==='sec-sop'){if(!(['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER'].includes(currentUser.role) && currentUser.assigned_mine_id==='7bb6efc1-77b7-4a5e-9dc5-dc9596dc7c3e')){switchSec('sec-report');return;}loadSOPs();}
   if(id==='sec-statutory') loadStat();
   window.scrollTo({top:0,behavior:'smooth'});
 }
