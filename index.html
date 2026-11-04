@@ -239,7 +239,7 @@ body::before{
   letter-spacing:1px
 }
 /* LOGIN PAGE */
-#loginPage{display:none;width:100%;max-width:440px;position:relative;z-index:10}
+#loginPage{display:block;width:100%;max-width:480px;position:relative;z-index:10}#landingPage{display:none!important}
 .glass-card{
   background:rgba(255,255,255,0.85);
   border:1.5px solid rgba(255,255,255,0.6);
@@ -480,6 +480,26 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
   .opt-icon{width:44px;height:44px}
   .glass-card{padding:24px}
 }
+
+/* Refined login-first presentation — retain the MineGuard navy / orange identity */
+body{background:radial-gradient(ellipse at 12% 12%,rgba(37,99,235,.12),transparent 38%),radial-gradient(ellipse at 88% 88%,rgba(255,122,0,.08),transparent 34%),linear-gradient(135deg,#f5f7fa 0%,#eef6ff 52%,#f5f7fa 100%)}
+#loginPage{max-width:470px;animation:login-enter .5s cubic-bezier(.2,.75,.25,1) both}
+.glass-card{padding:clamp(24px,5vw,38px);border-radius:24px;border:1px solid rgba(255,255,255,.88);box-shadow:0 24px 70px rgba(15,45,105,.14),0 3px 12px rgba(15,45,105,.05),inset 0 1px 0 #fff}
+.login-brand{padding-bottom:20px;border-bottom:1px solid rgba(15,45,105,.09);margin-bottom:26px}
+.login-brand-icon{border-radius:9px;padding:8px 10px;box-shadow:0 5px 14px rgba(15,45,105,.18)}
+.login-brand-name{font-size:14px;letter-spacing:-.2px}.login-brand-sub{font-size:11px;letter-spacing:.15px}
+.login-title{font-size:27px;letter-spacing:-.8px;margin-bottom:7px}.login-sub{font-size:13px;line-height:1.55;margin-bottom:24px}
+.tab-row{border-radius:14px;background:#eaf0f8;border:1px solid #dfe7f2;padding:4px;margin-bottom:23px}
+.tab{font-size:13px;padding:11px;border-radius:10px}.tab.active{background:#fff;color:#0f2d69;box-shadow:0 3px 10px rgba(15,45,105,.10)}
+.glass-input{background:#f8faff;border:1px solid #d9e2ef;border-radius:13px;padding:14px 15px;font-size:15px}
+.glass-input:focus{background:#fff;border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+.field-label{font-size:10px;letter-spacing:1.1px;color:#53627a}
+.glass-btn{border-radius:13px;min-height:50px;background:#0f2d69;box-shadow:0 8px 18px rgba(15,45,105,.20);letter-spacing:.25px}
+.glass-btn:hover{background:#1a3d82;box-shadow:0 11px 24px rgba(15,45,105,.24)}
+.secure-row{padding-top:15px;border-top:1px solid rgba(15,45,105,.08)}
+@keyframes login-enter{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:480px){body{padding:18px 14px}.glass-card{padding:24px 20px;border-radius:20px}.login-title{font-size:24px}}
+@media(prefers-reduced-motion:reduce){#loginPage{animation:none}}
 </style>
 </head>
 <body>
@@ -504,26 +524,13 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
   </div>
 
   <div class="options">
-    <a href="https://shorturl.at/V0HNE" target="_blank" rel="noopener" class="opt-card opt-sop">
-      <div class="opt-icon">
-        <span class="ms" style="font-size:24px">menu_book</span>
-      </div>
-      <div class="opt-text">
-        <div class="opt-title">View SOPs & Updates</div>
-        <div class="opt-sub">Browse standard operating procedures and safety updates — no login required</div>
-      </div>
-      <div class="opt-arrow">
-        <span class="ms" style="font-size:18px">open_in_new</span>
-      </div>
-    </a>
-
     <button class="opt-card opt-report" onclick="showLogin()">
       <div class="opt-icon">
         <span class="ms" style="font-size:24px">warning_amber</span>
       </div>
       <div class="opt-text">
-        <div class="opt-title">Report Incident</div>
-        <div class="opt-sub">Sign in to report an incident, view your reports, and access the full safety portal</div>
+        <div class="opt-title">Login to MineGuard</div>
+        <div class="opt-sub">Secure access for authorized SECL safety personnel</div>
       </div>
       <div class="opt-arrow">
         <span class="ms" style="font-size:18px">arrow_forward</span>
@@ -540,9 +547,7 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
 <!-- LOGIN -->
 <div id="loginPage">
   <div class="glass-card">
-    <button class="back-btn" onclick="showLanding()">
-      <span class="ms" style="font-size:18px">arrow_back</span> Back
-    </button>
+    
 
     <div class="login-brand">
       <div class="login-brand-icon">
@@ -555,11 +560,11 @@ select.glass-input option{background:var(--white);color:var(--text-primary)}
       </div>
     </div>
 
-    <div class="login-title">Sign in</div>
-    <div class="login-sub">Enter your credentials to continue</div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Sign in to access the SECL Mine Safety Management Portal</div>
 
     <div class="tab-row">
-      <button class="tab active" onclick="switchTab('signin',this)">Sign In</button>
+      <button class="tab active" onclick="switchTab('signin',this)">Login</button>
       <button class="tab" onclick="switchTab('register',this)">Register</button>
     </div>
 
