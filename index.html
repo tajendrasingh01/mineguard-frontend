@@ -1,718 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Suraksha Prabandhan Pranali — NCPH Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --navy:#0F2D69;
-  --navy-dark:#091f4a;
-  --navy-hover:#1a3d82;
-  --accent:#2563EB;
-  --white:#FFFFFF;
-  --bg:#F5F7FA;
-  --surface:#FFFFFF;
-  --border:#E5E7EB;
-  --text-primary:#0A1838;
-  --text-secondary:#4B5563;
-  --success:#10B981;
-  --warning:#F59E0B;
-  --danger:#DC2626;
-  --font:'Inter',system-ui,sans-serif
-}
-html,body{height:100%;font-family:var(--font)}
-body{
-  min-height:100dvh;
-  background:linear-gradient(135deg, #F5F7FA 0%, #EEFBFF 50%, #F5F7FA 100%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:24px 16px;
-  position:relative;
-  overflow:hidden
-}
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at 20% 50%, rgba(37,99,235,0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(0,32,107,0.06) 0%, transparent 50%);
-  pointer-events:none;
-  z-index:0
-}
-.wrap{
-  position:relative;
-  z-index:10;
-  width:100%;
-  max-width:440px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center
-}
-.brand{margin-bottom:40px}
-.brand-icon{margin-bottom:20px;display:flex;justify-content:center}
-.ncph-logo{
-  display:inline-flex;align-items:center;gap:2px;
-  background:#0F2D69;border-radius:8px;
-  padding:8px 12px;
-  line-height:1
-}
-.ncph-logo-text{
-  font-size:15px;font-weight:700;
-  color:#FFFFFF;letter-spacing:0.3px
-}
-.ncph-logo-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:#FF7A00;flex-shrink:0;margin-bottom:1px
-}
-.brand-name{
-  font-size:22px;font-weight:700;
-  color:#0F2D69;letter-spacing:-0.3px;
-  line-height:1.3;margin-bottom:8px;margin-top:14px
-}
-.brand-tag{
-  font-size:11px;
-  font-weight:600;
-  color:var(--text-secondary);
-  letter-spacing:1px;
-  text-transform:uppercase
-}
-.divider{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  margin-bottom:28px
-}
-.divider-line{
-  flex:1;
-  height:1px;
-  background:linear-gradient(90deg, transparent 0%, rgba(0,32,107,0.2) 50%, transparent 100%)
-}
-.divider-txt{
-  font-size:11px;
-  font-weight:600;
-  color:var(--text-secondary);
-  text-transform:uppercase;
-  letter-spacing:1px;
-  white-space:nowrap
-}
-.options{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  width:100%;
-  margin-bottom:32px
-}
-.opt-card{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:18px;
-  border-radius:14px;
-  cursor:pointer;
-  text-decoration:none;
-  border:1.5px solid;
-  transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position:relative;
-  overflow:hidden;
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(10px);
-  box-shadow:0 8px 32px rgba(0,0,0,0.1),
-             inset 1px 1px 0 rgba(255,255,255,0.6),
-             inset -1px -1px 2px rgba(0,0,0,0.05)
-}
-.opt-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 100%);
-  opacity:0;
-  transition:opacity 0.3s ease
-}
-.opt-card:hover{
-  border-color:var(--navy);
-  transform:translateY(-4px);
-  box-shadow:0 16px 48px rgba(0,32,107,0.2),
-             inset 1px 1px 0 rgba(255,255,255,0.8),
-             inset -1px -1px 4px rgba(0,32,107,0.1)
-}
-.opt-card:hover::before{opacity:1}
-.opt-card:active{transform:scale(0.96)}
-.opt-sop{border-color:rgba(0,32,107,0.2)}
-.opt-report{
-  border-color:rgba(220,38,38,0.3);
-  background:linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(220,38,38,0.04) 100%);
-  box-shadow:0 8px 32px rgba(220,38,38,0.08),
-             inset 1px 1px 0 rgba(255,255,255,0.6),
-             inset -1px -1px 2px rgba(220,38,38,0.05)
-}
-.opt-icon{
-  width:48px;
-  height:48px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  border:1.5px solid
-}
-.opt-sop .opt-icon{
-  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
-  border-color:rgba(0,32,107,0.1);
-  color:var(--text-secondary);
-  box-shadow:0 4px 12px rgba(0,0,0,0.05),
-             inset 1px 1px 2px rgba(255,255,255,0.5),
-             inset -1px -1px 2px rgba(0,32,107,0.05)
-}
-.opt-report .opt-icon{
-  background:linear-gradient(135deg, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0.08) 100%);
-  border-color:rgba(220,38,38,0.3);
-  color:var(--danger);
-  box-shadow:0 4px 12px rgba(220,38,38,0.1),
-             inset 1px 1px 2px rgba(255,255,255,0.3),
-             inset -1px -1px 2px rgba(220,38,38,0.1)
-}
-.opt-text{text-align:left;flex:1;min-width:0}
-.opt-title{
-  font-size:16px;
-  font-weight:700;
-  color:var(--text-primary);
-  margin-bottom:4px;
-  letter-spacing:-0.2px
-}
-.opt-sub{
-  font-size:12px;
-  font-weight:400;
-  color:var(--text-secondary);
-  line-height:1.5
-}
-.opt-arrow{
-  width:32px;
-  height:32px;
-  border-radius:10px;
-  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
-  border:1.5px solid rgba(0,32,107,0.1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  color:var(--text-secondary);
-  box-shadow:0 4px 12px rgba(0,0,0,0.05),
-             inset 1px 1px 2px rgba(255,255,255,0.5),
-             inset -1px -1px 2px rgba(0,32,107,0.05)
-}
-.opt-report .opt-arrow{
-  background:linear-gradient(135deg, rgba(220,38,38,0.1) 0%, rgba(220,38,38,0.04) 100%);
-  border-color:rgba(220,38,38,0.2);
-  color:var(--danger);
-  box-shadow:0 4px 12px rgba(220,38,38,0.1),
-             inset 1px 1px 2px rgba(255,255,255,0.3),
-             inset -1px -1px 2px rgba(220,38,38,0.08)
-}
-.footer-row{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  position:relative;
-  z-index:10
-}
-.footer-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#FF7A00;
-  animation:pulse 2s ease-in-out infinite
-}
-@keyframes pulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
-.footer-txt{
-  font-size:10px;
-  font-weight:600;
-  color:var(--text-secondary);
-  text-transform:uppercase;
-  letter-spacing:1px
-}
-/* LOGIN PAGE */
-#loginPage{display:block;width:100%;max-width:480px;position:relative;z-index:10}#landingPage{display:none!important}
-.glass-card{
-  background:rgba(255,255,255,0.85);
-  border:1.5px solid rgba(255,255,255,0.6);
-  border-radius:16px;
-  padding:32px;
-  box-shadow:0 16px 48px rgba(0,0,0,0.12),
-             inset 1px 1px 0 rgba(255,255,255,0.8),
-             inset -1px -1px 2px rgba(0,32,107,0.05);
-  backdrop-filter:blur(20px);
-  position:relative
-}
-.glass-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 100%);
-  border-radius:16px;
-  pointer-events:none
-}
-.back-btn{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background:none;
-  border:none;
-  color:var(--text-secondary);
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  padding:8px 12px;
-  margin:-8px -12px 20px;
-  font-family:var(--font);
-  transition:all 0.2s ease;
-  border-radius:10px
-}
-.back-btn:hover{
-  color:var(--navy);
-  background:linear-gradient(135deg, rgba(0,32,107,0.08) 0%, rgba(37,99,235,0.04) 100%);
-  box-shadow:inset 0 0 8px rgba(0,32,107,0.1)
-}
-.login-brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:24px
-}
-.login-brand-icon{
-  display:inline-flex;align-items:center;gap:2px;
-  background:#0F2D69;border-radius:6px;
-  padding:5px 8px;line-height:1;flex-shrink:0
-}
-.login-brand-icon-text{
-  font-size:12px;font-weight:700;
-  color:#FFFFFF;letter-spacing:0.3px
-}
-.login-brand-icon-dot{
-  width:4px;height:4px;border-radius:50%;
-  background:#FF7A00;flex-shrink:0;margin-bottom:1px
-}
-.login-brand-name{
-  font-size:13px;font-weight:700;
-  color:#0F2D69;line-height:1.2
-}
-.login-brand-sub{
-  font-size:10px;
-  color:var(--text-secondary);
-  margin-top:2px
-}
-.login-title{
-  font-size:22px;
-  font-weight:800;
-  color:#0F2D69;
-  letter-spacing:-0.5px;
-  margin-bottom:6px
-}
-.login-sub{
-  font-size:13px;
-  color:var(--text-secondary);
-  margin-bottom:24px
-}
-.tab-row{
-  display:flex;
-  gap:2px;
-  background:linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(229,237,245,0.8) 100%);
-  border:1.5px solid rgba(0,32,107,0.1);
-  border-radius:12px;
-  padding:4px;
-  margin-bottom:22px;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,0.02),
-             inset 0 -2px 8px rgba(255,255,255,0.3)
-}
-.tab{
-  flex:1;
-  padding:10px;
-  text-align:center;
-  font-size:12px;
-  font-weight:700;
-  color:var(--text-secondary);
-  cursor:pointer;
-  border-radius:10px;
-  transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  background:none;
-  border:none;
-  font-family:var(--font);
-  text-transform:capitalize
-}
-.tab.active{
-  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,250,0.9) 100%);
-  color:var(--navy);
-  box-shadow:0 4px 12px rgba(0,0,0,0.08),
-             inset 1px 1px 0 rgba(255,255,255,0.8),
-             inset -1px -1px 2px rgba(0,32,107,0.05)
-}
-.panel{display:none;flex-direction:column;gap:14px}
-.panel.active{display:flex}
-.field-label{
-  font-size:10px;
-  font-weight:700;
-  color:var(--text-secondary);
-  text-transform:uppercase;
-  letter-spacing:1px;
-  margin-bottom:8px
-}
-.glass-input{
-  width:100%;
-  background:linear-gradient(135deg, rgba(245,247,250,0.9) 0%, rgba(229,237,245,0.9) 100%);
-  border:1.5px solid rgba(0,32,107,0.15);
-  border-radius:12px;
-  padding:12px 14px;
-  font-size:15px;
-  font-weight:400;
-  color:var(--text-primary);
-  font-family:var(--font);
-  transition:all 0.3s ease;
-  outline:none;
-  box-shadow:inset 1px 1px 2px rgba(0,32,107,0.05),
-             inset -1px -1px 2px rgba(255,255,255,0.3)
-}
-.glass-input::placeholder{color:var(--text-secondary)}
-.glass-input:focus{
-  background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,250,0.95) 100%);
-  border-color:var(--navy);
-  box-shadow:0 0 0 3px rgba(0,32,107,0.1),
-             inset 1px 1px 2px rgba(0,32,107,0.05),
-             inset -1px -1px 2px rgba(255,255,255,0.4)
-}
-select.glass-input option{background:var(--white);color:var(--text-primary)}
-.glass-btn{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-size:14px;
-  font-weight:700;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:all 0.2s ease;
-  font-family:var(--font);
-  background:#0F2D69;
-  color:var(--white);
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  margin-top:4px;
-  box-shadow:0 4px 16px rgba(15,45,105,0.3)
-}
-.glass-btn:hover{
-  background:#1a3d82;
-  transform:translateY(-1px);
-  box-shadow:0 8px 24px rgba(15,45,105,0.35)
-}
-.glass-btn:active{transform:scale(0.98)}
-.glass-btn:disabled{
-  opacity:0.6;
-  cursor:not-allowed;
-  transform:none;
-  background:linear-gradient(135deg, #cbd5e1 0%, #a0aec0 100%);
-  box-shadow:0 4px 12px rgba(0,0,0,0.1)
-}
-.spin{
-  width:16px;
-  height:16px;
-  border:2px solid rgba(255,255,255,0.3);
-  border-top-color:var(--white);
-  border-radius:50%;
-  animation:spin 0.7s linear infinite;
-  display:none;
-  flex-shrink:0
-}
-.spin.on{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-.err-box{
-  background:linear-gradient(135deg, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0.08) 100%);
-  border:1.5px solid rgba(220,38,38,0.3);
-  border-radius:10px;
-  padding:10px 14px;
-  font-size:13px;
-  color:var(--danger);
-  display:none;
-  box-shadow:inset 1px 1px 2px rgba(255,255,255,0.2),
-             inset -1px -1px 2px rgba(220,38,38,0.1)
-}
-.err-box.on{display:block}
-.secure-row{
-  margin-top:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px
-}
-.s-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#FF7A00;
-  animation:pulse 2s ease-in-out infinite
-}
-.s-txt{
-  font-size:10px;
-  font-weight:600;
-  color:var(--text-secondary);
-  text-transform:uppercase;
-  letter-spacing:1px
-}
-.ms{
-  font-family:'Material Symbols Outlined';
-  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
-  line-height:1;
-  display:inline-block;
-  vertical-align:middle
-}
-@media(max-width:400px){
-  .brand-name{font-size:18px}
-  .opt-title{font-size:14px}
-  .opt-card{padding:14px}
-  .opt-icon{width:44px;height:44px}
-  .glass-card{padding:24px}
-}
-
-/* Refined login-first presentation — retain the MineGuard navy / orange identity */
-body{background:radial-gradient(ellipse at 12% 12%,rgba(37,99,235,.12),transparent 38%),radial-gradient(ellipse at 88% 88%,rgba(255,122,0,.08),transparent 34%),linear-gradient(135deg,#f5f7fa 0%,#eef6ff 52%,#f5f7fa 100%)}
-#loginPage{max-width:470px;animation:login-enter .5s cubic-bezier(.2,.75,.25,1) both}
-.glass-card{padding:clamp(24px,5vw,38px);border-radius:24px;border:1px solid rgba(255,255,255,.88);box-shadow:0 24px 70px rgba(15,45,105,.14),0 3px 12px rgba(15,45,105,.05),inset 0 1px 0 #fff}
-.login-brand{padding-bottom:20px;border-bottom:1px solid rgba(15,45,105,.09);margin-bottom:26px}
-.login-brand-icon{border-radius:9px;padding:8px 10px;box-shadow:0 5px 14px rgba(15,45,105,.18)}
-.login-brand-name{font-size:14px;letter-spacing:-.2px}.login-brand-sub{font-size:11px;letter-spacing:.15px}
-.login-title{font-size:27px;letter-spacing:-.8px;margin-bottom:7px}.login-sub{font-size:13px;line-height:1.55;margin-bottom:24px}
-.tab-row{border-radius:14px;background:#eaf0f8;border:1px solid #dfe7f2;padding:4px;margin-bottom:23px}
-.tab{font-size:13px;padding:11px;border-radius:10px}.tab.active{background:#fff;color:#0f2d69;box-shadow:0 3px 10px rgba(15,45,105,.10)}
-.glass-input{background:#f8faff;border:1px solid #d9e2ef;border-radius:13px;padding:14px 15px;font-size:15px}
-.glass-input:focus{background:#fff;border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.10)}
-.field-label{font-size:10px;letter-spacing:1.1px;color:#53627a}
-.glass-btn{border-radius:13px;min-height:50px;background:#0f2d69;box-shadow:0 8px 18px rgba(15,45,105,.20);letter-spacing:.25px}
-.glass-btn:hover{background:#1a3d82;box-shadow:0 11px 24px rgba(15,45,105,.24)}
-.secure-row{padding-top:15px;border-top:1px solid rgba(15,45,105,.08)}
-@keyframes login-enter{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
-@media(max-width:480px){body{padding:18px 14px}.glass-card{padding:24px 20px;border-radius:20px}.login-title{font-size:24px}}
-@media(prefers-reduced-motion:reduce){#loginPage{animation:none}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f2d69">
+<title>Sign in · MineGuard SECL Safety Management</title>
+<link rel="stylesheet" href="assets/css/mg.css">
 </head>
 <body>
-
-<!-- LANDING -->
-<div class="wrap" id="landingPage">
-  <div class="brand">
-    <div class="brand-icon">
-      <div class="ncph-logo">
-        <span class="ncph-logo-text">Suraksha</span>
-        <span class="ncph-logo-dot"></span>
-      </div>
+<div class="auth">
+  <aside class="auth-side" aria-hidden="false">
+    <div class="auth-ring"></div>
+    <div class="brand"><div class="brand-mark">MG</div><div><b style="color:#fff">MineGuard</b><small>South Eastern Coalfields Limited</small></div></div>
+    <div>
+      <h1>Safety intelligence for every mine.</h1>
+      <p>Report, review and close safety incidents — and see exactly where attention is needed — across Areas, Mines and Projects.</p>
     </div>
-    <div class="brand-name">Suraksha Prabandhan Pranali</div>
-    <div class="brand-tag">Mine Worker Safety Portal &middot; NCPH / SECL</div>
-  </div>
+    <ul class="auth-points">
+      <li><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></svg>Live dashboards for HQ, Area and Mine</li>
+      <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Role-based access to your own scope only</li>
+      <li><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Every incident tracked from report to closure</li>
+    </ul>
+  </aside>
 
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-txt">Select an option</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="options">
-    <button class="opt-card opt-report" onclick="showLogin()">
-      <div class="opt-icon">
-        <span class="ms" style="font-size:24px">warning_amber</span>
-      </div>
-      <div class="opt-text">
-        <div class="opt-title">Login to MineGuard</div>
-        <div class="opt-sub">Secure access for authorized SECL safety personnel</div>
-      </div>
-      <div class="opt-arrow">
-        <span class="ms" style="font-size:18px">arrow_forward</span>
-      </div>
-    </button>
-  </div>
-
-  <div class="footer-row">
-    <div class="footer-dot"></div>
-    <div class="footer-txt">Secure connection established</div>
-  </div>
-</div>
-
-<!-- LOGIN -->
-<div id="loginPage">
-  <div class="glass-card">
-    
-
-    <div class="login-brand">
-      <div class="login-brand-icon">
-        <span class="login-brand-icon-text">Suraksha</span>
-        <span class="login-brand-icon-dot"></span>
-      </div>
+  <main class="auth-main">
+    <div class="auth-card">
       <div>
-        <div class="login-brand-name">Suraksha Prabandhan Pranali</div>
-        <div class="login-brand-sub">Mine Worker Safety Portal</div>
+        <h2 id="authTitle">Welcome back</h2>
+        <p class="lead" id="authLead">Sign in to the SECL Safety Management Portal.</p>
       </div>
+      <div class="seg" role="tablist" aria-label="Sign in or register" style="justify-self:start">
+        <button type="button" role="tab" id="tabIn" class="active" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" id="tabUp" aria-selected="false">Register</button>
+      </div>
+
+      <form id="formIn" novalidate>
+        <div class="field"><label for="loginId">ID / NEIS number</label><input id="loginId" class="input" type="text" placeholder="Enter your ID or NEIS number" autocomplete="username" maxlength="100"></div>
+        <div class="field"><label for="loginPass">Password</label>
+          <div class="pw"><input id="loginPass" class="input" type="password" placeholder="Your password" autocomplete="current-password" maxlength="128"><button type="button" class="btn btn-ghost btn-sm" data-peek="loginPass" aria-label="Show password">Show</button></div></div>
+        <div id="loginErr" class="err-box" role="alert"></div>
+        <button id="loginBtn" class="btn btn-primary" type="submit" style="padding:12px 16px">Sign in</button>
+      </form>
+
+      <form id="formUp" class="hidden" novalidate>
+        <div class="field"><label for="regName">Full name</label><input id="regName" class="input" type="text" placeholder="Your full name" autocomplete="name" maxlength="150"></div>
+        <div class="field"><label for="regId">ID / NEIS number</label><input id="regId" class="input" type="text" placeholder="Enter your ID or NEIS number" maxlength="100"></div>
+        <div class="field-row three" style="gap:10px">
+          <div class="field"><label for="regDept">Employment</label><select id="regDept" class="select"><option value="">Select</option><option>Departmental</option><option>Contractual</option></select></div>
+          <div class="field"><label for="regDeptType">Department</label><select id="regDeptType" class="select"><option value="">Select</option><option>Electrical</option><option>Mechanical</option><option>Mining</option><option>Civil</option></select></div>
+          <div class="field"><label for="regWorkplace">Work place</label><select id="regWorkplace" class="select"><option value="">Select</option><option>Below Ground</option><option>Surface</option></select></div>
+        </div>
+        <div class="field"><label for="regPass">Password</label>
+          <div class="pw"><input id="regPass" class="input" type="password" placeholder="At least 12 characters" minlength="12" maxlength="128" autocomplete="new-password"><button type="button" class="btn btn-ghost btn-sm" data-peek="regPass" aria-label="Show password">Show</button></div>
+          <span class="hint">12–128 characters. Safety roles are assigned by an administrator, not at registration.</span></div>
+        <div id="regErr" class="err-box" role="alert"></div>
+        <button id="regBtn" class="btn btn-primary" type="submit" style="padding:12px 16px">Create account</button>
+      </form>
+
+      <div class="auth-foot"><i></i>Secure connection</div>
     </div>
-
-    <div class="login-title">Welcome back</div>
-    <div class="login-sub">Sign in to access the SECL Mine Safety Management Portal</div>
-
-    <div class="tab-row">
-      <button class="tab active" onclick="switchTab('signin',this)">Login</button>
-      <button class="tab" onclick="switchTab('register',this)">Register</button>
-    </div>
-
-    <!-- SIGN IN -->
-    <div id="panelSignin" class="panel active">
-      <div>
-        <div class="field-label">ID / NEIS Number</div>
-        <input id="loginId" class="glass-input" type="text" placeholder="Enter your ID or NEIS number" autocomplete="username"/>
-      </div>
-      <div>
-        <div class="field-label">Password</div>
-        <input id="loginPass" class="glass-input" type="password" placeholder="Your password" autocomplete="current-password"/>
-      </div>
-      <div id="loginErr" class="err-box"></div>
-      <button id="loginBtn" class="glass-btn" onclick="doLogin()">
-        <div class="spin" id="loginSpin"></div>
-        <span id="loginTxt">Sign In</span>
-        <span class="ms" style="font-size:18px">arrow_forward</span>
-      </button>
-    </div>
-
-    <!-- REGISTER -->
-    <div id="panelRegister" class="panel">
-      <div>
-        <div class="field-label">Full Name</div>
-        <input id="regName" class="glass-input" type="text" placeholder="Your full name" autocomplete="name"/>
-      </div>
-      <div>
-        <div class="field-label">ID / NEIS Number</div>
-        <input id="regId" class="glass-input" type="text" placeholder="Enter your ID or NEIS number"/>
-      </div>
-      <div>
-        <div class="field-label">Employment Type</div>
-        <select id="regDept" class="glass-input">
-          <option value="">Select Employment Type</option>
-          <option>Departmental</option>
-          <option>Contractual</option>
-        </select>
-      </div>
-      <div>
-        <div class="field-label">Department</div>
-        <select id="regDeptType" class="glass-input">
-          <option value="">Select Department</option>
-          <option>Electrical</option>
-          <option>Mechanical</option>
-          <option>Mining</option>
-          <option>Civil</option>
-        </select>
-      </div>
-      <div>
-        <div class="field-label">Work Place</div>
-        <select id="regWorkplace" class="glass-input">
-          <option value="">Select Work Place</option>
-          <option>Below Ground</option>
-          <option>Surface</option>
-        </select>
-      </div>
-      <div>
-        <div class="field-label">Password</div>
-        <input id="regPass" class="glass-input" type="password" placeholder="At least 12 characters" minlength="12" maxlength="128" autocomplete="new-password"/>
-      </div>
-      <div id="regErr" class="err-box"></div>
-      <button id="regBtn" class="glass-btn" onclick="doRegister()">
-        <div class="spin" id="regSpin"></div>
-        <span id="regTxt">Create Account</span>
-        <span class="ms" style="font-size:18px">arrow_forward</span>
-      </button>
-    </div>
-
-    <div class="secure-row">
-      <div class="s-dot"></div>
-      <div class="s-txt">Secure connection</div>
-    </div>
-  </div>
+  </main>
 </div>
 
 <script>
-const PROD_FRONTEND_HOSTS = new Set(['mineguard-frontend.vercel.app','mineguard-frontend-tajendrasingh01s-projects.vercel.app','mineguard-frontend-git-main-tajendrasingh01s-projects.vercel.app']);
-const API_BASE = window.MINEGUARD_API_BASE || (PROD_FRONTEND_HOSTS.has(location.hostname) ? 'https://mineguard-api.onrender.com' : 'https://mineguard-test-api.onrender.com');
+const PROD_FRONTEND_HOSTS=new Set(['mineguard-frontend.vercel.app','mineguard-frontend-tajendrasingh01s-projects.vercel.app','mineguard-frontend-git-main-tajendrasingh01s-projects.vercel.app']);
+const API_BASE=window.MINEGUARD_API_BASE||(PROD_FRONTEND_HOSTS.has(location.hostname)?'https://mineguard-api.onrender.com':'https://mineguard-test-api.onrender.com');
+const $=id=>document.getElementById(id);
 
-window.addEventListener('DOMContentLoaded', () => {
-  const t = localStorage.getItem('mg_token');
-  if (t) {
-    try {
-      const p = JSON.parse(atob(t.split('.')[1]));
-      if (p.exp * 1000 > Date.now()) { location.href = 'safety.html'; return; }
-    } catch {}
-    localStorage.removeItem('mg_token');
-  }
-});
+/* Already signed in with an unexpired token → straight to the portal. */
+(function(){
+  const t=localStorage.getItem('mg_token');if(!t)return;
+  try{const p=JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if(p.exp*1000>Date.now()){location.replace('safety.html');return}}catch{}
+  localStorage.removeItem('mg_token');
+})();
 
-function showLogin() {
-  document.getElementById('landingPage').style.display = 'none';
-  document.getElementById('loginPage').style.display = 'block';
+const mode=m=>{
+  const up=m==='up';
+  $('tabIn').classList.toggle('active',!up);$('tabUp').classList.toggle('active',up);$('tabIn').setAttribute('aria-selected',String(!up));$('tabUp').setAttribute('aria-selected',String(up));
+  $('formIn').classList.toggle('hidden',up);$('formUp').classList.toggle('hidden',!up);
+  $('authTitle').textContent=up?'Create your account':'Welcome back';
+  $('authLead').textContent=up?'Register to report and track safety observations.':'Sign in to the SECL Safety Management Portal.';
+  (up?$('regName'):$('loginId')).focus();
+};
+$('tabIn').onclick=()=>mode('in');$('tabUp').onclick=()=>mode('up');
+document.querySelectorAll('[data-peek]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.peek),show=i.type==='password';i.type=show?'text':'password';b.textContent=show?'Hide':'Show';b.setAttribute('aria-label',show?'Hide password':'Show password')});
+
+const fail=(id,msg)=>{const e=$(id);e.textContent=msg;e.classList.add('on')};
+const busy=(btn,on,label)=>{btn.disabled=on;btn.classList.toggle('loading',on);btn.firstChild.textContent=on?label:btn.dataset.l};
+['loginBtn','regBtn'].forEach(id=>{$(id).dataset.l=$(id).textContent});
+
+async function post(path,body){
+  const r=await fetch(API_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({error:'Invalid response from server'}));
+  if(!r.ok)throw new Error(d.error||'Request failed');
+  return d;
 }
-function showLanding() {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('landingPage').style.display = 'flex';
-}
-function switchTab(tab, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-}
-async function doLogin() {
-  const id = document.getElementById('loginId').value.trim();
-  const pw = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginErr');
-  err.classList.remove('on');
-  if (!id || !pw) { err.textContent = 'Please enter your ID and password.'; err.classList.add('on'); return; }
-  setBusy('loginBtn','loginSpin','loginTxt','Signing in...');
-  try {
-    const r = await fetch(API_BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({worker_id:id,password:pw})});
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error||'Login failed');
-    localStorage.setItem('mg_token', d.token);
-    location.href = 'safety.html';
-  } catch(e) { err.textContent=e.message; err.classList.add('on'); setIdle('loginBtn','loginSpin','loginTxt','Sign In'); }
-}
-async function doRegister() {
-  const name      = document.getElementById('regName').value.trim();
-  const id        = document.getElementById('regId').value.trim();
-  const empType   = document.getElementById('regDept').value;
-  const deptType  = document.getElementById('regDeptType').value;
-  const workplace = document.getElementById('regWorkplace').value;
-  const pw        = document.getElementById('regPass').value;
-  const err       = document.getElementById('regErr');
-  err.classList.remove('on');
-  if (!name||!id||!pw){err.textContent='Name, ID and password are required.';err.classList.add('on');return;}
-  if (pw.length<12 || pw.length>128){err.textContent='Password must be 12–128 characters.';err.classList.add('on');return;}
-  setBusy('regBtn','regSpin','regTxt','Creating...');
-  const deptStr = [empType, deptType, workplace].filter(Boolean).join(' | ');
-  try {
-    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,worker_id:id,department:deptStr,password:pw})});
-    const d=await r.json();
-    if (!r.ok) throw new Error(d.error||'Registration failed');
-    localStorage.setItem('mg_token',d.token);
-    location.href='safety.html';
-  } catch(e){err.textContent=e.message;err.classList.add('on');setIdle('regBtn','regSpin','regTxt','Create Account');}
-}
-function setBusy(b,s,t,m){document.getElementById(b).disabled=true;document.getElementById(s).classList.add('on');document.getElementById(t).textContent=m;}
-function setIdle(b,s,t,m){document.getElementById(b).disabled=false;document.getElementById(s).classList.remove('on');document.getElementById(t).textContent=m;}
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Enter')return;
-  if( document.getElementById('loginPage').style.display==='none')return;
-  document.querySelector('.panel.active')?.id==='panelSignin'?doLogin():doRegister();
-});
+$('formIn').onsubmit=async e=>{
+  e.preventDefault();$('loginErr').classList.remove('on');
+  const id=$('loginId').value.trim(),pw=$('loginPass').value;
+  if(!id||!pw)return fail('loginErr','Please enter your ID and password.');
+  busy($('loginBtn'),true,'Signing in…');
+  try{const d=await post('/api/auth/login',{worker_id:id,password:pw});localStorage.setItem('mg_token',d.token);location.href='safety.html'}
+  catch(err){fail('loginErr',err.message);busy($('loginBtn'),false)}
+};
+$('formUp').onsubmit=async e=>{
+  e.preventDefault();$('regErr').classList.remove('on');
+  const name=$('regName').value.trim(),id=$('regId').value.trim(),pw=$('regPass').value;
+  if(!name||!id||!pw)return fail('regErr','Name, ID and password are required.');
+  if(pw.length<12||pw.length>128)return fail('regErr','Password must be 12–128 characters.');
+  const department=[$('regDept').value,$('regDeptType').value,$('regWorkplace').value].filter(Boolean).join(' | ');
+  busy($('regBtn'),true,'Creating…');
+  try{const d=await post('/api/auth/register',{name,worker_id:id,department,password:pw});localStorage.setItem('mg_token',d.token);location.href='safety.html'}
+  catch(err){fail('regErr',err.message);busy($('regBtn'),false)}
+};
 </script>
 </body>
 </html>
