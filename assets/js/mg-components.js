@@ -20,7 +20,7 @@ UI.card=(r,i=0)=>{
   const st=MG.STATUS[r.status]||{color:'#94a3b8'},pend=MG.data.pendingLabel(r),resp=MG.data.responsible(r);
   return '<article class="inc-card" tabindex="0" role="link" aria-label="Open incident '+esc(r.incident_ref||'')+'" data-id="'+esc(r.id)+'" style="--c:'+st.color+';animation-delay:'+Math.min(i,12)*28+'ms">'
    +'<div class="inc-top"><span class="inc-id">'+esc(r.incident_ref||'Reference pending')+'</span>'+MG.statusPill(r.status)+'</div>'
-   +'<h3 class="inc-title">'+esc(r.incident_type||r.category||'Incident')+'</h3>'
+   +'<h3 class="inc-title">'+esc(r.incident_type||r.category||'Incident')+'</h3>'+(MG.state.user&&r.assignee_id&&r.assignee_id===MG.state.user.id&&r.status!=='closed'?'<div class="you-flag">'+MG.icon('bell')+'Action needed from you</div>':'')
    +'<div class="inc-meta"><div>'+MG.icon('pin')+'<span>'+esc([r.mine_name,r.area_name].filter(Boolean).join(' · ')||r.location_zone||'—')+'</span></div>'
    +'<div>'+MG.icon('layers')+'<span>'+esc(r.category||'—')+(r.discipline?' · '+esc(r.discipline):'')+'</span></div>'
    +'<div>'+MG.icon('calendar')+'<span>'+esc(MG.date(r.date_of_incident||r.created_at))+(r.time_of_incident?' · '+esc(String(r.time_of_incident).slice(0,5)):'')+'</span></div>'

@@ -56,13 +56,12 @@ D.responsible=(inc,history)=>{
   if(inc.status==='closed')return {role:'—',text:'Closed'};
   let role=inc.assignee_role||null;const name=inc.assignee_name||'';
   if(!role&&history&&history.length){const h=D.lastHistory(history);if(h)role=h.to_role}
-  if(!role)role=inc.status==='escalated'?'AREA_SAFETY_OFFICER':'MINE_MANAGER';
-  if(inc.status==='resolved')role='MINE_MANAGER';/* resolution is closed out by the Mine Manager */
-  return {role,name,text:MG.role(role)+(name&&inc.status!=='resolved'?' · '+name:'')};
+  if(!role)role=inc.status==='escalated'?(MG.stageOf(inc)==='with_hq'?'HQ_SAFETY_HEAD':'AREA_SAFETY_OFFICER'):inc.status==='action_assigned'?(inc.discipline==='Electrical & Mechanical'?'MINE_SO_EM':'MINE_SO_MINING'):'MINE_MANAGER';
+  return {role,name,text:MG.role(role)+(name?' · '+name:'')};
 };
 D.pendingLabel=inc=>{
   if(inc.status==='closed')return {text:'Completed',cls:'done'};
-  const o=MG.isOverdue(inc);return {text:(o?'Overdue · ':'')+(MG.STATUS[inc.status]?.pending||'Pending'),cls:o?'overdue':''};
+  const o=MG.isOverdue(inc),me=S.user&&inc.assignee_id&&inc.assignee_id===S.user.id;return {text:(o?'Overdue · ':'')+(MG.STAGE[MG.stageOf(inc)]?.pending||MG.STATUS[inc.status]?.pending||'Pending'),cls:o?'overdue':me?'mine':''};
 };
 
 /* ---------- aggregation ---------- */
