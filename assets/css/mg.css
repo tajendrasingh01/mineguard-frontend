@@ -318,3 +318,10 @@ a.btn{text-decoration:none}
 .brand-mark.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:2px}
 .brand b{font-size:13px;line-height:1.2}
 .gate-card .brand-mark.logo{margin:0 auto 12px;width:56px;height:56px;border-radius:14px}
+.brand-mark.logo{border-radius:50%;border:0;background:#fff}
+.brand-mark.logo img{padding:0;object-fit:cover;border-radius:50%}
+.auth-side .brand-mark.logo{width:48px;height:48px}
+.gate-card .brand-mark.logo{border-radius:50%;width:72px;height:72px}
+.auth-side .brand-mark.logo{width:84px;height:84px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.sidebar .brand-mark.logo{width:42px;height:42px}
+.gate-card .brand-mark.logo{width:110px;height:110px}

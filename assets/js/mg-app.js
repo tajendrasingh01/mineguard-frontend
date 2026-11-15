@@ -39,7 +39,7 @@ const homeScope=()=>MG.can.isHQ()?'Corporate HQ':MG.can.isArea()?(S.areas[0]?.na
 function buildShell(){
   const u=S.user;
   MG.$('app').innerHTML=
-   '<aside class="sidebar" aria-label="Main navigation"><div class="brand"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.png" alt="SECL logo" onerror="this.remove()"></div><div><b>Suraksha Prabandhan Pranali</b><small>SECL Safety</small></div></div>'
+   '<aside class="sidebar" aria-label="Main navigation"><div class="brand"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.jpg" alt="SECL logo" onerror="this.remove()"></div><div><b>Suraksha Prabandhan Pranali</b><small>SECL Safety</small></div></div>'
    +'<div class="nav-label">Workspace</div><nav id="nav" style="display:contents">'+NAV.filter(n=>n.show()).map(n=>'<a class="nav-link" data-nav="'+n.name+'" href="#'+n.href+'">'+MG.icon(n.icon)+'<span>'+esc(n.label)+'</span></a>').join('')+'</nav>'
    +'<div class="side-spacer"></div><div class="userbox"><div><div class="u-name" title="'+esc(u.name)+'">'+esc(u.name||u.worker_id)+'</div><div class="u-role">'+esc(MG.role(u.role))+'</div>'+(homeScope()?'<div class="u-role">'+esc(homeScope())+'</div>':'')+'</div><button class="btn btn-secondary btn-sm" id="logout">'+MG.icon('logout')+'Sign out</button></div></aside>'
    +'<div class="main"><header class="topbar" id="topbar"><div class="crumbs" id="crumbs"></div><div class="top-actions" id="topActions"></div></header><main class="content"><div id="banner"></div><div id="view" aria-live="polite"></div></main></div>';
@@ -107,7 +107,7 @@ async function route(){
 /* ---------- boot ---------- */
 const decode=t=>{try{return JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))}catch{return null}};
 function fatal(title,msg,withRetry){
-  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.png" alt="SECL logo" onerror="this.remove()"></div><h2>'+esc(title)+'</h2><p class="muted">'+esc(msg)+'</p><div class="gate-actions">'+(withRetry?'<button class="btn btn-primary" id="gRetry">'+MG.icon('refresh')+'Try again</button>':'')+'<button class="btn btn-secondary" id="gOut">'+MG.icon('logout')+'Sign out</button></div></div></div>';
+  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.jpg" alt="SECL logo" onerror="this.remove()"></div><h2>'+esc(title)+'</h2><p class="muted">'+esc(msg)+'</p><div class="gate-actions">'+(withRetry?'<button class="btn btn-primary" id="gRetry">'+MG.icon('refresh')+'Try again</button>':'')+'<button class="btn btn-secondary" id="gOut">'+MG.icon('logout')+'Sign out</button></div></div></div>';
   const r=MG.$('gRetry');if(r)r.onclick=()=>location.reload();MG.$('gOut').onclick=MG.logout;
 }
 async function versionCheck(){
@@ -119,7 +119,7 @@ async function versionCheck(){
 async function boot(){
   const tok=localStorage.getItem('mg_token'),claims=tok&&decode(tok);
   if(!claims||!(claims.exp*1000>Date.now())){MG.logout();return}
-  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.png" alt="SECL logo" onerror="this.remove()"></div><p class="muted">Loading your safety workspace…</p><div class="skeleton" style="height:8px;width:160px;margin:6px auto 0"></div></div></div>';
+  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="brand-mark logo"><span>SECL</span><img src="assets/img/secl-logo.jpg" alt="SECL logo" onerror="this.remove()"></div><p class="muted">Loading your safety workspace…</p><div class="skeleton" style="height:8px;width:160px;margin:6px auto 0"></div></div></div>';
   try{S.user=(await MG.api('/api/auth/me')).user}
   catch(e){if(e.status===401){MG.logout();return}fatal('Unable to reach the portal',e.message||'Please check your connection and try again.',true);return}
   if(!MG.ROLE[S.user.role]){fatal('No safety role assigned','Your account ('+(S.user.worker_id||'')+') is not assigned a SECL safety-management role. Ask the system administrator to assign your Mine or Area safety role.',false);return}
