@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0f2d69">
 <title>Sign in · Suraksha Prabandhan Pranali</title>
 <link rel="stylesheet" href="assets/css/mg.css">
+<script src="assets/js/mg-loader.js"></script>
 </head>
 <body>
 <div class="auth">
@@ -85,7 +86,10 @@ const mode=m=>{
 $('tabIn').onclick=()=>mode('in');$('tabUp').onclick=()=>mode('up');
 document.querySelectorAll('[data-peek]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.peek),show=i.type==='password';i.type=show?'text':'password';b.textContent=show?'Hide':'Show';b.setAttribute('aria-label',show?'Hide password':'Show password')});
 
-const fail=(id,msg)=>{const e=$(id);e.textContent=msg;e.classList.add('on')};
+/* Full-screen loading scene shown the moment the user signs in; removed again if sign-in fails. */
+const showLoader=msg=>{hideLoader();const d=document.createElement('div');d.id='ldOverlay';d.innerHTML=window.MG.loaderHtml(msg);document.body.appendChild(d)};
+const hideLoader=()=>{const d=document.getElementById('ldOverlay');if(d)d.remove()};
+const fail=(id,msg)=>{hideLoader();const e=$(id);e.textContent=msg;e.classList.add('on')};
 const busy=(btn,on,label)=>{btn.disabled=on;btn.classList.toggle('loading',on);btn.firstChild.textContent=on?label:btn.dataset.l};
 ['loginBtn','regBtn'].forEach(id=>{$(id).dataset.l=$(id).textContent});
 
@@ -99,7 +103,7 @@ $('formIn').onsubmit=async e=>{
   e.preventDefault();$('loginErr').classList.remove('on');
   const id=$('loginId').value.trim(),pw=$('loginPass').value;
   if(!id||!pw)return fail('loginErr','Please enter your ID and password.');
-  busy($('loginBtn'),true,'Signing in…');
+  busy($('loginBtn'),true,'Signing in…');showLoader('Signing you in');
   try{const d=await post('/api/auth/login',{worker_id:id,password:pw});localStorage.setItem('mg_token',d.token);location.href='safety.html'}
   catch(err){fail('loginErr',err.message);busy($('loginBtn'),false)}
 };
@@ -109,7 +113,7 @@ $('formUp').onsubmit=async e=>{
   if(!name||!id||!pw)return fail('regErr','Name, ID and password are required.');
   if(pw.length<12||pw.length>128)return fail('regErr','Password must be 12–128 characters.');
   const department=[$('regDept').value,$('regDeptType').value,$('regWorkplace').value].filter(Boolean).join(' | ');
-  busy($('regBtn'),true,'Creating…');
+  busy($('regBtn'),true,'Creating…');showLoader('Creating your account');
   try{const d=await post('/api/auth/register',{name,worker_id:id,department,password:pw});localStorage.setItem('mg_token',d.token);location.href='safety.html'}
   catch(err){fail('regErr',err.message);busy($('regBtn'),false)}
 };
