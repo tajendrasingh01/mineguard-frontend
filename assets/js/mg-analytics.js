@@ -44,6 +44,7 @@ V.analytics={
      +'<div class="grid g2" id="aCompare" style="margin-bottom:16px"></div>'
      +'<div class="section-title"><div><h2>Category &amp; severity</h2></div></div>'
      +'<div class="grid g3" style="margin-bottom:16px">'+card('cCat','Category mix','Select a slice to filter')+card('cSev','Severity','Recorded severity levels')+card('cHeatCS','Category × severity','Select a cell to list incidents')+'</div>'
+     +'<div id="aInsights"></div>'
      +'<div class="grid g-wide" style="margin-bottom:16px">'+card('cSevTime','Severity over time','Stacked by recorded severity')+card('cPeriods','Period comparison','Reported vs resolved','<div class="seg" id="aPer" role="group" aria-label="Period">'+[['month','Monthly'],['quarter','Quarterly']].map(([k,l])=>'<button type="button" data-p="'+k+'">'+l+'</button>').join('')+'</div>')+'</div>'
      +'<div class="section-title"><div><h2>Resolution time</h2><p class="muted small">Elapsed time from report to recorded resolution</p></div></div>'
      +'<div class="grid g3" style="margin-bottom:16px">'+card('cResBins','Time to resolve','Distribution of resolved incidents')+card('cResTrend','Average days to resolve','By the period each incident was resolved')+card('cResSlow','Slowest to resolve','Average by mine / project')+'</div>'
@@ -127,6 +128,8 @@ V.analytics={
         onSelect:(i,k)=>{const [r,c]=String(k).split(':').map(Number);goIncidents('cat='+cats[r]+'&sev='+MG.SEV_KEYS[c])},empty:'No incidents recorded.'});
       const sevSeries=MG.SEV_KEYS.map(k=>({key:k,name:MG.SEVERITY[k].label,color:MG.SEVERITY[k].color,values:D.series(rows,bk,r=>r.severity,[k])[k]})).filter(s=>MG.sum(s.values)>0);
       C.columns($('#cSevTime'),{title:'Severity over time',labels,series:sevSeries,onSelect:(i,k)=>{if(k)goIncidents('sev='+k+(F.cat?'&cat='+F.cat:''))},empty:'No incidents recorded.',height:250});
+
+      MG.insights.mount($('#aInsights'),rows,{go:q=>goIncidents(q)});
 
       /* Monthly / quarterly comparison */
       const pb=period==='quarter'?quarters(cr.from,cr.to):D.buckets(cr.from,cr.to,'month'),pc=pb.map(()=>0),pr=pb.map(()=>0);

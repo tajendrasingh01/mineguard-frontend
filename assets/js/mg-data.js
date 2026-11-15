@@ -52,11 +52,13 @@ D.invalidate=id=>{S.detail.delete(id);S.loadedKey=null};
 /* ---------- responsible authority ---------- */
 D.lastHistory=(history,actions)=>[...(history||[])].reverse().find(h=>!actions||actions.includes(h.action));
 D.responsible=(inc,history)=>{
-  const s=inc.status;
-  if(s==='closed')return {role:'—',text:'Closed'};
-  if(s==='escalated')return {role:'AREA_SAFETY_OFFICER',text:MG.role('AREA_SAFETY_OFFICER')};
-  if(s==='action_assigned'){const h=D.lastHistory(history,['ASSIGN','REASSIGN','FORWARD']);return h?{role:h.to_role,text:MG.role(h.to_role)}:{role:null,text:'Assigned officer'}}
-  return {role:'MINE_MANAGER',text:MG.role('MINE_MANAGER')};
+  /* Current holder: the list API supplies assignee_role/name; the detail view falls back to the last recorded hand-over. */
+  if(inc.status==='closed')return {role:'—',text:'Closed'};
+  let role=inc.assignee_role||null;const name=inc.assignee_name||'';
+  if(!role&&history&&history.length){const h=D.lastHistory(history);if(h)role=h.to_role}
+  if(!role)role=inc.status==='escalated'?'AREA_SAFETY_OFFICER':'MINE_MANAGER';
+  if(inc.status==='resolved')role='MINE_MANAGER';/* resolution is closed out by the Mine Manager */
+  return {role,name,text:MG.role(role)+(name&&inc.status!=='resolved'?' · '+name:'')};
 };
 D.pendingLabel=inc=>{
   if(inc.status==='closed')return {text:'Completed',cls:'done'};

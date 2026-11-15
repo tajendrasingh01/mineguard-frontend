@@ -56,7 +56,7 @@ MG.ageHours=i=>MG.hoursBetween(i.created_at,new Date());
 MG.isOverdue=i=>MG.isActive(i.status)&&(MG.ageHours(i)||0)>MG.OVERDUE_DAYS*24;
 MG.resolutionHours=i=>MG.isActive(i.status)||!i.resolved_at?null:MG.hoursBetween(i.created_at,i.resolved_at);
 MG.statusPill=s=>{const m=MG.STATUS[s]||{label:MG.nice(s),color:'#475569',bg:'#e2e8f0'};return '<span class="pill" style="--c:'+m.color+';--bg-c:'+m.bg+'"><span class="dot"></span>'+esc(m.label)+'</span>'};
-MG.sevHtml=v=>{const m=MG.sevMeta(v);return '<span class="sev" style="--c:'+m.color+'"><i>'+[1,2,3,4,5].map(n=>'<s class="'+(n<=m.bars?'on':'')+'"></s>').join('')+'</i>'+esc(m.label)+'</span>'};
+MG.sevHtml=v=>{const m=MG.sevMeta(v);return '<span class="sev'+(m.bars>=4?' hot':'')+'" style="--c:'+m.color+'"><i>'+[1,2,3,4,5].map(n=>'<s class="'+(n<=m.bars?'on':'')+'"></s>').join('')+'</i>'+esc(m.label)+'</span>'};
 MG.catTag=v=>{const m=MG.CATEGORY[MG.catKey(v)];return '<span class="tag"><span class="dot" style="width:7px;height:7px;border-radius:50%;background:'+m.color+'"></span>'+esc(v||m.label)+'</span>'};
 MG.tint=(hex,a)=>{const h=hex.replace('#','');const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16);return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')'};
 
@@ -65,7 +65,9 @@ const U=()=>MG.state.user||{};
 MG.can={
   isHQ:()=>U().role==='HQ_SAFETY_HEAD',isArea:()=>U().role==='AREA_SAFETY_OFFICER',isMineSO:()=>['MINE_SO_MINING','MINE_SO_EM'].includes(U().role),
   isManager:()=>U().role==='MINE_MANAGER',isLocal:()=>['LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(U().role),
-  manage:()=>['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(U().role),resolveClose:()=>U().role==='MINE_MANAGER',
+  manage:()=>['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(U().role),
+  /* Escalation chain: Mine Manager -> ASO -> HQ. HQ is the top and can only return an incident downwards. */
+  escalate:s=>U().role==='MINE_MANAGER'?(MG.TRANSITIONS[s]||[]).includes('escalated'):U().role==='AREA_SAFETY_OFFICER'?['open','under_review','action_assigned','escalated'].includes(s):false,resolveClose:()=>U().role==='MINE_MANAGER',
   report:()=>['MINE_SO_MINING','MINE_SO_EM','HQ_SAFETY_HEAD'].includes(U().role),
   viewNCPHSops:()=>['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER'].includes(U().role)&&U().assigned_mine_id===MG.NCPH_MINE_ID
 };

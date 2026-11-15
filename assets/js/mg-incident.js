@@ -6,13 +6,13 @@ const MG=window.MG,S=MG.state,D=MG.data,esc=MG.esc,V=MG.views=MG.views||{};
 /* ====================================================================== */
 /* Incident feed                                                          */
 /* ====================================================================== */
-const defaults=()=>({q:'',status:'',sev:'',cat:'',sort:'new',overdue:false});
+const defaults=()=>({q:'',status:'',sev:'',cat:'',type:'',sort:'new',overdue:false});
 S.filters=defaults();
 const SORTS={new:'Newest first',old:'Oldest first',sev:'Highest severity',attention:'Needs attention'};
 const applyFilters=(rows,f,skipStatus)=>{
   const q=f.q.trim().toLowerCase();
   return rows.filter(r=>(!q||[r.incident_ref,r.incident_type,r.category,r.description,r.mine_name,r.area_name,r.location_zone,r.location_detail,r.reporter_name].join(' ').toLowerCase().includes(q))
-    &&(!f.sev||r.severity===f.sev)&&(!f.cat||r._cat===f.cat)&&(skipStatus||!f.status||r.status===f.status)&&(!f.overdue||MG.isOverdue(r)));
+    &&(!f.sev||r.severity===f.sev)&&(!f.cat||r._cat===f.cat)&&(!f.type||r.incident_type===f.type)&&(skipStatus||!f.status||r.status===f.status)&&(!f.overdue||MG.isOverdue(r)));
 };
 const sortRows=(rows,k)=>{const a=[...rows];
   if(k==='old')a.sort((x,y)=>x._t-y._t);else if(k==='sev')a.sort((x,y)=>(MG.sevMeta(y.severity).order-MG.sevMeta(x.severity).order)||y._t-x._t);
@@ -21,7 +21,7 @@ const sortRows=(rows,k)=>{const a=[...rows];
 V.incidents={
   async render(host,params){
     const q=params.query;
-    if(q&&[...q.keys()].length){S.filters={...defaults(),status:q.get('status')||'',sev:q.get('sev')||'',cat:q.get('cat')||'',overdue:q.get('overdue')==='1'}}
+    if(q&&[...q.keys()].length){S.filters={...defaults(),status:q.get('status')||'',sev:q.get('sev')||'',cat:q.get('cat')||'',type:q.get('type')||'',overdue:q.get('overdue')==='1'}}
     host.innerHTML='<div class="toolbar"><span class="skeleton" style="height:40px;width:300px"></span></div><div class="feed">'+MG.skeleton(6,190)+'</div>';
     try{await D.load()}catch(e){host.innerHTML='<div class="banner error">'+MG.icon('alert')+'<span>'+esc(e.message)+'</span><button class="btn btn-secondary btn-sm" id="retry">Retry</button></div>';host.querySelector('#retry').onclick=()=>V.incidents.render(host,params);return}
     const f=S.filters,areas=S.areas,showArea=areas.length>1&&!MG.can.isArea();
@@ -41,6 +41,7 @@ V.incidents={
       const cnt=MG.countBy(pre,r=>r.status),od=pre.filter(MG.isOverdue).length;
       $('#fChips').innerHTML='<button class="chip '+(!f.status&&!f.overdue?'on':'')+'" data-s="">All <span class="n">'+pre.length+'</span></button>'+MG.STATUS_KEYS.map(k=>'<button class="chip '+(f.status===k?'on':'')+'" data-s="'+k+'"><span class="dot" style="background:'+MG.STATUS[k].color+'"></span>'+MG.STATUS[k].label+' <span class="n">'+(cnt.get(k)||0)+'</span></button>').join('')+'<button class="chip '+(f.overdue?'on':'')+'" data-od="1" title="Active for more than '+MG.OVERDUE_DAYS+' days">'+MG.icon('clock')+' Overdue <span class="n">'+od+'</span></button>';
       $('#fChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(c.dataset.od){f.overdue=!f.overdue}else{f.status=c.dataset.s;f.overdue=false}draw()});
+      if(f.type){$('#fChips').insertAdjacentHTML('beforeend','<button class="chip on" id="clrType" title="Clear incident type filter">Type: '+esc(f.type)+' '+MG.icon('x')+'</button>');$('#clrType').onclick=()=>{f.type='';draw()}}
       MG.ui.feed($('#feedHost'),sorted);
     };
     $('#fq').oninput=MG.debounce(e=>{f.q=e.target.value;draw()},180);
@@ -62,7 +63,8 @@ const photosOf=inc=>{try{const p=typeof inc.photos==='string'?JSON.parse(inc.pho
 const route=h=>MG.role(h.from_role)+' → '+MG.role(h.to_role);
 MG.lifecycle=function(inc,comments,history){
   const s=inc.status,hist=[...(history||[])].sort(byTime),com=[...(comments||[])].sort(byTime);
-  const assigns=hist.filter(h=>h.action==='ASSIGN'),escs=hist.filter(h=>h.action==='ESCALATE'),moves=hist.filter(h=>['FORWARD','REASSIGN'].includes(h.action));
+  const sub=hist.find(h=>h.action==='FORWARD'&&h.to_role==='MINE_MANAGER'&&['MINE_SO_MINING','MINE_SO_EM','HQ_SAFETY_HEAD'].includes(h.from_role));
+  const assigns=hist.filter(h=>h.action==='ASSIGN'),escs=hist.filter(h=>h.action==='ESCALATE'),moves=hist.filter(h=>['FORWARD','REASSIGN'].includes(h.action)&&h!==sub);
   const resC=com.filter(c=>isTag(c,'Resolution')),cloC=com.filter(c=>isTag(c,'Closure')),plain=com.filter(c=>!isTag(c,'Resolution')&&!isTag(c,'Closure'));
   const firstAssign=assigns[0]?new Date(assigns[0].created_at):null;
   const before=plain.filter(c=>!firstAssign||new Date(c.created_at)<firstAssign),after=plain.filter(c=>firstAssign&&new Date(c.created_at)>=firstAssign);
@@ -80,11 +82,11 @@ MG.lifecycle=function(inc,comments,history){
   const mk=(key,title,icon,extra)=>({key,title,icon,state:st(key),events:[],...extra});
   const steps=[
     mk('reported','Incident Reported','file',{at:inc.created_at,who:(inc.reporter_name||'Reporter')+(inc.discipline?' · '+inc.discipline:''),action:'Report filed · '+(inc.category||'Incident')+(inc.incident_type&&inc.incident_type!==inc.category?' · '+inc.incident_type:''),remark:inc.description,attach:photosOf(inc).length,occurred:[inc.date_of_incident,inc.time_of_incident&&String(inc.time_of_incident).slice(0,5)].filter(Boolean).join(' ')}),
-    mk('submitted','Submitted for Review','send',{at:inc.created_at,who:'Routed to '+MG.role('MINE_MANAGER'),action:'Submitted for Mine Manager review'}),
+    mk('submitted','Submitted for Review','send',{at:sub?sub.created_at:inc.created_at,who:sub?route(sub):'Routed to '+MG.role('MINE_MANAGER'),action:'Forwarded to the Mine Manager for review and closure'}),
     mk('reviewed','Incident Reviewed','eye',{at:null,who:MG.role('MINE_MANAGER'),action:s==='open'?'Awaiting review':s==='under_review'?'Review in progress':'Review completed',remark:before.map(c=>c.comment_text).join('\n\n'),events:before.map(c=>({t:c.created_at,who:MG.role(c.context?.role),text:c.comment_text}))}),
     mk('assigned','Action Assigned','user',{at:assigns[0]?.created_at||null,who:assigns[0]?route(assigns[0]):'',action:assigns.length?'Corrective action assigned'+(assigns.length>1?' ('+assigns.length+' times)':''):'No assignment recorded',remark:assigns.map(h=>h.comments).filter(Boolean).join('\n\n')}),
     mk('action','Action Taken / Updated','activity',{at:updates.length?updates[updates.length-1].t:null,who:updates.length?updates[updates.length-1].who:'',action:updates.length?updates.length+' update'+(updates.length>1?'s':'')+' recorded':(s==='action_assigned'?'Action in progress':'No updates yet'),events:updates}),
-    mk('escalated','Incident Escalated','flag',{at:escs[0]?.created_at||null,who:escs[0]?route(escs[0]):'',action:escs.length?'Escalated to '+MG.role('AREA_SAFETY_OFFICER'):'Optional · not escalated',remark:escs.map(h=>h.comments).filter(Boolean).join('\n\n')}),
+    mk('escalated','Incident Escalated','flag',{at:escs[0]?.created_at||null,who:escs.length?route(escs[escs.length-1]):'',action:escs.length?'Escalated to '+[...new Set(escs.map(h=>MG.role(h.to_role)))].join(' → '):'Optional · not escalated',remark:escs.length>1?'':escs.map(h=>h.comments).filter(Boolean).join('\n\n'),events:escs.length>1?escs.map(h=>({t:h.created_at,who:route(h),text:h.comments||'Escalated'})):[]}),
     mk('resolved','Incident Resolved','checkc',{at:inc.resolved_at||null,who:inc.resolved_at||later?MG.role('MINE_MANAGER'):'',action:inc.resolved_at||later?'Marked resolved':'Pending resolution',remark:resC.length?stripTag(resC[resC.length-1].comment_text):''}),
     mk('closed','Incident Closed','lock',{at:inc.closed_at||null,who:inc.closed_at||s==='closed'?MG.role('MINE_MANAGER'):'',action:s==='closed'?'Closed':s==='resolved'?'Awaiting closure':'Pending closure',remark:cloC.length?stripTag(cloC[cloC.length-1].comment_text):''})
   ];
@@ -96,6 +98,14 @@ MG.lifecycle=function(inc,comments,history){
 /* ====================================================================== */
 /* Detail view                                                             */
 /* ====================================================================== */
+const LADDER=[['Safety Officer','file'],['Mine Manager','user'],['Area Safety Officer','shield'],['HQ Safety','flag']];
+const rung=r=>r==='HQ_SAFETY_HEAD'?3:r==='AREA_SAFETY_OFFICER'?2:['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r)?1:0;
+function ladderHtml(inc,resp,hist){
+  const closed=inc.status==='closed',cur=closed?-1:rung(resp.role),reached=Math.max(1,cur,...(hist||[]).filter(h=>h.action==='ESCALATE').map(h=>rung(h.to_role)));
+  const note=closed?'Closed':reached>1&&cur<reached?'Returned to '+MG.role(resp.role):reached>1?'Escalated to '+LADDER[reached][0]:'Not escalated · with the Mine Manager';
+  return '<section class="card ladder-card" aria-label="Reporting and escalation path"><div class="card-h"><div><h3>Reporting &amp; escalation path</h3><p class="sub">'+esc(note)+'</p></div></div><ol class="ladder">'
+   +LADDER.map(([l],i)=>'<li class="'+(i===cur?'cur':i<=reached?'done':'')+(i>reached&&!closed?' future':'')+'"><span class="dotl">'+(i===cur?MG.icon(LADDER[i][1]):i<=reached?MG.icon('check'):'')+'</span><b>'+esc(l)+'</b><small>'+(i===cur?'Currently here':i===0?'Reports':i===1?'Reviews &amp; closes':i===2?'Escalation level 1':'Escalation level 2')+'</small></li>').join('')+'</ol></section>';
+}
 const fact=(l,v,wide)=>'<div class="fact'+(wide?' wide':'')+'"><small>'+esc(l)+'</small><b>'+esc(v===0?'0':v||'—')+'</b></div>';
 function stepHtml(x,i){
   const time=x.at?MG.dateTime(x.at):x.state==='pending'||x.state==='skipped'?'':'Time not recorded';
@@ -120,7 +130,7 @@ V.incident={
     host.innerHTML=
      '<button class="btn btn-ghost btn-sm back" id="back">'+MG.icon('left')+' Back</button>'
     +'<div class="card" style="margin-bottom:16px;border-left:4px solid '+(MG.STATUS[inc.status]?.color||'#94a3b8')+'"><div class="inc-head" style="margin:0"><div><span class="inc-id">'+esc(inc.incident_ref||'Reference pending')+'</span><h2>'+esc(inc.incident_type||inc.category||'Incident')+'</h2><div class="row">'+MG.statusPill(inc.status)+MG.sevHtml(inc.severity)+MG.catTag(inc.category)+(mineN?'<span class="tag">'+MG.icon('pin')+esc([mineN,areaN].filter(Boolean).join(' · '))+'</span>':'')+'<span class="pending-flag '+pend.cls+'">'+(pend.cls==='done'?MG.icon('check'):'<span class="pulse"></span>')+esc(pend.text)+'</span></div><p class="small muted" style="margin-top:10px">Responsible: <b style="color:var(--ink-2)">'+esc(resp.text)+'</b> · Reported '+esc(MG.dateTime(inc.created_at))+' ('+esc(MG.relTime(inc.created_at))+')</p></div><div class="action-bar" id="actions"></div></div></div>'
-    +'<div class="stepper" id="stepper" aria-label="Incident progress">'+steps.map(x=>'<button type="button" class="sp '+x.state+'" data-go="'+x.key+'">'+esc(x.title.replace('Incident ',''))+'</button>').join('')+'</div>'
+    +ladderHtml(inc,resp,det.forwarding_history)+'<div class="stepper" id="stepper" aria-label="Incident progress">'+steps.map(x=>'<button type="button" class="sp '+x.state+'" data-go="'+x.key+'">'+esc(x.title.replace('Incident ',''))+'</button>').join('')+'</div>'
     +'<div class="grid g-wide"><section class="card"><div class="card-h"><div><h3>Incident lifecycle</h3><p class="sub">Select a stage to see who acted, when, and what was recorded</p></div></div><div class="tl" id="tl">'+steps.map(stepHtml).join('')+'</div></section>'
     +'<div class="grid" style="align-content:start"><section class="card"><div class="card-h"><div><h3>Report details</h3></div></div><div class="facts">'+[fact('Description',inc.description,1),fact('Immediate actions taken',inc.immediate_actions,1),fact('Category',inc.category),fact('Incident type',inc.incident_type),fact('Discipline',inc.discipline),fact('Severity',MG.sevMeta(inc.severity).label),fact('Date of incident',inc.date_of_incident?MG.date(inc.date_of_incident):''),fact('Time',inc.time_of_incident&&String(inc.time_of_incident).slice(0,5)),fact('Location',inc.location_zone),fact('Level / zone detail',inc.location_detail),fact('Persons injured',inc.persons_injured),fact('Supervisor on duty',inc.supervisor_on_duty),fact('PPE worn',MG.nice(inc.ppe_worn||'')),fact('SOP followed',MG.nice(inc.sop_followed||'')),fact('Witnesses',inc.witnesses,1)].join('')+'</div></section>'
     +'<section class="card"><div class="card-h"><div><h3>Evidence</h3><p class="sub">'+(photos.length?photos.length+' photo'+(photos.length>1?'s':'')+' attached at reporting':'No photos attached')+'</p></div></div>'+(photos.length?'<div class="gallery">'+photos.map((p,i)=>'<button type="button" data-ph="'+i+'" aria-label="Open photo '+(i+1)+'"><img alt="Incident evidence '+(i+1)+'" src="'+p.data+'"></button>').join('')+'</div>':'<p class="muted small">Photos added when the incident was reported appear here.</p>')+'</section>'
@@ -141,16 +151,17 @@ V.incident={
 /* Workflow actions                                                        */
 /* ====================================================================== */
 function renderActions(host,inc,det,reload){
-  if(!MG.can.manage()){return}
+  const hq=MG.can.isHQ();if(!MG.can.manage()&&!hq)return;
   const s=inc.status,can=to=>MG.TRANSITIONS[s].includes(to),mgr=MG.can.isManager(),btns=[];
   if(s==='closed'){host.innerHTML='<span class="tag">'+MG.icon('lock')+' Closed · history is read-only</span>';return}
   if(s==='open')btns.push(['review','eye','Start review','btn-secondary']);
   if(['under_review','action_assigned'].includes(s))btns.push(['assign','user',s==='action_assigned'?'Update / reassign action':'Assign action','btn-accent']);
   btns.push(['transfer','send','Transfer','btn-secondary']);
-  if(mgr&&can('escalated'))btns.push(['escalate','flag','Escalate','btn-danger']);
+  if(MG.can.escalate(s))btns.push(['escalate','flag',mgr?'Escalate to ASO':'Escalate to HQ','btn-danger']);
   if(mgr&&['action_assigned','escalated'].includes(s))btns.push(['resolve','checkc','Resolve','btn-primary']);
   if(mgr&&s==='resolved')btns.push(['close','lock','Close incident','btn-primary']);
   if(['action_assigned','escalated','resolved'].includes(s))btns.push(['return','undo','Return to review','btn-ghost']);
+  if(hq){btns.length=0;if(MG.isActive(s))btns.push(['transfer','send','Return to Area / Mine','btn-primary'])}
   host.innerHTML=btns.map(([k,i,l,c])=>'<button class="btn '+c+'" data-act="'+k+'">'+MG.icon(i)+esc(l)+'</button>').join('');
   host.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>MG.busy(b,async()=>{
     const k=b.dataset.act;
@@ -161,7 +172,10 @@ function renderActions(host,inc,det,reload){
     forwardFlow(inc,det,k,recs,reload);
   }));
 }
-const recipientsFor=(recs,action)=>MG.can.isManager()?(action==='ESCALATE'?recs.filter(r=>r.role==='AREA_SAFETY_OFFICER'):recs.filter(r=>['LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r.role))):recs.filter(r=>['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r.role));
+const recipientsFor=(recs,action)=>{const R=roles=>recs.filter(r=>roles.includes(r.role));
+  if(MG.can.isHQ())return R(['AREA_SAFETY_OFFICER','MINE_MANAGER']);
+  if(MG.can.isManager())return action==='ESCALATE'?R(['AREA_SAFETY_OFFICER']):R(['LOCAL_SUPERVISOR','LOCAL_ENGINEER']);
+  return action==='ESCALATE'?R(['HQ_SAFETY_HEAD']):R(['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'])};
 const sumRows=rows=>'<div class="summary-box">'+rows.map(([k,v])=>'<div><small>'+esc(k)+'</small><b style="text-align:right;max-width:65%;overflow-wrap:anywhere">'+esc(v||'—')+'</b></div>').join('')+'</div>';
 const header=inc=>'<div class="summary-box"><div><small>Incident</small><b>'+esc(inc.incident_ref||'')+'</b></div><div><small>Current status</small>'+MG.statusPill(inc.status)+'</div></div>';
 
@@ -179,11 +193,11 @@ const syncOpts=el=>el.querySelectorAll('.opt').forEach(o=>{const i=o.querySelect
 
 function forwardFlow(inc,det,kind,recs,reload){
   const s=inc.status,resp=D.responsible(inc,det.forwarding_history);
-  const cfg={transfer:{title:'Transfer incident',action:'FORWARD',verb:'Transfer',ph:'Why is this incident being transferred? (optional)',req:false,tone:'btn-primary'},
+  const cfg={transfer:MG.can.isHQ()?{title:'Return incident to Area / Mine',action:'FORWARD',verb:'Return',ph:'Direction for the receiving officer (optional)…',req:false,tone:'btn-primary'}:{title:'Transfer incident',action:'FORWARD',verb:'Transfer',ph:'Why is this incident being transferred? (optional)',req:false,tone:'btn-primary'},
     assign:{title:s==='action_assigned'?'Update / reassign action':'Assign corrective action',action:s==='action_assigned'?'REASSIGN':'ASSIGN',verb:'Assign',ph:'Describe the corrective action required…',req:false,tone:'btn-accent'},
-    escalate:{title:'Escalate incident',action:'ESCALATE',verb:'Escalate',ph:'Reason for escalation (required)…',req:true,tone:'btn-danger'}}[kind];
+    escalate:{title:MG.can.isArea()?'Escalate to HQ':'Escalate to Area Safety Officer',action:'ESCALATE',verb:'Escalate',ph:'Reason for escalation (required)…',req:true,tone:'btn-danger'}}[kind];
   const list=recipientsFor(recs,cfg.action);
-  if(!list.length){MG.drawer({title:cfg.title,body:header(inc)+'<div class="banner warn">'+MG.icon('info')+'<span>No authorized recipient is available for this action in your current hierarchy.</span></div>'});return}
+  if(!list.length){MG.drawer({title:cfg.title,body:header(inc)+'<div class="banner warn">'+MG.icon('info')+'<span>'+(cfg.action==='ESCALATE'&&MG.can.isArea()?'No active HQ Safety user is configured to receive escalations.':'No authorized recipient is available for this action in your current hierarchy.')+'</span></div>'});return}
   const actionPick=kind==='assign'&&s==='action_assigned'?'<div class="field"><label>Action</label><div class="seg" id="actPick"><button type="button" class="active" data-a="REASSIGN">Reassign</button><button type="button" data-a="ASSIGN">Assign again</button></div></div>':'';
   const ctl=twoPhase({title:cfg.title,sub:esc(inc.incident_ref||''),tone:cfg.tone,confirmLabel:'Confirm '+cfg.verb.toLowerCase(),
     form:header(inc)+'<div class="summary-box"><div><small>Current responsible authority</small><b>'+esc(resp.text)+'</b></div></div>'+actionPick+'<div class="field"><label>Destination · authorized recipients</label>'+optList('rcp',list)+'</div><div class="field"><label for="fRem">'+(cfg.req?'Escalation remarks':'Remarks')+'</label><textarea class="textarea" id="fRem" maxlength="5000" placeholder="'+esc(cfg.ph)+'"></textarea></div>',

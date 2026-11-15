@@ -114,7 +114,7 @@ function wire(host,draw){
       const payload={category:R.category,discipline:MG.can.isHQ()?R.discipline:(S.user.role==='MINE_SO_MINING'?'Mining':'Electrical & Mechanical'),incident_type:R.type,date_of_incident:R.date,time_of_incident:R.time,location_zone:R.location,location_detail:R.zone,severity:R.severity,persons_injured:Number(R.injured)||0,description:R.desc,immediate_actions:R.act,ppe_worn:R.ppe,sop_followed:R.sop,witnesses:R.wit,supervisor_on_duty:R.sup,photos};
       if(MG.can.isHQ())payload.mine_id=R.mine_id;
       const saved=await MG.api('/api/safety/incidents',{method:'POST',body:JSON.stringify(payload)});
-      R=null;S.loadedKey=null;MG.toast('Incident report submitted');const id=saved.incident?.id;
+      R=null;S.loadedKey=null;MG.toast(saved.routed_to?'Incident reported and forwarded to '+(saved.routed_to.name||'the Mine Manager')+' (Mine Manager) for review':saved.routed_to===null?'Incident reported. No active Mine Manager is configured for this mine yet — it is visible to the mine team.':'Incident report submitted');const id=saved.incident?.id;
       MG.go(id?(MG.can.isHQ()?'/incidents/'+id:'/my-reports/'+id):(MG.can.isHQ()?'/incidents':'/my-reports'));
     });};
 }

@@ -36,6 +36,7 @@ V.dashboard={
      +'<div class="grid g3" style="margin-bottom:16px"><section class="card"><div class="card-h"><div><h3>Severity</h3><p class="sub">Recorded severity levels</p></div></div><div class="chart" id="cSev"></div></section>'
      +'<section class="card"><div class="card-h"><div><h3>Category</h3><p class="sub">Report classification</p></div></div><div class="chart" id="cCat"></div></section>'
      +'<section class="card"><div class="card-h"><div><h3>'+(level==='hq'?'Mine-wise distribution':'Status mix')+'</h3><p class="sub">'+(level==='hq'?'Busiest mines · select to drill down':'Current workflow status')+'</p></div></div><div class="chart" id="cMix"></div></section></div>'
+     +'<div id="insights"></div>'
      +'<div class="section-title"><div><h2>Needs attention</h2><p class="muted small">Escalated incidents and those active for more than '+MG.OVERDUE_DAYS+' days</p></div><button class="btn btn-secondary btn-sm" id="allAtt">View all '+MG.icon('arrow')+'</button></div><div id="attn"></div>';
     const $=s=>host.querySelector(s);
 
@@ -78,6 +79,8 @@ V.dashboard={
       +'<div class="chips" style="margin-top:12px"><button class="chip" id="chOd">'+MG.icon('clock')+' Overdue <span class="n">'+sm.overdue+'</span></button><span class="small faint" style="align-self:center">active &gt; '+MG.OVERDUE_DAYS+' days</span></div>';
     C.hbars($('#cRes'),{items:bins.map((b,i)=>({label:b[0],total:bc[i],color:i<2?'#10b981':i<3?'#f59e0b':'#ef4444'})),empty:'No incidents have been resolved yet.'});
     $('#chOd').onclick=()=>goIncidents('overdue=1');
+
+    MG.insights.mount($('#insights'),rows,{go:goIncidents});
 
     /* needs attention */
     const att=needsAttention(rows);$('#allAtt').onclick=()=>goIncidents('overdue=1');
