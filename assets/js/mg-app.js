@@ -107,7 +107,7 @@ async function route(){
 /* ---------- boot ---------- */
 const decode=t=>{try{return JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))}catch{return null}};
 function fatal(title,msg,withRetry){
-  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="logo-plate gate"><img src="assets/img/secl-logo-wide.jpg" alt="Coal India · SECL"></div><h2>'+esc(title)+'</h2><p class="muted">'+esc(msg)+'</p><div class="gate-actions">'+(withRetry?'<button class="btn btn-primary" id="gRetry">'+MG.icon('refresh')+'Try again</button>':'')+'<button class="btn btn-secondary" id="gOut">'+MG.icon('logout')+'Sign out</button></div></div></div>';
+  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="logo-plate gate-logo"><img src="assets/img/secl-logo-wide.jpg" alt="Coal India · SECL"></div><h2>'+esc(title)+'</h2><p class="muted">'+esc(msg)+'</p><div class="gate-actions">'+(withRetry?'<button class="btn btn-primary" id="gRetry">'+MG.icon('refresh')+'Try again</button>':'')+'<button class="btn btn-secondary" id="gOut">'+MG.icon('logout')+'Sign out</button></div></div></div>';
   const r=MG.$('gRetry');if(r)r.onclick=()=>location.reload();MG.$('gOut').onclick=MG.logout;
 }
 async function versionCheck(){
@@ -119,7 +119,7 @@ async function versionCheck(){
 async function boot(){
   const tok=localStorage.getItem('mg_token'),claims=tok&&decode(tok);
   if(!claims||!(claims.exp*1000>Date.now())){MG.logout();return}
-  MG.$('app').innerHTML='<div class="gate"><div class="gate-card"><div class="logo-plate gate"><img src="assets/img/secl-logo-wide.jpg" alt="Coal India · SECL"></div><p class="muted">Loading your safety workspace…</p><div class="skeleton" style="height:8px;width:160px;margin:6px auto 0"></div></div></div>';
+  MG.$('app').innerHTML=MG.loaderHtml('Loading your safety workspace');
   try{S.user=(await MG.api('/api/auth/me')).user}
   catch(e){if(e.status===401){MG.logout();return}fatal('Unable to reach the portal',e.message||'Please check your connection and try again.',true);return}
   if(!MG.ROLE[S.user.role]){fatal('No safety role assigned','Your account ('+(S.user.worker_id||'')+') is not assigned a SECL safety-management role. Ask the system administrator to assign your Mine or Area safety role.',false);return}

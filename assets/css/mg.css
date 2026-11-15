@@ -337,5 +337,41 @@ a.btn{text-decoration:none}
 .auth-side .brand-stack b{color:#fff;font-size:17px;margin-top:4px}
 .auth-side .logo-plate{padding:12px 18px}
 .auth-side .logo-plate img{max-height:84px}
-.logo-plate.gate{margin:0 auto 16px;max-width:300px}
+.logo-plate.gate-logo{margin:0 auto 16px;max-width:300px}
 @media(max-width:1000px){.sidebar .brand-stack{display:none}}
+
+/* ---------- Loading scene (excavator + dumper) ---------- */
+.ld-card{width:min(560px,100%)!important;box-sizing:border-box;padding:20px 20px 24px!important}
+.ld-scene{display:block;width:100%;height:auto;border-radius:14px;margin:4px 0 8px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(15,45,105,.08)}
+.ld-scene *{transform-box:view-box}
+.ld-msg{margin:6px 0 10px;font-weight:600;color:var(--ink,#0f172a);text-align:center}
+.ld-dots i{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-left:3px;animation:ldDot 1.2s infinite ease-in-out both}
+.ld-dots i:nth-child(2){animation-delay:.15s}.ld-dots i:nth-child(3){animation-delay:.3s}
+@keyframes ldDot{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-4px);opacity:1}}
+.ld-bar{height:5px;border-radius:99px;background:#e6ecf7;overflow:hidden;max-width:260px;margin:0 auto}
+.ld-bar i{display:block;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,#0f2d69,#2563eb);animation:ldBar 1.6s infinite cubic-bezier(.4,0,.2,1)}
+@keyframes ldBar{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+.ld-cloud{animation:ldCloud 60s linear infinite}.ld-c2{animation-duration:90s;animation-delay:-40s}.ld-c1{animation-delay:-15s}
+@keyframes ldCloud{0%{transform:translateX(-80px)}100%{transform:translateX(560px)}}
+/* excavator: 6s dig → lift → swing → dump → swing back */
+.ld-swing,.ld-boom,.ld-stick,.ld-bucket{transform-origin:0 0;animation-duration:6s;animation-iteration-count:infinite;animation-timing-function:ease-in-out;will-change:transform}
+.ld-swing{animation-name:ldSwing}.ld-boom{animation-name:ldBoom}.ld-stick{animation-name:ldStick}.ld-bucket{animation-name:ldBucket}
+@keyframes ldSwing{0%,36%{transform:scaleX(1)}50%,68%{transform:scaleX(-1)}84%,100%{transform:scaleX(1)}}
+@keyframes ldBoom{0%{transform:rotate(2deg)}14%,30%{transform:rotate(10deg)}42%{transform:rotate(-26deg)}56%,70%{transform:rotate(-14deg)}84%{transform:rotate(-8deg)}100%{transform:rotate(2deg)}}
+@keyframes ldStick{0%{transform:rotate(20deg)}14%{transform:rotate(44deg)}30%{transform:rotate(46deg)}42%{transform:rotate(18deg)}56%,70%{transform:rotate(22deg)}84%{transform:rotate(20deg)}100%{transform:rotate(20deg)}}
+@keyframes ldBucket{0%{transform:rotate(8deg)}14%{transform:rotate(0)}32%,62%{transform:rotate(-78deg)}70%{transform:rotate(12deg)}84%{transform:rotate(10deg)}100%{transform:rotate(8deg)}}
+.ld-load{transform-origin:0 0;animation:ldLoad 6s infinite ease-in-out}
+@keyframes ldLoad{0%,28%{opacity:0}34%,62%{opacity:1}68%,100%{opacity:0}}
+.ld-dust{transform-origin:372px 204px;opacity:0;animation:ldDust 6s infinite ease-out}.ld-d2{transform-origin:352px 208px;animation-delay:.15s}
+@keyframes ldDust{0%,10%{opacity:0;transform:scale(.4)}16%{opacity:.55}30%{opacity:0;transform:scale(2)}100%{opacity:0;transform:scale(2)}}
+.ld-p{fill:#10151d;opacity:0;animation:ldFall 6s infinite cubic-bezier(.5,0,1,.6)}
+.ld-p2{animation-delay:.06s}.ld-p3{animation-delay:.12s}.ld-p4{animation-delay:.04s}.ld-p5{animation-delay:.1s}
+@keyframes ldFall{0%,64%{opacity:0;transform:translateY(0)}65%{opacity:1;transform:translateY(0)}73%{opacity:1;transform:translateY(54px)}74%,100%{opacity:0;transform:translateY(54px)}}
+/* dumper: 30s = 5 loads, drives out when full, empty one drives in */
+.ld-truck{animation:ldTruck 30s infinite linear}
+@keyframes ldTruck{0%,76%{transform:translateX(0);animation-timing-function:cubic-bezier(.5,0,.8,.6)}83.4%{transform:translateX(-400px)}83.5%{transform:translateX(400px);animation-timing-function:cubic-bezier(.2,.5,.4,1)}90%,100%{transform:translateX(0)}}
+.ld-fill{transform-origin:0 -27px;animation:ldFill 30s infinite ease-in-out}
+@keyframes ldFill{0%,13%{transform:scaleY(.2)}15%,33%{transform:scaleY(.4)}35%,53%{transform:scaleY(.6)}55%,73%{transform:scaleY(.8)}75%,83%{transform:scaleY(1)}83.4%,93%{transform:scaleY(0)}95%,100%{transform:scaleY(.2)}}
+.ld-wheel{transform-origin:0 0;animation:ldWheel 30s infinite linear}
+@keyframes ldWheel{0%,76%{transform:rotate(0)}83.4%{transform:rotate(-1440deg)}83.5%{transform:rotate(-1440deg)}90%,100%{transform:rotate(-2880deg)}}
+@media (prefers-reduced-motion:reduce){.ld-scene *,.ld-bar i,.ld-dots i{animation:none!important}}
