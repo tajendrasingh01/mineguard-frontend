@@ -1,4 +1,4 @@
-/* MineGuard data layer. Everything shown in the UI is derived from live API responses.
+/* data layer. Everything shown in the UI is derived from live API responses.
    Role scoping is applied by the backend; the client only narrows what it already received. */
 (function(){
 const MG=window.MG,S=MG.state,D=MG.data={};

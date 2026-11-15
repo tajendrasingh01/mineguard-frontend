@@ -1,4 +1,4 @@
-# MineGuard — SECL Safety Management
+# Suraksha Prabandhan Pranali — SECL Safety Management
 
 The frontend is a static HTML application paired with the Express/Supabase backend. Existing pages remain available; `safety.html` adds the role-aware SECL safety dashboard.
 

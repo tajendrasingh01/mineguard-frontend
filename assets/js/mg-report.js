@@ -38,7 +38,7 @@ async function packPhoto(f){
 /* ---------- wizard ---------- */
 V.report={
   render(host){
-    if(!R){R=fresh();if(MG.can.isHQ())R.discipline='Mining';else R.discipline=S.user.role==='MINE_SO_MINING'?'Mining':'Electrical & Mechanical'}
+    if(!R){R=fresh();R.discipline=S.user.role==='MINE_SO_MINING'?'Mining':'Electrical & Mechanical'}
     const draw=()=>{
       const L=t(),s=R.step;
       host.innerHTML='<div class="wz"><div class="wz-head"><div><div class="eyebrow">'+esc(L.eyebrow)+'</div><h2>'+esc(L.title)+'</h2><p class="muted" style="margin-top:3px">'+esc(L.sub)+'</p></div><div class="seg" role="group" aria-label="Language"><button type="button" data-l="en" class="'+(lang==='en'?'active':'')+'">EN</button><button type="button" data-l="hi" class="'+(lang==='hi'?'active':'')+'">हिं</button></div></div>'
@@ -89,7 +89,7 @@ function capture(host){
 function validate(s){
   const L=t();
   if(s===0){if(!R.category)return 'Select a report category';if(!R.type)return 'Select the incident type';if(!R.severity)return 'Select the severity level'}
-  if(s===1){if(!R.date||!R.time)return 'Enter the date and time of the incident';if(MG.can.isHQ()&&!R.mine_id)return 'Select the Mine / Project';if(!R.location)return 'Select the incident location'}
+  if(s===1){if(!R.date||!R.time)return 'Enter the date and time of the incident';if(!R.location)return 'Select the incident location'}
   if(s===2){if(!R.desc.trim())return 'Describe what happened'}
   return '';
 }
@@ -111,11 +111,10 @@ function wire(host,draw){
   $('#wzForm').onsubmit=e=>{e.preventDefault();for(let i=0;i<3;i++){const er=validate(i);if(er){R.step=i;draw();MG.toast(er,'err');return}}
     MG.busy($('#sb'),async()=>{
       const photos=R.photos.length?JSON.stringify(R.photos):null;if(photos&&photos.length>6800000)throw Error('Photos are too large to upload. Remove some and try again.');
-      const payload={category:R.category,discipline:MG.can.isHQ()?R.discipline:(S.user.role==='MINE_SO_MINING'?'Mining':'Electrical & Mechanical'),incident_type:R.type,date_of_incident:R.date,time_of_incident:R.time,location_zone:R.location,location_detail:R.zone,severity:R.severity,persons_injured:Number(R.injured)||0,description:R.desc,immediate_actions:R.act,ppe_worn:R.ppe,sop_followed:R.sop,witnesses:R.wit,supervisor_on_duty:R.sup,photos};
-      if(MG.can.isHQ())payload.mine_id=R.mine_id;
+      const payload={category:R.category,discipline:(S.user.role==='MINE_SO_MINING'?'Mining':'Electrical & Mechanical'),incident_type:R.type,date_of_incident:R.date,time_of_incident:R.time,location_zone:R.location,location_detail:R.zone,severity:R.severity,persons_injured:Number(R.injured)||0,description:R.desc,immediate_actions:R.act,ppe_worn:R.ppe,sop_followed:R.sop,witnesses:R.wit,supervisor_on_duty:R.sup,photos};
       const saved=await MG.api('/api/safety/incidents',{method:'POST',body:JSON.stringify(payload)});
       R=null;S.loadedKey=null;MG.toast(saved.routed_to?'Incident reported and forwarded to '+(saved.routed_to.name||'the Mine Manager')+' (Mine Manager) for review':saved.routed_to===null?'Incident reported. No active Mine Manager is configured for this mine yet — it is visible to the mine team.':'Incident report submitted');const id=saved.incident?.id;
-      MG.go(id?(MG.can.isHQ()?'/incidents/'+id:'/my-reports/'+id):(MG.can.isHQ()?'/incidents':'/my-reports'));
+      MG.go(id?'/my-reports/'+id:'/my-reports');
     });};
 }
 

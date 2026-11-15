@@ -1,4 +1,4 @@
-/* MineGuard charts: dependency-free SVG/DOM charts with tooltips, click-to-drill and enter animations. */
+/* charts: dependency-free SVG/DOM charts with tooltips, click-to-drill and enter animations. */
 (function(){
 const MG=window.MG,esc=MG.esc,C=MG.charts={};
 const NS='http://www.w3.org/2000/svg';

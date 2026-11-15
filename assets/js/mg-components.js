@@ -1,4 +1,4 @@
-/* MineGuard shared components: incident card + hover panel, KPI card, range control. */
+/* shared components: incident card + hover panel, KPI card, range control. */
 (function(){
 const MG=window.MG,esc=MG.esc,UI=MG.ui={};
 
