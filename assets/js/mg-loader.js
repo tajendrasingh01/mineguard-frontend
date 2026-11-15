@@ -1,7 +1,7 @@
 /* Loading scene: an excavator digs coal at an opencast pit face, swings and loads a dumper; when full, the dumper drives off
    and an empty one arrives. Pure SVG + CSS transforms (GPU-friendly, no JS timers). */
 (function(){
-const MG=window.MG;
+const MG=window.MG=window.MG||{};MG.esc=MG.esc||(s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 const wheel=(x)=>'<g transform="translate('+x+',-17)"><g class="ld-wheel"><circle r="17" fill="#1f2328"/><circle r="9" fill="#9aa3ad"/><circle r="3.5" fill="#4b5563"/><path d="M0 -9V9M-9 0H9" stroke="#4b5563" stroke-width="2"/><path d="M0 -17V-13M0 13V17M-17 0H-13M13 0H17" stroke="#3a424b" stroke-width="3"/></g></g>';
 MG.loaderScene=()=>
 '<svg class="ld-scene" viewBox="0 0 480 270" role="img" aria-label="Excavator loading coal onto a dumper in an opencast mine">'

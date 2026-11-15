@@ -375,3 +375,14 @@ a.btn{text-decoration:none}
 .ld-wheel{transform-origin:0 0;animation:ldWheel 30s infinite linear}
 @keyframes ldWheel{0%,76%{transform:rotate(0)}83.4%{transform:rotate(-1440deg)}83.5%{transform:rotate(-1440deg)}90%,100%{transform:rotate(-2880deg)}}
 @media (prefers-reduced-motion:reduce){.ld-scene *,.ld-bar i,.ld-dots i{animation:none!important}}
+
+/* Loading / gate screens: always a centred full-viewport layer, regardless of the parent layout */
+.gate{position:fixed;inset:0;z-index:60;width:auto;min-height:0;overflow:auto;box-sizing:border-box}
+#ldOverlay{position:fixed;inset:0;z-index:100}
+.ld-card{margin:auto}
+/* Signed-in user card: everything stays inside the card */
+.userbox{grid-template-columns:minmax(0,1fr);min-width:0;overflow:hidden;box-sizing:border-box}
+.userbox>div{min-width:0}
+.userbox .u-name{max-width:100%}
+.userbox .u-role{white-space:normal;overflow-wrap:anywhere;line-height:1.35;margin-top:1px}
+.userbox .btn{width:100%;justify-content:center;min-width:0}
