@@ -1,4 +1,4 @@
-/* MineGuard core: config, API client, constants, helpers, overlays.
+/* core: config, API client, constants, helpers, overlays.
    Authorization is enforced by the backend. Permission helpers here only decide which controls to show. */
 (function(){
 const MG=window.MG=window.MG||{};
@@ -68,7 +68,7 @@ MG.can={
   manage:()=>['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(U().role),
   /* Escalation chain: Mine Manager -> ASO -> HQ. HQ is the top and can only return an incident downwards. */
   escalate:s=>U().role==='MINE_MANAGER'?(MG.TRANSITIONS[s]||[]).includes('escalated'):U().role==='AREA_SAFETY_OFFICER'?['open','under_review','action_assigned','escalated'].includes(s):false,resolveClose:()=>U().role==='MINE_MANAGER',
-  report:()=>['MINE_SO_MINING','MINE_SO_EM','HQ_SAFETY_HEAD'].includes(U().role),
+  report:()=>['MINE_SO_MINING','MINE_SO_EM'].includes(U().role),
   viewNCPHSops:()=>['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER'].includes(U().role)&&U().assigned_mine_id===MG.NCPH_MINE_ID
 };
 
