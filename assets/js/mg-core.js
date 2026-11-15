@@ -30,14 +30,24 @@ MG.isoDay=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()
 
 /* ---------- constants mirrored from backend policy (display only) ---------- */
 MG.STATUS={
-  open:{label:'Open',short:'Open',color:'#d97706',bg:'#fef3c7',order:0,pending:'Awaiting review'},
-  under_review:{label:'Under Review',short:'Review',color:'#2563eb',bg:'#dbeafe',order:1,pending:'Action to be assigned'},
-  action_assigned:{label:'Action Assigned',short:'Action',color:'#7c3aed',bg:'#ede9fe',order:2,pending:'Action in progress'},
-  escalated:{label:'Escalated',short:'Escalated',color:'#dc2626',bg:'#fee2e2',order:3,pending:'Awaiting senior decision'},
-  resolved:{label:'Resolved',short:'Resolved',color:'#059669',bg:'#d1fae5',order:4,pending:'Awaiting closure'},
+  open:{label:'New',short:'New',color:'#d97706',bg:'#fef3c7',order:0,pending:'Awaiting Mine Manager review'},
+  under_review:{label:'Under Review',short:'Review',color:'#2563eb',bg:'#dbeafe',order:1,pending:'Mine Manager review in progress'},
+  action_assigned:{label:'With Safety Officer',short:'With SO',color:'#7c3aed',bg:'#ede9fe',order:2,pending:'Safety Officer action required'},
+  escalated:{label:'Escalated',short:'Escalated',color:'#dc2626',bg:'#fee2e2',order:3,pending:'Awaiting ASO / HQ recommendation'},
+  resolved:{label:'Awaiting Closure',short:'Closure',color:'#059669',bg:'#d1fae5',order:4,pending:'Awaiting Mine Manager closure'},
   closed:{label:'Closed',short:'Closed',color:'#64748b',bg:'#e2e8f0',order:5,pending:''}
 };
 MG.STATUS_KEYS=Object.keys(MG.STATUS);
+/* Workflow stage: finer than status, stored by the API in audit_metadata.stage. Falls back to a sensible default per status. */
+MG.STAGE={
+  reported:{label:'New report',pending:'Awaiting Mine Manager review'},manager_review:{label:'Mine Manager review',pending:'Mine Manager review in progress'},
+  with_so:{label:'With Safety Officer',pending:'Safety Officer action required'},escalation_requested:{label:'Escalation requested',pending:'Mine Manager to decide on escalation'},
+  awaiting_closure:{label:'Awaiting closure',pending:'Final review & closure by Mine Manager'},with_aso:{label:'With ASO',pending:'Awaiting ASO recommendation'},
+  with_hq:{label:'With HQ',pending:'Awaiting HQ recommendation'},recommended:{label:'Recommendation received',pending:'Mine Manager to act on recommendation'},closed:{label:'Closed',pending:''}
+};
+MG.stageOf=i=>{const s=i.audit_metadata&&i.audit_metadata.stage;if(s&&MG.STAGE[s]){/* a stored stage is only trusted while it still matches the status */
+  const ok={reported:['open'],manager_review:['under_review'],with_so:['action_assigned'],escalation_requested:['under_review'],awaiting_closure:['resolved'],with_aso:['escalated'],with_hq:['escalated'],recommended:['under_review'],closed:['closed']};if((ok[s]||[]).includes(i.status))return s}
+  return {open:'reported',under_review:'manager_review',action_assigned:'with_so',escalated:'with_aso',resolved:'awaiting_closure',closed:'closed'}[i.status]||'manager_review'};
 MG.TRANSITIONS={open:['under_review','escalated'],under_review:['action_assigned','escalated'],action_assigned:['under_review','resolved','escalated'],escalated:['under_review','action_assigned','resolved'],resolved:['closed','under_review'],closed:[]};
 MG.SEVERITY={
   none:{label:'None',color:'#94a3b8',bars:1,order:0},nearMiss:{label:'Near miss',color:'#0ea5e9',bars:1,order:1},
@@ -65,9 +75,7 @@ const U=()=>MG.state.user||{};
 MG.can={
   isHQ:()=>U().role==='HQ_SAFETY_HEAD',isArea:()=>U().role==='AREA_SAFETY_OFFICER',isMineSO:()=>['MINE_SO_MINING','MINE_SO_EM'].includes(U().role),
   isManager:()=>U().role==='MINE_MANAGER',isLocal:()=>['LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(U().role),
-  manage:()=>['MINE_MANAGER','AREA_SAFETY_OFFICER'].includes(U().role),
-  /* Escalation chain: Mine Manager -> ASO -> HQ. HQ is the top and can only return an incident downwards. */
-  escalate:s=>U().role==='MINE_MANAGER'?(MG.TRANSITIONS[s]||[]).includes('escalated'):U().role==='AREA_SAFETY_OFFICER'?['open','under_review','action_assigned','escalated'].includes(s):false,resolveClose:()=>U().role==='MINE_MANAGER',
+  /* Closure and escalation authority rest exclusively with the Mine Manager; the API enforces this, the UI only mirrors it. */
   report:()=>['MINE_SO_MINING','MINE_SO_EM'].includes(U().role),
   viewNCPHSops:()=>['MINE_SO_MINING','MINE_SO_EM','MINE_MANAGER'].includes(U().role)&&U().assigned_mine_id===MG.NCPH_MINE_ID
 };
@@ -94,6 +102,7 @@ const P={
  msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
  filter:'<path d="M22 3H2l8 9.46V19l4 2v-8.54z"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',trend:'<path d="m23 6-9.5 9.5-5-5L1 18M17 6h6v6"/>',
  layers:'<path d="m12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
+ bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>',
  eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/>',
  activity:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',ext:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>',
  hard:'<path d="M2 18h20M4 18v-2a8 8 0 0 1 16 0v2M12 8V4M9 18v-4h6v4"/>',target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',

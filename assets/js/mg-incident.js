@@ -1,5 +1,5 @@
 /* Incident management: feed, details, lifecycle timeline and guided workflows.
-   Workflows call existing endpoints only: comments, status (PATCH) and forward (POST). */
+   Workflow actions call POST /api/safety/incidents/:id/workflow; the API enforces who may do what. */
 (function(){
 const MG=window.MG,S=MG.state,D=MG.data,esc=MG.esc,V=MG.views=MG.views||{};
 
@@ -57,54 +57,78 @@ V.incidents={
 /* ====================================================================== */
 const byTime=(a,b)=>new Date(a.created_at)-new Date(b.created_at);
 const ACTION_LABEL={FORWARD:'Transferred',ASSIGN:'Action assigned',REASSIGN:'Action reassigned',ESCALATE:'Escalated'};
-const stripTag=t=>String(t||'').replace(/^\[(Resolution|Closure)\]\s*/,'');
-const isTag=(c,tag)=>String(c.comment_text||'').startsWith('['+tag+']');
+const KIND_HEAD={report_submitted:'Reported · sent to Mine Manager',review_to_so:'Reviewed · sent to Safety Officer',action_taken:'Action taken · returned to Mine Manager',escalation_request:'Escalation requested by Safety Officer',escalation:'Escalated by Mine Manager',recommendation:'Recommendation given',closure:'Closed by Mine Manager'};
+const kindOf=h=>h&&h.context&&h.context.kind||null;
+const lvl=l=>l==='HQ'?'HQ':l==='ASO'?'the Area Safety Officer (ASO)':'a senior authority';
+function evText(h){
+  const c=h.context||{},k=kindOf(h),p=[];
+  if(k==='review_to_so'){if(c.remarks)p.push('Remarks: '+c.remarks);if(c.recommendations)p.push('Recommendations: '+c.recommendations)}
+  else if(k==='action_taken')p.push('Action taken: '+(c.actions||h.comments||''));
+  else if(k==='escalation_request')p.push('Requested escalation to '+lvl(c.level)+'. Justification: '+(c.justification||h.comments||''));
+  else if(k==='escalation')p.push('Escalated to '+lvl(c.level)+'. Remarks: '+(c.remarks||h.comments||''));
+  else if(k==='recommendation')p.push('Recommendations: '+(c.recommendations||h.comments||''));
+  else if(k==='closure')p.push('Closing remarks: '+(c.remarks||h.comments||''));
+  else if(k==='report_submitted')p.push('Submitted for Mine Manager review');
+  else if(h.comments)p.push(h.comments);
+  return p.join('\n');
+}
+const headOf=h=>KIND_HEAD[kindOf(h)]||ACTION_LABEL[h.action]||MG.nice(h.action);
 const photosOf=inc=>{try{const p=typeof inc.photos==='string'?JSON.parse(inc.photos):inc.photos;return Array.isArray(p)?p.filter(x=>x&&typeof x.data==='string'&&x.data.startsWith('data:image/')):[]}catch{return[]}};
 const route=h=>MG.role(h.from_role)+' → '+MG.role(h.to_role);
+const lastKind=(det,...k)=>[...(det.forwarding_history||[])].sort(byTime).reverse().find(h=>k.includes(kindOf(h)));
 MG.lifecycle=function(inc,comments,history){
-  const s=inc.status,hist=[...(history||[])].sort(byTime),com=[...(comments||[])].sort(byTime);
-  const sub=hist.find(h=>h.action==='FORWARD'&&h.to_role==='MINE_MANAGER'&&['MINE_SO_MINING','MINE_SO_EM','HQ_SAFETY_HEAD'].includes(h.from_role));
-  const assigns=hist.filter(h=>h.action==='ASSIGN'),escs=hist.filter(h=>h.action==='ESCALATE'),moves=hist.filter(h=>['FORWARD','REASSIGN'].includes(h.action)&&h!==sub);
-  const resC=com.filter(c=>isTag(c,'Resolution')),cloC=com.filter(c=>isTag(c,'Closure')),plain=com.filter(c=>!isTag(c,'Resolution')&&!isTag(c,'Closure'));
-  const firstAssign=assigns[0]?new Date(assigns[0].created_at):null;
-  const before=plain.filter(c=>!firstAssign||new Date(c.created_at)<firstAssign),after=plain.filter(c=>firstAssign&&new Date(c.created_at)>=firstAssign);
-  const updates=[...moves.map(h=>({t:h.created_at,who:route(h),text:ACTION_LABEL[h.action]+(h.comments?': '+h.comments:'')})),...after.map(c=>({t:c.created_at,who:MG.role(c.context?.role),text:c.comment_text}))].sort((a,b)=>new Date(a.t)-new Date(b.t));
-  const A=MG.isActive(s),later=['resolved','closed'].includes(s);
-  const st=(k)=>({
+  const s=inc.status,stage=MG.stageOf(inc),hist=[...(history||[])].sort(byTime);
+  const K=(...k)=>hist.filter(h=>k.includes(kindOf(h)));
+  const sub=K('report_submitted')[0]||hist.find(h=>!kindOf(h)&&h.action==='FORWARD'&&h.to_role==='MINE_MANAGER');
+  const reviews=K('review_to_so'),acts=K('action_taken','escalation_request'),escs=K('escalation','recommendation'),clos=K('closure');
+  const ev=hs=>hs.map(h=>({t:h.created_at,who:route(h),text:evText(h)}));
+  const last=hs=>hs.length?hs[hs.length-1]:null;
+  const legacy=hist.filter(h=>!kindOf(h)&&h!==sub);
+  const reviewCur=['reported','manager_review','recommended','escalation_requested'].includes(stage);
+  const state={
     reported:'done',submitted:'done',
-    reviewed:['open','under_review'].includes(s)?'current':'done',
-    assigned:assigns.length||['action_assigned','resolved','closed'].includes(s)?'done':(later||s==='escalated'?'skipped':'pending'),
-    action:s==='action_assigned'?'current':(updates.length||later?'done':'pending'),
-    escalated:s==='escalated'?'current':escs.length?'done':'skipped',
-    resolved:inc.resolved_at||later?'done':'pending',
-    closed:inc.closed_at||s==='closed'?'done':(s==='resolved'?'current':'pending')
-  })[k];
-  const mk=(key,title,icon,extra)=>({key,title,icon,state:st(key),events:[],...extra});
+    review:reviewCur?'current':(reviews.length||['with_so','awaiting_closure','closed'].includes(stage)?'done':'pending'),
+    action:stage==='with_so'?'current':(acts.length?'done':(s==='closed'?'skipped':'pending')),
+    escalation:['with_aso','with_hq'].includes(stage)?'current':(escs.length?'done':'skipped'),
+    closure:stage==='closed'?'done':stage==='awaiting_closure'?'current':'pending'
+  };
+  const mk=(key,title,short,icon,extra)=>({key,title,short,icon,state:state[key],events:[],...extra});
   const steps=[
-    mk('reported','Incident Reported','file',{at:inc.created_at,who:(inc.reporter_name||'Reporter')+(inc.discipline?' · '+inc.discipline:''),action:'Report filed · '+(inc.category||'Incident')+(inc.incident_type&&inc.incident_type!==inc.category?' · '+inc.incident_type:''),remark:inc.description,attach:photosOf(inc).length,occurred:[inc.date_of_incident,inc.time_of_incident&&String(inc.time_of_incident).slice(0,5)].filter(Boolean).join(' ')}),
-    mk('submitted','Submitted for Review','send',{at:sub?sub.created_at:inc.created_at,who:sub?route(sub):'Routed to '+MG.role('MINE_MANAGER'),action:'Forwarded to the Mine Manager for review and closure'}),
-    mk('reviewed','Incident Reviewed','eye',{at:null,who:MG.role('MINE_MANAGER'),action:s==='open'?'Awaiting review':s==='under_review'?'Review in progress':'Review completed',remark:before.map(c=>c.comment_text).join('\n\n'),events:before.map(c=>({t:c.created_at,who:MG.role(c.context?.role),text:c.comment_text}))}),
-    mk('assigned','Action Assigned','user',{at:assigns[0]?.created_at||null,who:assigns[0]?route(assigns[0]):'',action:assigns.length?'Corrective action assigned'+(assigns.length>1?' ('+assigns.length+' times)':''):'No assignment recorded',remark:assigns.map(h=>h.comments).filter(Boolean).join('\n\n')}),
-    mk('action','Action Taken / Updated','activity',{at:updates.length?updates[updates.length-1].t:null,who:updates.length?updates[updates.length-1].who:'',action:updates.length?updates.length+' update'+(updates.length>1?'s':'')+' recorded':(s==='action_assigned'?'Action in progress':'No updates yet'),events:updates}),
-    mk('escalated','Incident Escalated','flag',{at:escs[0]?.created_at||null,who:escs.length?route(escs[escs.length-1]):'',action:escs.length?'Escalated to '+[...new Set(escs.map(h=>MG.role(h.to_role)))].join(' → '):'Optional · not escalated',remark:escs.length>1?'':escs.map(h=>h.comments).filter(Boolean).join('\n\n'),events:escs.length>1?escs.map(h=>({t:h.created_at,who:route(h),text:h.comments||'Escalated'})):[]}),
-    mk('resolved','Incident Resolved','checkc',{at:inc.resolved_at||null,who:inc.resolved_at||later?MG.role('MINE_MANAGER'):'',action:inc.resolved_at||later?'Marked resolved':'Pending resolution',remark:resC.length?stripTag(resC[resC.length-1].comment_text):''}),
-    mk('closed','Incident Closed','lock',{at:inc.closed_at||null,who:inc.closed_at||s==='closed'?MG.role('MINE_MANAGER'):'',action:s==='closed'?'Closed':s==='resolved'?'Awaiting closure':'Pending closure',remark:cloC.length?stripTag(cloC[cloC.length-1].comment_text):''})
+    mk('reported','Incident Reported','Reported','file',{at:inc.created_at,who:(inc.reporter_name||'Safety Officer')+(inc.discipline?' · '+inc.discipline:''),action:'Report filed · '+(inc.category||'Incident')+(inc.incident_type&&inc.incident_type!==inc.category?' · '+inc.incident_type:''),remark:inc.description,attach:photosOf(inc).length,occurred:[inc.date_of_incident,inc.time_of_incident&&String(inc.time_of_incident).slice(0,5)].filter(Boolean).join(' ')}),
+    mk('submitted','Sent to Mine Manager','Sent','send',{at:sub?sub.created_at:inc.created_at,who:sub?route(sub):'Routed to '+MG.role('MINE_MANAGER'),action:'Appeared in the Mine Manager\'s dashboard with a new-incident notification'}),
+    mk('review','Mine Manager Review','MM review','eye',{at:last(reviews)?last(reviews).created_at:null,who:MG.role('MINE_MANAGER'),action:reviewCur?(stage==='escalation_requested'?'Decide on the Safety Officer\'s escalation request':stage==='recommended'?'Act on the ASO / HQ recommendation':'Awaiting review, remarks and recommendations'):reviews.length?'Remarks and recommendations sent to the Safety Officer'+(reviews.length>1?' ('+reviews.length+' rounds)':''):'Pending',remark:last(reviews)?evText(last(reviews)):'',events:reviews.length>1?ev(reviews):[]}),
+    mk('action','Safety Officer Action','SO action','activity',{at:last(acts)?last(acts).created_at:null,who:last(acts)?route(last(acts)):MG.role(inc.discipline==='Electrical & Mechanical'?'MINE_SO_EM':'MINE_SO_MINING'),action:stage==='with_so'?'Action required: record action taken, or request escalation':acts.length?headOf(last(acts)):(s==='closed'?'Not required':'Pending Mine Manager review'),remark:last(acts)?evText(last(acts)):'',events:acts.length>1?ev(acts):[]}),
+    mk('escalation','Escalation (if required)','Escalation','flag',{at:escs.length?escs[0].created_at:null,who:escs.length?route(last(escs)):'',action:['with_aso','with_hq'].includes(stage)?'With '+(stage==='with_hq'?'HQ':'the Area Safety Officer')+' for recommendation':escs.length?'ASO / HQ involvement recorded':'Optional · only the Mine Manager can escalate',events:ev([...escs,...K('escalation_request')].sort(byTime))}),
+    mk('closure','Final Review & Closure','Closure','lock',{at:inc.closed_at||null,who:MG.role('MINE_MANAGER'),action:s==='closed'?'Closed by the Mine Manager':stage==='awaiting_closure'?'Awaiting final review and closure':'Only the Mine Manager can close an incident',remark:last(clos)?evText(last(clos)):''})
   ];
+  if(legacy.length)steps[2].events=[...steps[2].events,...ev(legacy)];
   const cur=steps.find(x=>x.state==='current');if(cur&&MG.isOverdue(inc))cur.state='overdue';
-  if(A&&!cur){const p=steps.find(x=>x.state==='pending');if(p&&MG.isOverdue(inc))p.state='overdue'}
   return steps;
 };
 
 /* ====================================================================== */
 /* Detail view                                                             */
 /* ====================================================================== */
-const LADDER=[['Safety Officer','file'],['Mine Manager','user'],['Area Safety Officer','shield'],['HQ Safety','flag']];
-const rung=r=>r==='HQ_SAFETY_HEAD'?3:r==='AREA_SAFETY_OFFICER'?2:['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'].includes(r)?1:0;
+const LADDER=[['Safety Officer','file','Reports & takes action'],['Mine Manager','user','Reviews, escalates & closes'],['Area Safety Officer','shield','Recommends'],['HQ Safety','flag','Recommends']];
+const rung=r=>r==='HQ_SAFETY_HEAD'?3:r==='AREA_SAFETY_OFFICER'?2:r==='MINE_MANAGER'?1:0;
 function ladderHtml(inc,resp,hist){
-  const closed=inc.status==='closed',cur=closed?-1:rung(resp.role),reached=Math.max(1,cur,...(hist||[]).filter(h=>h.action==='ESCALATE').map(h=>rung(h.to_role)));
-  const note=closed?'Closed':reached>1&&cur<reached?'Returned to '+MG.role(resp.role):reached>1?'Escalated to '+LADDER[reached][0]:'Not escalated · with the Mine Manager';
+  const closed=inc.status==='closed',cur=closed?-1:rung(resp.role),esc2=(hist||[]).filter(h=>kindOf(h)==='escalation').map(h=>rung(h.to_role)),reached=Math.max(1,cur,...esc2);
+  const st=MG.stageOf(inc),note=closed?'Closed by the Mine Manager':reached>1&&cur===1?'Recommendation stage · back with the Mine Manager':reached>1&&cur>1?'Escalated by the Mine Manager to '+LADDER[cur][0]:st==='with_so'?'With the Safety Officer for action':'Not escalated · with the Mine Manager';
   return '<section class="card ladder-card" aria-label="Reporting and escalation path"><div class="card-h"><div><h3>Reporting &amp; escalation path</h3><p class="sub">'+esc(note)+'</p></div></div><ol class="ladder">'
-   +LADDER.map(([l],i)=>'<li class="'+(i===cur?'cur':i<=reached?'done':'')+(i>reached&&!closed?' future':'')+'"><span class="dotl">'+(i===cur?MG.icon(LADDER[i][1]):i<=reached?MG.icon('check'):'')+'</span><b>'+esc(l)+'</b><small>'+(i===cur?'Currently here':i===0?'Reports':i===1?'Reviews &amp; closes':i===2?'Escalation level 1':'Escalation level 2')+'</small></li>').join('')+'</ol></section>';
+   +LADDER.map(([l,ic,role],i)=>'<li class="'+(i===cur?'cur':i<=reached?'done':'')+(i>reached&&!closed?' future':'')+'"><span class="dotl">'+(i===cur?MG.icon(ic):i<=reached?MG.icon('check'):'')+'</span><b>'+esc(l)+'</b><small>'+(i===cur?'Currently here':role)+'</small></li>').join('')+'</ol></section>';
+}
+/* What the viewer needs to know before acting: the latest instruction or request addressed to them. */
+function contextBanner(inc,det){
+  const u=S.user,st=MG.stageOf(inc);if(inc.status==='closed')return '';
+  const box=(title,h)=>h?'<div class="banner info wf-note">'+MG.icon('info')+'<div><b>'+esc(title)+'</b><p>'+esc(evText(h)).replace(/\n/g,'<br>')+'</p><small>'+esc(route(h))+' · '+esc(MG.dateTime(h.created_at))+'</small></div></div>':'';
+  if(MG.can.isMineSO()&&st==='with_so'&&inc.assignee_id===u.id)return box('Mine Manager\'s remarks & recommendations — your action is required',lastKind(det,'review_to_so'));
+  if(MG.can.isManager()){
+    if(st==='escalation_requested')return box('The Safety Officer has requested escalation',lastKind(det,'escalation_request'));
+    if(st==='awaiting_closure')return box('Action taken by the Safety Officer — final review and closure pending',lastKind(det,'action_taken'));
+    if(st==='recommended')return box('Recommendation received',lastKind(det,'recommendation'));
+  }
+  if((MG.can.isArea()||MG.can.isHQ())&&inc.status==='escalated'&&inc.assignee_id===u.id)return box('Escalated to you by the Mine Manager — please give your recommendation',lastKind(det,'escalation'));
+  return '';
 }
 const fact=(l,v,wide)=>'<div class="fact'+(wide?' wide':'')+'"><small>'+esc(l)+'</small><b>'+esc(v===0?'0':v||'—')+'</b></div>';
 function stepHtml(x,i){
@@ -115,8 +139,8 @@ function stepHtml(x,i){
   return '<div class="tl-item '+x.state+'" id="step-'+x.key+'" data-step="'+x.key+'"><div class="tl-dot">'+(x.state==='done'?MG.icon('check'):MG.icon(x.icon))+'</div><div class="tl-card" tabindex="0" role="button" aria-expanded="false"><div class="tl-top"><span class="tl-title">'+(i+1)+'. '+esc(x.title)+'</span><span style="display:flex;gap:8px;align-items:center">'+od+'<span class="tl-time">'+esc(time||(x.state==='skipped'?'Optional':'Pending'))+'</span></span></div><div class="tl-sum">'+esc([x.who,x.action].filter(Boolean).join(' · '))+'</div><div class="tl-more">'+kv.map(([k,v,raw])=>'<div class="tl-kv"><small>'+esc(k)+'</small><div>'+(raw?v:esc(v))+'</div></div>').join('')+ev+'</div></div></div>';
 }
 function logItems(det){
-  const items=[...(det.forwarding_history||[]).map(h=>({t:h.created_at,c:false,head:ACTION_LABEL[h.action]||MG.nice(h.action),who:route(h),text:h.comments})),
-    ...(det.comments||[]).map(c=>({t:c.created_at,c:true,head:isTag(c,'Resolution')?'Resolution note':isTag(c,'Closure')?'Closure note':'Remark',who:(c.author_id===S.user.id?'You · ':'')+MG.role(c.context?.role),text:stripTag(c.comment_text)}))].sort((a,b)=>new Date(b.t)-new Date(a.t));
+  const items=[...(det.forwarding_history||[]).map(h=>({t:h.created_at,c:false,head:headOf(h),who:route(h),text:evText(h)})),
+    ...(det.comments||[]).map(c=>({t:c.created_at,c:true,head:'Remark',who:(c.author_id===S.user.id?'You · ':'')+MG.role(c.context?.role),text:String(c.comment_text||'').replace(/^\[(Resolution|Closure)\]\s*/,'')}))].sort((a,b)=>new Date(b.t)-new Date(a.t));
   return items.length?'<div class="log">'+items.map(i=>'<div class="log-item '+(i.c?'c':'')+'"><i></i><div><b>'+esc(i.head)+'</b> · <span class="muted">'+esc(i.who)+'</span> <time>'+esc(MG.dateTime(i.t))+'</time>'+(i.text?'<p>'+esc(i.text)+'</p>':'')+'</div></div>').join('')+'</div>':'<p class="muted small">No remarks or workflow activity recorded yet.</p>';
 }
 
@@ -130,54 +154,51 @@ V.incident={
     host.innerHTML=
      '<button class="btn btn-ghost btn-sm back" id="back">'+MG.icon('left')+' Back</button>'
     +'<div class="card" style="margin-bottom:16px;border-left:4px solid '+(MG.STATUS[inc.status]?.color||'#94a3b8')+'"><div class="inc-head" style="margin:0"><div><span class="inc-id">'+esc(inc.incident_ref||'Reference pending')+'</span><h2>'+esc(inc.incident_type||inc.category||'Incident')+'</h2><div class="row">'+MG.statusPill(inc.status)+MG.sevHtml(inc.severity)+MG.catTag(inc.category)+(mineN?'<span class="tag">'+MG.icon('pin')+esc([mineN,areaN].filter(Boolean).join(' · '))+'</span>':'')+'<span class="pending-flag '+pend.cls+'">'+(pend.cls==='done'?MG.icon('check'):'<span class="pulse"></span>')+esc(pend.text)+'</span></div><p class="small muted" style="margin-top:10px">Responsible: <b style="color:var(--ink-2)">'+esc(resp.text)+'</b> · Reported '+esc(MG.dateTime(inc.created_at))+' ('+esc(MG.relTime(inc.created_at))+')</p></div><div class="action-bar" id="actions"></div></div></div>'
-    +ladderHtml(inc,resp,det.forwarding_history)+'<div class="stepper" id="stepper" aria-label="Incident progress">'+steps.map(x=>'<button type="button" class="sp '+x.state+'" data-go="'+x.key+'">'+esc(x.title.replace('Incident ',''))+'</button>').join('')+'</div>'
+    +contextBanner(inc,det)+ladderHtml(inc,resp,det.forwarding_history)+'<div class="stepper" id="stepper" aria-label="Incident progress">'+steps.map(x=>'<button type="button" class="sp '+x.state+'" data-go="'+x.key+'">'+esc(x.short||x.title)+'</button>').join('')+'</div>'
     +'<div class="grid g-wide"><section class="card"><div class="card-h"><div><h3>Incident lifecycle</h3><p class="sub">Select a stage to see who acted, when, and what was recorded</p></div></div><div class="tl" id="tl">'+steps.map(stepHtml).join('')+'</div></section>'
     +'<div class="grid" style="align-content:start"><section class="card"><div class="card-h"><div><h3>Report details</h3></div></div><div class="facts">'+[fact('Description',inc.description,1),fact('Immediate actions taken',inc.immediate_actions,1),fact('Category',inc.category),fact('Incident type',inc.incident_type),fact('Discipline',inc.discipline),fact('Severity',MG.sevMeta(inc.severity).label),fact('Date of incident',inc.date_of_incident?MG.date(inc.date_of_incident):''),fact('Time',inc.time_of_incident&&String(inc.time_of_incident).slice(0,5)),fact('Location',inc.location_zone),fact('Level / zone detail',inc.location_detail),fact('Persons injured',inc.persons_injured),fact('Supervisor on duty',inc.supervisor_on_duty),fact('PPE worn',MG.nice(inc.ppe_worn||'')),fact('SOP followed',MG.nice(inc.sop_followed||'')),fact('Witnesses',inc.witnesses,1)].join('')+'</div></section>'
     +'<section class="card"><div class="card-h"><div><h3>Evidence</h3><p class="sub">'+(photos.length?photos.length+' photo'+(photos.length>1?'s':'')+' attached at reporting':'No photos attached')+'</p></div></div>'+(photos.length?'<div class="gallery">'+photos.map((p,i)=>'<button type="button" data-ph="'+i+'" aria-label="Open photo '+(i+1)+'"><img alt="Incident evidence '+(i+1)+'" src="'+p.data+'"></button>').join('')+'</div>':'<p class="muted small">Photos added when the incident was reported appear here.</p>')+'</section>'
-    +'<section class="card"><div class="card-h"><div><h3>Activity &amp; remarks</h3><p class="sub">Complete history, preserved for audit</p></div></div>'+(ro?'':'<form id="cf" class="composer"><div class="field"><label for="cmt">'+(MG.can.isHQ()?'Management direction / action request':'Add remark')+'</label><textarea class="textarea" id="cmt" maxlength="10000" required placeholder="'+(MG.can.isHQ()?'Direction or action request…':'Observation, update or instruction…')+'"></textarea></div><div><button class="btn btn-primary btn-sm" type="submit">'+(MG.can.isHQ()?'Send action request':'Post remark')+'</button></div></form><hr style="border:0;border-top:1px solid var(--line);margin:16px 0">')+'<div id="logHost">'+logItems(det)+'</div></section></div></div>';
+    +'<section class="card"><div class="card-h"><div><h3>Activity &amp; remarks</h3><p class="sub">Complete history, preserved for audit</p></div></div>'+(ro?'':'<form id="cf" class="composer"><div class="field"><label for="cmt">'+'Add remark'+'</label><textarea class="textarea" id="cmt" maxlength="10000" required placeholder="'+'Observation or update…'+'"></textarea></div><div><button class="btn btn-primary btn-sm" type="submit">'+'Post remark'+'</button></div></form><hr style="border:0;border-top:1px solid var(--line);margin:16px 0">')+'<div id="logHost">'+logItems(det)+'</div></section></div></div>';
     const $=s=>host.querySelector(s);
     $('#back').onclick=()=>MG.back(mine?'/my-reports':'/incidents');
     host.querySelectorAll('.tl-card').forEach(c=>{const t=()=>{const it=c.closest('.tl-item'),o=it.classList.toggle('open');c.setAttribute('aria-expanded',o)};c.onclick=t;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();t()}}});
     const curItem=host.querySelector('.tl-item.current,.tl-item.overdue');if(curItem){curItem.classList.add('open');curItem.querySelector('.tl-card').setAttribute('aria-expanded','true')}
     host.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const it=$('#step-'+b.dataset.go);it.classList.add('open');it.scrollIntoView({behavior:'smooth',block:'center'})});
     host.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>MG.lightbox(photos[Number(b.dataset.ph)].data));
-    const reload=async()=>{D.invalidate(id);await V.incident.render(host,{id,mine})};
+    const reload=async()=>{D.invalidate(id);if(MG.notify)MG.notify.refresh();await V.incident.render(host,{id,mine})};
     if($('#cf'))$('#cf').onsubmit=e=>{e.preventDefault();MG.busy(e.submitter,async()=>{await MG.api('/api/safety/incidents/'+inc.id+'/comments',{method:'POST',body:JSON.stringify({comment_text:$('#cmt').value})});MG.toast('Remark added');await reload()})};
-    if(!ro)renderActions($('#actions'),inc,det,reload);
+    renderActions($('#actions'),inc,det,reload);
   }
 };
 
 /* ====================================================================== */
-/* Workflow actions                                                        */
+/* Workflow actions (who may do what is enforced by the API)               */
 /* ====================================================================== */
-function renderActions(host,inc,det,reload){
-  const hq=MG.can.isHQ();if(!MG.can.manage()&&!hq)return;
-  const s=inc.status,can=to=>MG.TRANSITIONS[s].includes(to),mgr=MG.can.isManager(),btns=[];
-  if(s==='closed'){host.innerHTML='<span class="tag">'+MG.icon('lock')+' Closed · history is read-only</span>';return}
-  if(s==='open')btns.push(['review','eye','Start review','btn-secondary']);
-  if(['under_review','action_assigned'].includes(s))btns.push(['assign','user',s==='action_assigned'?'Update / reassign action':'Assign action','btn-accent']);
-  btns.push(['transfer','send','Transfer','btn-secondary']);
-  if(MG.can.escalate(s))btns.push(['escalate','flag',mgr?'Escalate to ASO':'Escalate to HQ','btn-danger']);
-  if(mgr&&['action_assigned','escalated'].includes(s))btns.push(['resolve','checkc','Resolve','btn-primary']);
-  if(mgr&&s==='resolved')btns.push(['close','lock','Close incident','btn-primary']);
-  if(['action_assigned','escalated','resolved'].includes(s))btns.push(['return','undo','Return to review','btn-ghost']);
-  if(hq){btns.length=0;if(MG.isActive(s))btns.push(['transfer','send','Return to Area / Mine','btn-primary'])}
-  host.innerHTML=btns.map(([k,i,l,c])=>'<button class="btn '+c+'" data-act="'+k+'">'+MG.icon(i)+esc(l)+'</button>').join('');
-  host.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>MG.busy(b,async()=>{
-    const k=b.dataset.act;
-    if(k==='review')return statusFlow(inc,'under_review','Start review','Mark this incident as under review. You can assign corrective action afterwards.',reload);
-    if(k==='return')return statusFlow(inc,'under_review','Return to review','Move this incident back to Under Review for further assessment.',reload);
-    if(k==='resolve'||k==='close')return closeFlow(inc,det,k,reload);
-    const recs=(await MG.api('/api/safety/recipients?incident_id='+encodeURIComponent(inc.id))).recipients||[];
-    forwardFlow(inc,det,k,recs,reload);
-  }));
-}
-const recipientsFor=(recs,action)=>{const R=roles=>recs.filter(r=>roles.includes(r.role));
-  if(MG.can.isHQ())return R(['AREA_SAFETY_OFFICER','MINE_MANAGER']);
-  if(MG.can.isManager())return action==='ESCALATE'?R(['AREA_SAFETY_OFFICER']):R(['LOCAL_SUPERVISOR','LOCAL_ENGINEER']);
-  return action==='ESCALATE'?R(['HQ_SAFETY_HEAD']):R(['MINE_MANAGER','LOCAL_SUPERVISOR','LOCAL_ENGINEER'])};
 const sumRows=rows=>'<div class="summary-box">'+rows.map(([k,v])=>'<div><small>'+esc(k)+'</small><b style="text-align:right;max-width:65%;overflow-wrap:anywhere">'+esc(v||'—')+'</b></div>').join('')+'</div>';
-const header=inc=>'<div class="summary-box"><div><small>Incident</small><b>'+esc(inc.incident_ref||'')+'</b></div><div><small>Current status</small>'+MG.statusPill(inc.status)+'</div></div>';
+const header=inc=>'<div class="summary-box"><div><small>Incident</small><b>'+esc(inc.incident_ref||'')+'</b></div><div><small>Current stage</small><b>'+esc((MG.STAGE[MG.stageOf(inc)]||{}).label||MG.STATUS[inc.status].label)+'</b></div></div>';
+function renderActions(host,inc,det,reload){
+  const u=S.user,role=u.role,s=inc.status,st=MG.stageOf(inc),mine=inc.assignee_id===u.id,btns=[],resp=D.responsible(inc,det.forwarding_history);
+  if(s==='closed'){host.innerHTML='<span class="tag">'+MG.icon('lock')+' Closed by the Mine Manager · history is read-only</span>';return}
+  if(role==='MINE_MANAGER'){
+    if(s==='open'||s==='under_review'){btns.push(['review','eye','Review & send to Safety Officer','btn-primary']);btns.push(['escalate','flag','Escalate to ASO / HQ','btn-danger'])}
+    else if(s==='resolved'){btns.push(['close','lock','Final review & close','btn-primary']);btns.push(['rework','undo','Send back to Safety Officer','btn-secondary'])}
+  }else if(MG.can.isMineSO()&&s==='action_assigned'&&mine){
+    btns.push(['taken','checkc','Action taken / Issue resolved','btn-primary']);btns.push(['reqesc','flag','Request escalation','btn-danger']);
+  }else if((MG.can.isArea()||MG.can.isHQ())&&s==='escalated'&&mine){
+    btns.push(['recommend','send','Give recommendation','btn-primary']);
+  }
+  if(!btns.length){host.innerHTML='<span class="tag">'+MG.icon('clock')+' Waiting for '+esc(resp.text)+'</span>';return}
+  host.innerHTML=btns.map(([k,i,l,c])=>'<button class="btn '+c+'" data-act="'+k+'">'+MG.icon(i)+esc(l)+'</button>').join('');
+  const F={
+    review:{step:'REVIEW',title:'Review & send to Safety Officer',blurb:'Record your remarks and recommendations. The incident goes back to the Safety Officer for action.',fields:[['remarks','Remarks','Your review of the incident…'],['recommendations','Recommendations','What should the Safety Officer do?']],confirm:'Send to Safety Officer',done:'Sent to the Safety Officer with your remarks and recommendations'},
+    rework:{step:'REVIEW',title:'Send back to Safety Officer',blurb:'The recorded action is not sufficient. Explain what is still needed.',fields:[['remarks','Remarks','Why is this being sent back?'],['recommendations','Recommendations','What further action is required?']],confirm:'Send back',done:'Sent back to the Safety Officer'},
+    escalate:{step:'ESCALATE',title:'Escalate incident',blurb:'Only the Mine Manager can escalate. The ASO / HQ will give recommendations and return it to you; you keep final closure.',level:true,fields:[['remarks','Escalation remarks','Why does this need ASO / HQ intervention?']],confirm:'Confirm escalation',tone:'btn-danger',done:'Incident escalated'},
+    taken:{step:'ACTION_TAKEN',title:'Action taken / Issue resolved',blurb:'Record what was done. It returns to the Mine Manager for final review and closure.',fields:[['actions','Action taken','Describe the actions you took…']],confirm:'Submit to Mine Manager',done:'Submitted to the Mine Manager for final review and closure'},
+    reqesc:{step:'REQUEST_ESCALATION',title:'Request escalation',blurb:'Only the Mine Manager can escalate. Your request and justification go to the Mine Manager, who decides.',level:true,fields:[['justification','Justification','Why does this need further intervention?']],confirm:'Send request',tone:'btn-danger',done:'Escalation request sent to the Mine Manager'},
+    recommend:{step:'RECOMMEND',title:'Give recommendation',blurb:'Your recommendations go back to the Mine Manager, who decides next steps and closes the incident.',fields:[['recommendations','Recommendations','Your recommendations…']],confirm:'Send to Mine Manager',done:'Recommendation sent to the Mine Manager'}
+  };
+  host.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='close')closeFlow(inc,det,reload);else wfFlow(inc,det,F[b.dataset.act],reload)});
+}
 
 /* Two-phase drawer: form → review & confirm → submit */
 function twoPhase({title,sub,form,collect,review,confirmLabel,submit,tone='btn-primary'}){
@@ -188,48 +209,28 @@ function twoPhase({title,sub,form,collect,review,confirmLabel,submit,tone='btn-p
     const nx=foot.querySelector('[data-next]');if(nx)nx.onclick=()=>{const r=collect(el);if(r.error){MG.toast(r.error,'err');return}data=r.data;p1.classList.add('hidden');p2.classList.remove('hidden');p2.innerHTML=review(data);foot.innerHTML='<button class="btn btn-ghost" data-back>Back</button><button class="btn '+tone+'" data-confirm>'+esc(confirmLabel)+'</button>';foot.querySelector('[data-back]').onclick=phase1;foot.querySelector('[data-confirm]').onclick=e=>MG.busy(e.currentTarget,async()=>{await submit(data);ctl.close()})}};
   wire();return ctl;
 }
-const optList=(name,items)=>'<div class="opt-list">'+items.map((r,i)=>'<label class="opt"><input type="radio" name="'+name+'" value="'+esc(r.id)+'" '+(i===0?'checked':'')+'><span><b>'+esc(r.name)+'</b><br><span class="small muted">'+esc(MG.role(r.role))+(r.worker_id?' · ID '+esc(r.worker_id):'')+'</span></span></label>').join('')+'</div>';
-const syncOpts=el=>el.querySelectorAll('.opt').forEach(o=>{const i=o.querySelector('input');const f=()=>el.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x.querySelector('input').checked));i.addEventListener('change',f);f()});
+const post=(inc,body)=>MG.api('/api/safety/incidents/'+inc.id+'/workflow',{method:'POST',body:JSON.stringify(body)});
 
-function forwardFlow(inc,det,kind,recs,reload){
-  const s=inc.status,resp=D.responsible(inc,det.forwarding_history);
-  const cfg={transfer:MG.can.isHQ()?{title:'Return incident to Area / Mine',action:'FORWARD',verb:'Return',ph:'Direction for the receiving officer (optional)…',req:false,tone:'btn-primary'}:{title:'Transfer incident',action:'FORWARD',verb:'Transfer',ph:'Why is this incident being transferred? (optional)',req:false,tone:'btn-primary'},
-    assign:{title:s==='action_assigned'?'Update / reassign action':'Assign corrective action',action:s==='action_assigned'?'REASSIGN':'ASSIGN',verb:'Assign',ph:'Describe the corrective action required…',req:false,tone:'btn-accent'},
-    escalate:{title:MG.can.isArea()?'Escalate to HQ':'Escalate to Area Safety Officer',action:'ESCALATE',verb:'Escalate',ph:'Reason for escalation (required)…',req:true,tone:'btn-danger'}}[kind];
-  const list=recipientsFor(recs,cfg.action);
-  if(!list.length){MG.drawer({title:cfg.title,body:header(inc)+'<div class="banner warn">'+MG.icon('info')+'<span>'+(cfg.action==='ESCALATE'&&MG.can.isArea()?'No active HQ Safety user is configured to receive escalations.':'No authorized recipient is available for this action in your current hierarchy.')+'</span></div>'});return}
-  const actionPick=kind==='assign'&&s==='action_assigned'?'<div class="field"><label>Action</label><div class="seg" id="actPick"><button type="button" class="active" data-a="REASSIGN">Reassign</button><button type="button" data-a="ASSIGN">Assign again</button></div></div>':'';
-  const ctl=twoPhase({title:cfg.title,sub:esc(inc.incident_ref||''),tone:cfg.tone,confirmLabel:'Confirm '+cfg.verb.toLowerCase(),
-    form:header(inc)+'<div class="summary-box"><div><small>Current responsible authority</small><b>'+esc(resp.text)+'</b></div></div>'+actionPick+'<div class="field"><label>Destination · authorized recipients</label>'+optList('rcp',list)+'</div><div class="field"><label for="fRem">'+(cfg.req?'Escalation remarks':'Remarks')+'</label><textarea class="textarea" id="fRem" maxlength="5000" placeholder="'+esc(cfg.ph)+'"></textarea></div>',
-    collect:el=>{const sel=el.querySelector('input[name=rcp]:checked');const rem=el.querySelector('#fRem').value.trim();if(!sel)return {error:'Select a recipient'};if(cfg.req&&!rem)return {error:'Escalation remarks are required'};const act=el.querySelector('#actPick .active')?.dataset.a||cfg.action;const r=list.find(x=>x.id===sel.value);return {data:{to:r,comments:rem,action:act}}},
-    review:d=>'<p class="muted small">Please confirm. This is recorded permanently in the incident history.</p>'+sumRows([['Incident',inc.incident_ref],['Action',ACTION_LABEL[d.action]||d.action],['From',resp.text],['To',d.to.name+' · '+MG.role(d.to.role)],['Remarks',d.comments||'None']]),
-    submit:async d=>{await MG.api('/api/safety/incidents/'+inc.id+'/forward',{method:'POST',body:JSON.stringify({to_user_id:d.to.id,action:d.action,comments:d.comments})});MG.toast(cfg.verb+' recorded');await reload()}});
-  syncOpts(ctl.el);const ap=ctl.el.querySelector('#actPick');if(ap)ap.querySelectorAll('button').forEach(b=>b.onclick=()=>{ap.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b))});
+function wfFlow(inc,det,cfg,reload){
+  const req=lastKind(det,'escalation_request'),pre=cfg.step==='ESCALATE'&&req?req.context.level:null;
+  const lv=cfg.level?'<div class="field"><label>Escalate to</label><div class="seg" id="lvPick"><button type="button" data-l="ASO" class="'+(pre==='ASO'?'active':'')+'">Area Safety Officer (ASO)</button><button type="button" data-l="HQ" class="'+(pre==='HQ'?'active':'')+'">HQ</button></div>'+(pre?'<span class="hint">The Safety Officer asked for '+(pre==='HQ'?'HQ':'the ASO')+'. You can choose differently.</span>':'')+'</div>':'';
+  const ctl=twoPhase({title:cfg.title,sub:esc(inc.incident_ref||''),tone:cfg.tone||'btn-primary',confirmLabel:cfg.confirm,
+    form:header(inc)+(cfg.blurb?'<p class="muted">'+esc(cfg.blurb)+'</p>':'')+lv+cfg.fields.map(([id,l,ph])=>'<div class="field"><label for="wf_'+id+'">'+esc(l)+' (required)</label><textarea class="textarea" id="wf_'+id+'" maxlength="4000" placeholder="'+esc(ph)+'"></textarea></div>').join(''),
+    collect:el=>{const d={};for(const [id,l] of cfg.fields){d[id]=el.querySelector('#wf_'+id).value.trim();if(!d[id])return {error:l+' is required'}}
+      if(cfg.level){d.level=el.querySelector('#lvPick .active')?.dataset.l;if(!d.level)return {error:'Choose ASO or HQ'}}return {data:d}},
+    review:d=>'<p class="muted small">Please confirm. This is recorded permanently in the incident history.</p>'+sumRows([['Incident',inc.incident_ref],...(d.level?[['Escalate to',d.level==='HQ'?'HQ':'Area Safety Officer (ASO)']]:[]),...cfg.fields.map(([id,l])=>[l,d[id]])]),
+    submit:async d=>{await post(inc,{step:cfg.step,...d});MG.toast(cfg.done);await reload()}});
+  const lp=ctl.el.querySelector('#lvPick');if(lp)lp.querySelectorAll('button').forEach(b=>b.onclick=()=>lp.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)));
 }
 
-function statusFlow(inc,target,title,blurb,reload){
-  twoPhase({title,sub:esc(inc.incident_ref||''),confirmLabel:'Confirm',
-    form:header(inc)+'<p class="muted">'+esc(blurb)+'</p><div class="field"><label for="sRem">Remark (optional)</label><textarea class="textarea" id="sRem" maxlength="5000"></textarea></div>',
-    collect:el=>({data:{remark:el.querySelector('#sRem').value.trim()}}),
-    review:d=>sumRows([['Incident',inc.incident_ref],['Status change',MG.STATUS[inc.status].label+' → '+MG.STATUS[target].label],['Remark',d.remark||'None']]),
-    submit:async d=>{await MG.api('/api/safety/incidents/'+inc.id+'/status',{method:'PATCH',body:JSON.stringify({status:target})});if(d.remark){try{await MG.api('/api/safety/incidents/'+inc.id+'/comments',{method:'POST',body:JSON.stringify({comment_text:d.remark})})}catch{MG.toast('Status updated, but the remark could not be saved','err')}}MG.toast('Status updated to '+MG.STATUS[target].label);await reload()}});
-}
-
-function closeFlow(inc,det,kind,reload){
-  const target=kind==='resolve'?'resolved':'closed',verb=kind==='resolve'?'Resolve':'Close',tag=kind==='resolve'?'Resolution':'Closure';
-  const taken=(det.forwarding_history||[]).map(h=>'<div class="log-item"><i></i><div><b>'+esc(ACTION_LABEL[h.action]||h.action)+'</b> · <span class="muted">'+esc(route(h))+'</span> <time>'+esc(MG.dateTime(h.created_at))+'</time>'+(h.comments?'<p>'+esc(h.comments)+'</p>':'')+'</div></div>').join('')||'<p class="muted small">No workflow actions recorded.</p>';
-  const prior=(det.comments||[]).find(c=>isTag(c,'Resolution'));const ph=photosOf(inc).length;
-  twoPhase({title:verb+' incident',sub:esc(inc.incident_ref||''),confirmLabel:'Confirm '+verb.toLowerCase(),
-    form:header(inc)+'<div class="field"><label>Actions taken so far</label><div class="log" style="border:1px solid var(--line);border-radius:12px;padding:4px 12px;max-height:190px;overflow:auto">'+taken+'</div></div>'
-      +(kind==='close'&&prior?'<div class="field"><label>Resolution note</label><div class="tl-remark">'+esc(stripTag(prior.comment_text))+'</div></div>':'')
-      +'<div class="field"><label for="cMeas">Corrective measures '+(kind==='resolve'?'(required)':'')+'</label><textarea class="textarea" id="cMeas" maxlength="4000" placeholder="Measures implemented to prevent recurrence…"></textarea></div><div class="field"><label for="cRem">Closure remarks (required)</label><textarea class="textarea" id="cRem" maxlength="4000" placeholder="Final observations and conclusion…"></textarea></div>'
-      +'<div class="field"><label>Supporting evidence</label><p class="small muted">'+(ph?ph+' photo'+(ph>1?'s':'')+' from the original report remain attached to this incident.':'No photos were attached to the original report.')+' Evidence can only be added when an incident is reported.</p></div>'
-      +'<label class="check"><input type="checkbox" id="cOk"><span>I confirm the corrective measures are complete and this incident can be '+(kind==='resolve'?'marked resolved':'closed')+'.</span></label>',
-    collect:el=>{const m=el.querySelector('#cMeas').value.trim(),r=el.querySelector('#cRem').value.trim();if(kind==='resolve'&&!m)return {error:'Describe the corrective measures'};if(!r)return {error:'Closure remarks are required'};if(!el.querySelector('#cOk').checked)return {error:'Please tick the confirmation'};return {data:{m,r}}},
-    review:d=>'<p class="muted small">Please confirm the '+verb.toLowerCase()+'. This is recorded permanently.</p>'+sumRows([['Incident',inc.incident_ref],['Status change',MG.STATUS[inc.status].label+' → '+MG.STATUS[target].label],['Corrective measures',d.m||'—'],['Remarks',d.r]]),
-    tone:'btn-primary',
-    submit:async d=>{await MG.api('/api/safety/incidents/'+inc.id+'/status',{method:'PATCH',body:JSON.stringify({status:target})});
-      try{await MG.api('/api/safety/incidents/'+inc.id+'/comments',{method:'POST',body:JSON.stringify({comment_text:'['+tag+'] '+(d.m?'Corrective measures: '+d.m+'\n':'')+'Remarks: '+d.r})})}catch{MG.toast('Status updated, but the closure notes could not be saved','err')}
-      MG.toast('Incident '+(kind==='resolve'?'resolved':'closed'));await reload()}});
+function closeFlow(inc,det,reload){
+  const taken=lastKind(det,'action_taken'),trail=(det.forwarding_history||[]).filter(h=>kindOf(h)).map(h=>'<div class="log-item"><i></i><div><b>'+esc(headOf(h))+'</b> · <span class="muted">'+esc(route(h))+'</span> <time>'+esc(MG.dateTime(h.created_at))+'</time>'+(evText(h)?'<p>'+esc(evText(h))+'</p>':'')+'</div></div>').join('')||'<p class="muted small">No workflow actions recorded.</p>';
+  twoPhase({title:'Final review & close',sub:esc(inc.incident_ref||''),confirmLabel:'Close incident',
+    form:header(inc)+'<div class="field"><label>Action and review trail</label><div class="log" style="border:1px solid var(--line);border-radius:12px;padding:4px 12px;max-height:210px;overflow:auto">'+trail+'</div></div>'
+      +'<div class="field"><label for="wf_remarks">Closing remarks (required)</label><textarea class="textarea" id="wf_remarks" maxlength="4000" placeholder="Final observations and conclusion…"></textarea></div>'
+      +'<label class="check"><input type="checkbox" id="cOk"><span>I have reviewed the action taken'+(taken?'':' and recommendations')+' and confirm this incident can be closed. Closure is final.</span></label>',
+    collect:el=>{const r=el.querySelector('#wf_remarks').value.trim();if(!r)return {error:'Closing remarks are required'};if(!el.querySelector('#cOk').checked)return {error:'Please tick the confirmation'};return {data:{remarks:r}}},
+    review:d=>'<p class="muted small">Closure is recorded permanently and cannot be undone.</p>'+sumRows([['Incident',inc.incident_ref],['Status change',MG.STATUS[inc.status].label+' → Closed'],['Closing remarks',d.remarks]]),
+    submit:async d=>{await post(inc,{step:'CLOSE',remarks:d.remarks});MG.toast('Incident closed');await reload()}});
 }
 })();

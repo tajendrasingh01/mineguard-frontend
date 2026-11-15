@@ -84,6 +84,7 @@ function buildTopActions(){
   el.innerHTML=(WITH_RANGE.has(cur.name)?'<div id="rangeHost"></div>':'')+'<button class="btn btn-secondary btn-icon" id="refresh" aria-label="Refresh data" title="Refresh data">'+MG.icon('refresh')+'</button>'
     +(MG.can.report()&&cur.name!=='report'?'<a class="btn btn-accent hide-sm" href="#/report">'+MG.icon('plus')+'Report incident</a>':'');
   const rh=MG.$('rangeHost');if(rh)UI.rangeControl(rh,()=>MG.refresh());
+  MG.notify.mountBell(el);
   MG.$('refresh').onclick=e=>{const b=e.currentTarget;b.classList.add('loading');MG.refresh();setTimeout(()=>b.classList.remove('loading'),600)};
 }
 
@@ -124,7 +125,7 @@ async function boot(){
   catch(e){if(e.status===401){MG.logout();return}fatal('Unable to reach the portal',e.message||'Please check your connection and try again.',true);return}
   if(!MG.ROLE[S.user.role]){fatal('No safety role assigned','Your account ('+(S.user.worker_id||'')+') is not assigned a SECL safety-management role. Ask the system administrator to assign your Mine or Area safety role.',false);return}
   await D.loadOrg();
-  buildShell();versionCheck();
+  buildShell();versionCheck();MG.notify.start();
   window.addEventListener('hashchange',route);route();
 }
 document.addEventListener('DOMContentLoaded',boot);

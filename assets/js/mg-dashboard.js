@@ -25,9 +25,10 @@ V.dashboard={
     const spark=k=>C.spark(D.series(rows,buckets,r=>k==='total'?'total':r.status,[k]).constructor===Object?(k==='total'?buckets.map((_,i)=>MG.sum(MG.STATUS_KEYS.map(s=>D.series(rows,buckets,r=>r.status,[s])[s][i]))):D.series(rows,buckets,r=>r.status,[k])[k]):[],MG.STATUS[k]?.color||'#2563eb');
     const totalSeries=(()=>{const v=buckets.map(()=>0);rows.forEach(r=>{const i=D.bucketIndex(buckets,r._t);if(i>=0)v[i]++});return v})();
     const sp=(k)=>C.spark(k==='total'?totalSeries:D.series(rows,buckets,r=>r.status,[k])[k],k==='total'?'#2563eb':MG.STATUS[k].color);
-    const kp=[['total','Total reported',sm.total,'#2563eb','In selected period'],['open','Open',sm.by.open,MG.STATUS.open.color,'Awaiting review'],['under_review','Under review',sm.by.under_review,MG.STATUS.under_review.color,'Being assessed'],['action_assigned','Awaiting action',sm.by.action_assigned,MG.STATUS.action_assigned.color,'Action assigned'],['escalated','Escalated',sm.by.escalated,MG.STATUS.escalated.color,'Senior attention'],['closed','Closed',sm.by.closed,MG.STATUS.closed.color,sm.by.resolved+' resolved, not closed']];
+    const kp=[['total','Total reported',sm.total,'#2563eb','In selected period'],['open','New',sm.by.open,MG.STATUS.open.color,'Awaiting Mine Manager'],['under_review','Under review',sm.by.under_review,MG.STATUS.under_review.color,'Mine Manager review'],['action_assigned','With Safety Officer',sm.by.action_assigned,MG.STATUS.action_assigned.color,'Action required'],['escalated','Escalated',sm.by.escalated,MG.STATUS.escalated.color,'Senior attention'],['closed','Closed',sm.by.closed,MG.STATUS.closed.color,sm.by.resolved+' awaiting closure']];
     host.innerHTML=
       (S.truncated?'<div class="banner warn">'+MG.icon('info')+'<span>Showing the first '+MG.num(S.rows.length)+' of '+MG.num(S.total)+' incidents. Narrow the reporting period for complete figures.</span></div>':'')
+     +'<div id="actPanel" style="margin-bottom:16px"></div>'
      +'<div class="kpis" id="kpis">'+(MG.can.isMineSO()?'<div id="safeKpi" class="kpi static" style="--c:#059669"><div class="kpi-top"><span class="dot"></span>Safe days</div><div class="kpi-val">…</div><div class="kpi-foot"><span>Since last incident report</span></div></div>':'')
        +kp.map(([k,l,v,c,f])=>UI.kpi({key:k,label:l,value:MG.num(v),color:c,foot:f,spark:sp(k),delta:k==='total'?'<span data-delta="total"></span>':k==='closed'?'<span data-delta="closed"></span>':''})).join('')+'</div>'
      +'<section class="card" style="margin-bottom:16px"><div class="card-h"><div><h3>Incident timeline</h3><p class="sub">Reports over time, coloured by where each incident stands today · line shows incidents resolved</p></div><div class="tools"><div class="seg" id="gran" role="group" aria-label="Time grouping">'+[['auto','Auto'],['day','Day'],['week','Week'],['month','Month']].map(([k,l])=>'<button type="button" data-g="'+k+'" class="'+(gran===k?'active':'')+'">'+l+'</button>').join('')+'</div></div></div><div class="chart" id="cTimeline"></div></section>'
@@ -84,6 +85,7 @@ V.dashboard={
 
     /* needs attention */
     const att=needsAttention(rows);$('#allAtt').onclick=()=>goIncidents('overdue=1');
+    MG.notify.mountPanel($('#actPanel'));MG.notify.fetch().then(()=>{if(my===token)MG.notify.mountPanel(host.querySelector('#actPanel'))});
     if(att.length)UI.feed($('#attn'),att.slice(0,6),{page:6,extra:rows});else $('#attn').innerHTML='<div class="card">'+MG.empty('checkc','All clear','No escalated or overdue incidents in this scope.')+'</div>';
     MG.bindTips(host);
 
