@@ -112,7 +112,7 @@ const P={
 MG.icon=(n,extra='')=>'<svg class="ic '+extra+'" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||'')+'</svg>';
 
 /* ---------- API ---------- */
-MG.logout=()=>{localStorage.removeItem('mg_token');location.href='index.html'};
+MG.logout=()=>{try{localStorage.removeItem('mg_demo')}catch{}localStorage.removeItem('mg_token');location.href='index.html'};
 MG.api=async(path,opt={})=>{
   const r=await fetch(MG.API+path,{...opt,headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('mg_token'),...opt.headers}});
   const d=await r.json().catch(()=>({error:'Invalid response'}));

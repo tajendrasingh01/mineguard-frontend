@@ -125,7 +125,7 @@ async function boot(){
   catch(e){if(e.status===401){MG.logout();return}fatal('Unable to reach the portal',e.message||'Please check your connection and try again.',true);return}
   if(!MG.ROLE[S.user.role]){fatal('No safety role assigned','Your account ('+(S.user.worker_id||'')+') is not assigned a SECL safety-management role. Ask the system administrator to assign your Mine or Area safety role.',false);return}
   await D.loadOrg();
-  buildShell();versionCheck();MG.notify.start();
+  buildShell();if(window.MGDemo)MGDemo.mount(MG.$('banner'));else versionCheck();MG.notify.start();
   window.addEventListener('hashchange',route);route();
 }
 document.addEventListener('DOMContentLoaded',boot);
