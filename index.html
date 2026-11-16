@@ -7,6 +7,7 @@
 <title>Sign in · Suraksha Prabandhan Pranali</title>
 <link rel="stylesheet" href="assets/css/mg.css">
 <script src="assets/js/mg-loader.js"></script>
+<script src="assets/js/mg-demo.js"></script>
 </head>
 <body>
 <div class="auth">
@@ -41,6 +42,7 @@
           <div class="pw"><input id="loginPass" class="input" type="password" placeholder="Your password" autocomplete="current-password" maxlength="128"><button type="button" class="btn btn-ghost btn-sm" data-peek="loginPass" aria-label="Show password">Show</button></div></div>
         <div id="loginErr" class="err-box" role="alert"></div>
         <button id="loginBtn" class="btn btn-primary" type="submit" style="padding:12px 16px">Sign in</button>
+        <div class="demo-box"><div class="demo-h">Explore the demo <span>fictional data · no live records</span></div><div class="demo-list" id="demoList"></div><div class="demo-note">Or sign in with a demo ID (e.g. <b>demo.mm</b>) and password <b>Demo@2026</b>.</div></div>
       </form>
 
       <form id="formUp" class="hidden" novalidate>
@@ -75,6 +77,8 @@ const $=id=>document.getElementById(id);
   localStorage.removeItem('mg_token');
 })();
 
+if(window.MGDemo){$('demoList').innerHTML=Object.entries(MGDemo.PERSONAS).map(([k,p])=>'<button type="button" class="demo-p" data-k="'+k+'"><b>'+p.label+'</b><small>'+p.blurb+'</small></button>').join('');
+  $('demoList').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;showLoader('Preparing the demo workspace');MGDemo.enter(b.dataset.k);setTimeout(()=>{location.href='safety.html'},700)}}
 const mode=m=>{
   const up=m==='up';
   $('tabIn').classList.toggle('active',!up);$('tabUp').classList.toggle('active',up);$('tabIn').setAttribute('aria-selected',String(!up));$('tabUp').setAttribute('aria-selected',String(up));
@@ -104,6 +108,8 @@ $('formIn').onsubmit=async e=>{
   const id=$('loginId').value.trim(),pw=$('loginPass').value;
   if(!id||!pw)return fail('loginErr','Please enter your ID and password.');
   busy($('loginBtn'),true,'Signing in…');showLoader('Signing you in');
+  const dk=window.MGDemo&&MGDemo.match(id,pw);
+  if(dk){MGDemo.enter(dk);setTimeout(()=>{location.href='safety.html'},600);return}
   try{const d=await post('/api/auth/login',{worker_id:id,password:pw});localStorage.setItem('mg_token',d.token);location.href='safety.html'}
   catch(err){fail('loginErr',err.message);busy($('loginBtn'),false)}
 };
