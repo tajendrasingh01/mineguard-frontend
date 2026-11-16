@@ -82,7 +82,7 @@ function build(){
   const R=rng(20261116),NOW=Date.now();
   const pick=a=>a[Math.floor(R()*a.length)],wpick=(a,w)=>{const t=w.reduce((x,y)=>x+y,0);let r=R()*t;for(let i=0;i<a.length;i++){r-=w[i];if(r<=0)return a[i]}return a[a.length-1]};
   const rr=(a,b)=>a+R()*(b-a),name=()=>pick(FIRST)+' '+pick(LAST);
-  const db={v:3,rev:4,seededAt:NOW,areas:AREAS.map(a=>({...a,normalized_name:a.name.toLowerCase()})),mines:MINES.map(m=>({id:m.id,area_id:m.area_id,name:m.name,code:m.code})),users:[],incidents:[],history:{},comments:{},seq:{},sops:sops()};
+  const db={v:3,rev:5,seededAt:NOW,areas:AREAS.map(a=>({...a,normalized_name:a.name.toLowerCase()})),mines:MINES.map(m=>({id:m.id,area_id:m.area_id,name:m.name,code:m.code})),users:[],incidents:[],history:{},comments:{},seq:{},sops:sops()};
   const U=(u)=>{db.users.push({is_active:true,worker_id:'DEMO-'+String(1000+db.users.length),department:'Demo',...u});return u};
   U({id:'u-hq',name:'Manoj Kulkarni (Demo)',role:'HQ_SAFETY_HEAD'});
   AREAS.forEach((a,i)=>U({id:i===0?'u-aso':'u-aso-'+a.id,name:i===0?'Kavita Rao (Demo)':name(),role:'AREA_SAFETY_OFFICER',assigned_area_id:a.id}));
@@ -145,12 +145,174 @@ function build(){
     keys.forEach(k=>mkIncident(m,k,n++));
   });
   db.incidents.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  seedCirc(db);
   return db;
 }
 function photo(type,loc){const s='<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b4452"/><stop offset="1" stop-color="#1b212b"/></linearGradient></defs><rect width="640" height="420" fill="url(#g)"/><path d="M0 330 L120 270 L250 310 L380 250 L520 300 L640 260 V420 H0Z" fill="#11161d"/><circle cx="500" cy="110" r="46" fill="#f5b301" opacity=".85"/><text x="320" y="190" text-anchor="middle" font-family="sans-serif" font-size="26" fill="#e5e7eb">SAMPLE EVIDENCE PHOTO</text><text x="320" y="226" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#9ca3af">'+esc(type)+' · '+esc(loc)+'</text><text x="320" y="392" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#6b7280">Demo data - fictional</text></svg>';return 'data:image/svg+xml;utf8,'+encodeURIComponent(s)}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function sops(){const base=[['Ground Control','Roof Support & Ground Control','Support plan, bolting pattern, examination and reporting of roof and sides.'],['Electrical Safety','Electrical Isolation & Lock-out','Isolation, tagging, testing and permit steps for electrical work in the section.'],['Blasting','Shot-firing & Misfire Handling','Charging, stemming, danger zone withdrawal and misfire clearance.'],['Fire Prevention','Belt Conveyor Fire Prevention','Idler checks, heating detection and first-response actions.'],['Transport','Dumper & LMV Movement Rules','Speed limits, right-of-way, reversing and parking in the yard and haul roads.'],['Ventilation','Gas Monitoring & Ventilation','Methane/CO checks, action levels and ventilation changes.'],['Emergency Response','Emergency Evacuation Plan','Assembly points, roll call, rescue team call-out and communication.'],['Working at Height','Working at Height & Platforms','Harness, anchorage, ladders and platform inspections.']];
   const d='https://drive.google.com/drive/my-drive';return base.map((b,i)=>({id:'d-s'+i,category:b[0],title:'Sample SOP – '+b[1],description:b[2]+' (Demo document)',rev:'Rev '+(1+i%4),drive_url:d})).concat([['[STAT] Inspection Checklists','Sample Statutory Inspection Checklist','Weekly and monthly inspection record formats (Demo document).'],['[STAT] Safety Committee','Sample Safety Committee Minutes Format','Template for pit safety committee meetings (Demo document).'],['[STAT] Returns','Sample Monthly Safety Return Summary','Summary format for accident and dangerous occurrence returns (Demo document).']].map((b,i)=>({id:'d-t'+i,category:b[0],title:b[1],description:b[2],rev:'Rev 2',drive_url:d})))}
+
+/* ----------------------------- circulars (demo): same scope rules as the backend circular-policy.js ----------------------------- */
+const CPRI=['normal','important','urgent','critical'],CCATS=['Circular','Guideline','Instruction','Advisory','Safety Alert','Notification'];
+const mineArea=(db,id)=>{const m=db.mines.find(x=>x.id===id);return m?m.area_id:null};
+const isRecip=(db,u,c)=>{if(!u||u.is_active===false||u.id===c.issuer_id)return false;if(c.scope_type==='ALL')return true;
+  if(c.scope_type==='AREA')return (!!u.assigned_area_id&&u.assigned_area_id===c.area_id)||(!!u.assigned_mine_id&&mineArea(db,u.assigned_mine_id)===c.area_id);
+  return !!u.assigned_mine_id&&u.assigned_mine_id===c.mine_id};
+const cRead=(db,u,c)=>u.role==='HQ_SAFETY_HEAD'||c.issuer_id===u.id||(u.role==='AREA_SAFETY_OFFICER'&&c.scope_type!=='ALL'&&c.area_id===u.assigned_area_id)||isRecip(db,u,c);
+const tinyPdf=t=>{const s='%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj\n4 0 obj<</Length 120>>stream\nBT /F1 18 Tf 60 780 Td ('+t.replace(/[()\\]/g,'')+') Tj 0 -28 Td /F1 12 Tf (Sample document - fictional demo content) Tj ET\nendstream endobj\n5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF';return btoa(s)};
+const demoPng='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+const circUsers=db=>db.users.filter(u=>u.is_active);
+function addCirc(db,spec){
+  const u=db.users.find(x=>x.id===spec.by),mine=u.assigned_mine_id?db.mines.find(m=>m.id===u.assigned_mine_id):null;
+  const scope=u.role==='HQ_SAFETY_HEAD'?{scope_type:'ALL',area_id:null,mine_id:null}:u.role==='AREA_SAFETY_OFFICER'?{scope_type:'AREA',area_id:u.assigned_area_id,mine_id:null}:{scope_type:'MINE',area_id:mine.area_id,mine_id:mine.id};
+  const at=new Date(Date.now()-spec.ago*DAY).toISOString(),id='d-c'+(db.circ.items.length+1);
+  const c={id,ref_no:spec.ref,...scope,issuer_id:u.id,issuer_role:u.role,issuer_name:u.name,category:spec.cat,priority:spec.pri,title:spec.title,subject:spec.sub,body_html:spec.body,issue_date:at.slice(0,10),effective_date:spec.eff!==undefined?(spec.eff===null?null:new Date(Date.now()-spec.eff*DAY).toISOString().slice(0,10)):at.slice(0,10),requires_ack:spec.ack!==false,status:spec.arch?'archived':'published',version:spec.amend?2:1,created_at:at,updated_at:spec.amend?new Date(Date.now()-(spec.ago-1.5)*DAY).toISOString():at,archived_at:spec.arch?new Date(Date.now()-(spec.ago-20)*DAY).toISOString():null};
+  db.circ.items.push(c);
+  db.circ.att[id]=(spec.att||[]).map((a,i)=>({id:id+'-a'+i,file_name:a[0],mime_type:a[1],size_bytes:Math.round(atob(a[2]).length),data_base64:a[2],added_in_version:1,created_at:at}));
+  db.circ.versions[id]=spec.amend?[{version:1,title:spec.title,subject:spec.sub,body_html:spec.body,priority:spec.pri==='critical'?'urgent':spec.pri,effective_date:c.effective_date,amendment_note:spec.amend[0],created_at:c.updated_at,edited_by:u.id}]:[];
+  if(spec.amend){c.body_html=spec.amend[1];c.title=spec.title}
+  db.circ.audit[id]=[{id:id+'-e0',actor_id:u.id,actor_role:u.role,event:'published',detail:{ref_no:c.ref_no,scope_type:c.scope_type,attachments:(spec.att||[]).length},created_at:at}];
+  /* delivery rows for every recipient; engagement is simulated so tracking screens have meaningful numbers */
+  const R=rng(id.length*977+db.circ.items.length*31);const pv=spec.engage==null?.7:spec.engage;
+  db.circ.recips[id]=circUsers(db).filter(x=>isRecip(db,x,c)).map(x=>{const age=Math.max(.2,spec.ago),t=Date.now()-age*DAY*R(),
+    forced=spec.state&&spec.state[x.id],seen=forced?forced!=='unread':R()<pv,ack=forced?forced==='ack':seen&&R()<pv*.9&&c.requires_ack;
+    return {user_id:x.id,delivered_at:at,viewed_at:seen?new Date(t).toISOString():null,viewed_version:seen?c.version:null,acknowledged_at:ack?new Date(t+HR).toISOString():null,ack_version:ack?c.version:null}});
+  if(!spec.arch)db.circ.items[db.circ.items.length-1].status='published';
+  const ev=db.circ.audit[id];if(spec.amend)ev.push({id:id+'-e1',actor_id:u.id,actor_role:u.role,event:'amended',detail:{from_version:1,to_version:2,note:spec.amend[0]},created_at:c.updated_at});
+  db.circ.recips[id].filter(r=>r.viewed_at).slice(0,6).forEach((r,i)=>ev.push({id:id+'-v'+i,actor_id:r.user_id,actor_role:(db.users.find(x=>x.id===r.user_id)||{}).role,event:'viewed',detail:{version:c.version},created_at:r.viewed_at}));
+  db.circ.recips[id].filter(r=>r.acknowledged_at).slice(0,6).forEach((r,i)=>ev.push({id:id+'-k'+i,actor_id:r.user_id,actor_role:(db.users.find(x=>x.id===r.user_id)||{}).role,event:'acknowledged',detail:{version:c.version},created_at:r.acknowledged_at}));
+  if(spec.arch)ev.push({id:id+'-x',actor_id:u.id,actor_role:u.role,event:'archived',detail:{},created_at:c.archived_at});
+  ev.sort((a,b)=>b.created_at<a.created_at?-1:1);
+}
+function seedCirc(db){
+  db.circ={items:[],att:{},versions:{},audit:{},recips:{}};
+  const P1=['Supervisors must brief all crews at the start of every shift.','Records of compliance must be kept at the Manager\'s office.','Non-compliance will be treated as a statutory violation.'];
+  const li=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+  const hq=[
+   {by:'u-hq',ref:'HQ/2026/001',cat:'Safety Alert',pri:'critical',ago:1.2,title:'Critical alert: roof fall fatalities in underground mines',sub:'Immediate review of roof support in all underground workings',body:'<p><b>All mines are directed to act immediately.</b> Two roof-fall fatalities were reported in the last fortnight in the subsidiary.</p>'+li(['Re-examine the support system in every working district within 48 hours.','Stop work where support is found deficient until rectified.','Confirm completion to your Area Safety Officer.']),att:[['Roof-fall-alert.pdf','application/pdf',tinyPdf('Critical alert - roof fall')],['Support-checklist.png','image/png',demoPng]],engage:.45,state:{'u-so':'unread','u-mm':'unread'}},
+   {by:'u-hq',ref:'HQ/2026/002',cat:'Circular',pri:'urgent',ago:4,title:'Mandatory refresher on SOP for belt conveyor safety',sub:'All mines to complete the refresher by month end',body:'<p>A refresher on the <b>Belt Conveyor Safety SOP</b> shall be conducted for all conveyor operators and maintenance staff.</p>'+li(P1),att:[['Conveyor-SOP-refresher.pdf','application/pdf',tinyPdf('Belt conveyor SOP refresher')]],engage:.65,state:{'u-so':'view','u-soem':'unread'}},
+   {by:'u-hq',ref:'HQ/2026/003',cat:'Guideline',pri:'important',ago:9,title:'Revised guidelines for incident reporting and closure',sub:'Reporting by Safety Officers; closure only by the Mine Manager',body:'<p>With immediate effect only the <b>Safety Officer (Mining / E&amp;M)</b> shall report incidents, which are reviewed and finally closed by the Mine Manager.</p><p>Escalation to the Area Safety Officer and HQ will be routed by the Mine Manager.</p>',engage:.85,state:{'u-so':'ack','u-soem':'ack','u-mm':'ack','u-aso':'ack'}},
+   {by:'u-hq',ref:'HQ/2026/004',cat:'Advisory',pri:'important',ago:14,title:'Advisory: monsoon preparedness for open cast projects',sub:'Dewatering, haul road and slope stability checks',body:'<p>All OC projects shall verify <b>pump capacity, drainage and haul-road gradients</b> before the monsoon, and keep an emergency contact roster current.</p>',engage:.8,state:{'u-so':'ack','u-mm':'view'}},
+   {by:'u-hq',ref:'HQ/2026/005',cat:'Instruction',pri:'normal',ago:22,title:'Updated format for monthly safety returns',sub:'New template effective from the next reporting cycle',body:'<p>Please use the revised template attached for the monthly safety return. Earlier formats will not be accepted.</p>',att:[['Monthly-return-template.docx','application/vnd.openxmlformats-officedocument.wordprocessingml.document','UEsDBBQAAAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAAdGVzdC50eHQ=']],engage:.9,state:{'u-so':'ack','u-mm':'ack'}},
+   {by:'u-hq',ref:'HQ/2026/006',cat:'Notification',pri:'normal',ago:40,title:'Safety week observance schedule',sub:'Programme for the annual Safety Week',body:'<p>The annual <b>Safety Week</b> will be observed from the first Monday of next month. Areas may add local programmes.</p>',ack:false,engage:.75},
+   {by:'u-hq',ref:'HQ/2025/019',cat:'Circular',pri:'normal',ago:150,title:'Archived: previous PPE issue policy',sub:'Superseded by the 2026 PPE guidelines',body:'<p>This circular is retained for reference only.</p>',arch:true,engage:.95}
+  ];
+  const aso=[
+   ['u-aso','SUND','Sundarpur Area'],['u-aso-d-a2','RAJN','Rajnagar Area'],['u-aso-d-a3','BHIL','Bhilori Area']
+  ].flatMap(([id,pre,nm],i)=>[
+   {by:id,ref:'ASO/'+pre+'/2026/001',cat:'Instruction',pri:i===0?'urgent':'important',ago:2.5+i,title:nm+': inspection of travelling roads and inclines',sub:'Special inspection drive within the Area',body:'<p>A <b>special inspection drive</b> of travelling roads, inclines and haulage tracks will be carried out across mines of the '+nm+'.</p>'+li(['Mine Managers to nominate a competent team.','Findings to be reported within seven days.']),att:i===0?[['Inspection-format.pdf','application/pdf',tinyPdf('Special inspection format')]]:[],engage:.55,state:i===0?{'u-so':'unread','u-mm':'view','u-soem':'unread'}:null},
+   {by:id,ref:'ASO/'+pre+'/2026/002',cat:'Guideline',pri:'important',ago:11+i,title:nm+': guideline on shot-firing supervision',sub:'Strengthened supervision during blasting operations',body:'<p>Shot-firing must be supervised by the <b>competent person</b> and the danger zone cleared and confirmed before every blast.</p>',engage:.75,state:i===0?{'u-so':'ack','u-mm':'ack'}:null},
+   {by:id,ref:'ASO/'+pre+'/2026/003',cat:'Advisory',pri:'normal',ago:27+i,title:nm+': area safety committee meeting schedule',sub:'Quarterly meeting dates and agenda',body:'<p>The quarterly Area safety committee meeting will be held at the Area office. Mine Managers to submit pending action points beforehand.</p>',ack:false,engage:.8}
+  ]);
+  const mine=[
+   {by:'u-mm',ref:'SUND-MGR/2026/004',cat:'Instruction',pri:'urgent',ago:.8,title:'Mine instruction: restricted entry to panel 4 until re-support',sub:'Entry barred after roof deterioration',body:'<p>Entry to <b>Level 2, Panel 4</b> is barred with immediate effect until re-supported and certified by the competent person.</p>',engage:.5,state:{'u-so':'unread','u-soem':'unread'}},
+   {by:'u-mm',ref:'SUND-MGR/2026/003',cat:'Guideline',pri:'important',ago:7,title:'Mine guideline: toolbox talks at every shift start',sub:'10-minute talk, recorded by the supervisor',body:'<p>All supervisors shall hold a <b>10-minute toolbox talk</b> at the start of every shift and record attendance.</p>',engage:.85,state:{'u-so':'ack','u-soem':'view'}},
+   {by:'u-mm',ref:'SUND-MGR/2026/002',cat:'Circular',pri:'normal',ago:30,title:'Mine circular: housekeeping standards in workshop',sub:'Weekly housekeeping audit introduced',body:'<p>A weekly housekeeping audit will be conducted in the workshop and surface installations.</p>',engage:.9,amend:['Corrected audit day to Thursday','<p>A weekly housekeeping audit will be conducted <b>every Thursday</b> in the workshop and surface installations.</p>'],state:{'u-so':'unread'}},
+   {by:'u-so',ref:'SUND-SO/2026/001',cat:'Notification',pri:'important',ago:3,title:'Safety Officer note: PPE compliance drive this week',sub:'Helmet, boots and self-rescuer checks at the pit-head',body:'<p>PPE compliance checks (<b>helmet, safety boots, self-rescuer</b>) will be carried out at the pit-head each shift this week.</p>',engage:.7,state:{'u-mm':'view','u-soem':'ack'}},
+   {by:'u-soem',ref:'SUND-EM/2026/001',cat:'Advisory',pri:'normal',ago:5,title:'E&M advisory: tagging of electrical isolation points',sub:'Lock-out tag-out reminder for electricians',body:'<p>All isolation points must be locked and tagged before maintenance. Report missing tags to the E&amp;M Safety Officer.</p>',engage:.6,state:{'u-so':'unread'}}
+  ];
+  hq.concat(aso,mine).forEach(s=>addCirc(db,s));
+  const other=[
+   {by:'u-mm-d-m4',ref:'RJOC-MGR/2026/001',cat:'Instruction',pri:'important',ago:6,title:'Rajnagar OC: haul road speed limits revised',sub:'Reduced speeds on ramps',body:'<p>Speed limits on haul roads and ramps are revised as per the attached notice.</p>',engage:.7},
+   {by:'u-mm-d-m7',ref:'BHO1-MGR/2026/001',cat:'Guideline',pri:'normal',ago:13,title:'Bhilori OC-I: dump yard spotter requirement',sub:'Spotters mandatory at tipping points',body:'<p>A trained spotter is mandatory at all dump-yard tipping points.</p>',engage:.7}
+  ];other.forEach(s=>addCirc(db,s));
+}
+const cDecor=(db,u,c)=>{const r=(db.circ.recips[c.id]||[]).find(x=>x.user_id===u.id),rec=isRecip(db,u,c),unread=rec&&c.status==='published'&&!(r&&r.viewed_version!=null&&r.viewed_version>=c.version),pend=rec&&!!c.requires_ack&&c.status==='published'&&!(r&&r.ack_version!=null&&r.ack_version>=c.version);
+  return {...c,body_html:undefined,is_issuer:c.issuer_id===u.id,is_recipient:rec,unread,pending_ack:pend,viewed_at:r&&r.viewed_at||null,acknowledged_at:r&&r.ack_version>=c.version?r.acknowledged_at:null}};
+const cAudit=(db,u,c,ev,detail)=>{const a=db.circ.audit[c.id]=db.circ.audit[c.id]||[];a.unshift({id:c.id+'-'+Date.now()+Math.random().toString(36).slice(2,5),actor_id:u.id,actor_role:u.role,event:ev,detail:detail||{},created_at:new Date().toISOString()})};
+const canTrack=(u,c)=>c.issuer_id===u.id||u.role==='HQ_SAFETY_HEAD'||(u.role==='AREA_SAFETY_OFFICER'&&(c.scope_type==='ALL'||c.area_id===u.assigned_area_id));
+const trackStats=(c,rows)=>{const t=rows.length,v=rows.filter(r=>r.viewed_version!=null&&r.viewed_version>=c.version).length,a=rows.filter(r=>r.ack_version!=null&&r.ack_version>=c.version).length;return {total_recipients:t,delivered:t,viewed:v,acknowledged:a,pending_ack:c.requires_ack?t-a:0,not_viewed:t-v}};
+const cleanHtml=h=>String(h||'').replace(/<(script|style|iframe|object|embed|svg|math)[\s\S]*?<\/\1\s*>/gi,'').replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,(m,t)=>['p','br','b','strong','i','em','u','ul','ol','li','h3','h4','blockquote','a','span','hr'].includes(t.toLowerCase())?(m[1]==='/'?'</'+t.toLowerCase()+'>':t.toLowerCase()==='a'?'<a href="'+((/href\s*=\s*["'](https?:\/\/[^"']*)["']/i.exec(m)||[])[1]||'#')+'" target="_blank" rel="noopener noreferrer">':'<'+t.toLowerCase()+'>'):'');
+const cText=h=>String(h||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+function circApi(db,user,p,q,method,body){
+  let m;
+  const cv=id=>db.circ.items.find(c=>c.id===id&&cRead(db,user,c));
+  if(p==='/api/safety/circulars/summary'&&method==='GET'){
+    const items=db.circ.items.filter(c=>c.status==='published'&&cRead(db,user,c)).sort((a,b)=>b.created_at<a.created_at?-1:1).map(c=>cDecor(db,user,c)),rank={critical:0,urgent:1,important:2,normal:3},week=Date.now()-7*DAY,urg=items.filter(i=>['urgent','critical'].includes(i.priority)&&(i.unread||i.pending_ack));
+    return json(200,{counts:{unread:items.filter(i=>i.unread).length,pending_ack:items.filter(i=>i.pending_ack).length,urgent_open:urg.length,published:items.length},latest:items.slice(0,5),urgent:urg.sort((a,b)=>rank[a.priority]-rank[b.priority]).slice(0,5),unread:items.filter(i=>i.unread).slice(0,5),pending:items.filter(i=>i.pending_ack).slice(0,5),recent:items.filter(i=>Date.parse(i.created_at)>=week).slice(0,5)});
+  }
+  if(p==='/api/safety/circulars'&&method==='GET'){
+    const v=q.get('view')||'inbox',limit=Math.max(1,Math.min(100,parseInt(q.get('limit'),10)||25)),offset=Math.max(0,parseInt(q.get('offset'),10)||0),qs=(q.get('q')||'').toLowerCase();
+    let rows=db.circ.items.filter(c=>cRead(db,user,c));
+    rows=v==='archive'?rows.filter(c=>c.status==='archived'):v==='issued'?rows.filter(c=>c.issuer_id===user.id):rows.filter(c=>c.status==='published');
+    if(qs)rows=rows.filter(c=>[c.title,c.subject,c.ref_no,c.issuer_name].some(x=>x.toLowerCase().includes(qs)));
+    if(CPRI.includes(q.get('priority')))rows=rows.filter(c=>c.priority===q.get('priority'));
+    if(CCATS.includes(q.get('category')))rows=rows.filter(c=>c.category===q.get('category'));
+    if(q.get('issuer_role'))rows=rows.filter(c=>c.issuer_role===q.get('issuer_role')||(q.get('issuer_role')==='MINE_SO_MINING'&&c.issuer_role==='MINE_SO_EM'));
+    if(q.get('ref'))rows=rows.filter(c=>c.ref_no.toLowerCase().includes(q.get('ref').toLowerCase()));
+    if(q.get('from'))rows=rows.filter(c=>c.issue_date>=q.get('from'));if(q.get('to'))rows=rows.filter(c=>c.issue_date<=q.get('to'));
+    rows=rows.sort((a,b)=>b.created_at<a.created_at?-1:1).map(c=>cDecor(db,user,c));
+    const fl=q.get('flag');if(fl)rows=rows.filter(i=>fl==='unread'?i.unread:fl==='pending'?i.pending_ack:true);
+    return json(200,{items:rows.slice(offset,offset+limit),total:rows.length,limit,offset});
+  }
+  if(p==='/api/safety/circulars'&&method==='POST'){
+    const mine=user.assigned_mine_id?db.mines.find(x=>x.id===user.assigned_mine_id):null;
+    const sc=user.role==='HQ_SAFETY_HEAD'?{scope_type:'ALL',area_id:null,mine_id:null}:user.role==='AREA_SAFETY_OFFICER'?{scope_type:'AREA',area_id:user.assigned_area_id,mine_id:null}:mine&&SO.concat(['MINE_MANAGER']).includes(user.role)?{scope_type:'MINE',area_id:mine.area_id,mine_id:mine.id}:null;
+    if(!sc)return json(403,{error:'Your role is not permitted to publish communications'});
+    const b=body,t=s=>String(s==null?'':s).trim(),title=t(b.title),sub=t(b.subject),cat=t(b.category)||'Circular',pri=t(b.priority)||'normal',html=cleanHtml(b.body_html);
+    if(title.length<3||title.length>200)return json(400,{error:'Title must be 3–200 characters'});if(sub.length<3||sub.length>300)return json(400,{error:'Subject must be 3–300 characters'});
+    if(!CCATS.includes(cat))return json(400,{error:'Invalid category'});if(!CPRI.includes(pri))return json(400,{error:'Invalid priority'});
+    if(SO.includes(user.role)&&CPRI.indexOf(pri)>1)return json(403,{error:'Your role may issue communications only up to "Important" priority'});
+    if(cText(html).length<3)return json(400,{error:'Description is required'});
+    const atts=Array.isArray(b.attachments)?b.attachments:[];if(atts.length>5)return json(400,{error:'At most 5 attachments are allowed'});
+    const OKM=['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','image/png','image/jpeg','image/webp'];
+    for(const a of atts)if(!OKM.includes(a.type)||!/^data:/.test(a.data||''))return json(400,{error:'Only PDF, DOCX, PNG, JPEG and WEBP files are allowed'});
+    const yr=new Date().getFullYear(),pre=sc.scope_type==='ALL'?'HQ':sc.scope_type==='AREA'?'ASO/'+(db.areas.find(a=>a.id===sc.area_id)||{name:'AREA'}).name.replace(/[^A-Za-z]/g,'').slice(0,4).toUpperCase():mine.code;
+    let ref=t(b.ref_no);if(!ref)ref=pre+'/'+yr+'/D'+String(db.circ.items.length+1).padStart(3,'0');
+    if(db.circ.items.some(c=>c.ref_no.toLowerCase()===ref.toLowerCase()))return json(409,{error:'A communication with this reference number already exists'});
+    const now=new Date(),id='d-cn'+now.getTime().toString(36),iso=now.toISOString();
+    const c={id,ref_no:ref,...sc,issuer_id:user.id,issuer_role:user.role,issuer_name:user.name,category:cat,priority:pri,title,subject:sub,body_html:html,issue_date:t(b.issue_date)||iso.slice(0,10),effective_date:t(b.effective_date)||null,requires_ack:b.requires_ack!==false,status:'published',version:1,created_at:iso,updated_at:iso,archived_at:null};
+    db.circ.items.unshift(c);db.circ.att[id]=atts.map((a,i)=>{const d=String(a.data).split(',')[1]||'';return {id:id+'-a'+i,file_name:String(a.name).slice(0,200),mime_type:a.type,size_bytes:Math.floor(d.length*3/4),data_base64:d,added_in_version:1,created_at:iso}});
+    db.circ.versions[id]=[];db.circ.recips[id]=circUsers(db).filter(x=>isRecip(db,x,c)).map(x=>({user_id:x.id,delivered_at:iso,viewed_at:null,viewed_version:null,acknowledged_at:null,ack_version:null}));
+    db.circ.audit[id]=[];cAudit(db,user,c,'published',{ref_no:ref,scope_type:c.scope_type,recipients:db.circ.recips[id].length,attachments:atts.length});
+    save();return json(201,{circular:{id,ref_no:ref,scope_type:c.scope_type,priority:pri,version:1},recipients:db.circ.recips[id].length});
+  }
+  if((m=p.match(/^\/api\/safety\/circulars\/([\w-]+)\/attachments\/([\w-]+)$/))&&method==='GET'){
+    const c=cv(m[1]),a=c&&(db.circ.att[c.id]||[]).find(x=>x.id===m[2]);if(!a)return json(404,{error:'Attachment not found'});return json(200,a);
+  }
+  if((m=p.match(/^\/api\/safety\/circulars\/([\w-]+)\/(acknowledge|amend|archive|tracking|audit)$/))){
+    const c=cv(m[1]);if(!c)return json(404,{error:'Communication not found'});const act=m[2];
+    if(act==='acknowledge'&&method==='POST'){
+      if(!isRecip(db,user,c))return json(403,{error:'This communication was not addressed to you'});if(c.status!=='published')return json(409,{error:'This communication has been archived'});
+      const r=db.circ.recips[c.id].find(x=>x.user_id===user.id),now=new Date().toISOString();Object.assign(r,{viewed_at:r.viewed_at||now,viewed_version:c.version,acknowledged_at:now,ack_version:c.version});cAudit(db,user,c,'acknowledged',{version:c.version});save();return json(200,{ok:true,acknowledged_at:now,version:c.version});
+    }
+    if(act==='archive'&&method==='POST'){
+      if(!(c.issuer_id===user.id||user.role==='HQ_SAFETY_HEAD'))return json(403,{error:'Only the issuing authority or HQ can archive a communication'});
+      if(c.status!=='archived'){c.status='archived';c.archived_at=new Date().toISOString();cAudit(db,user,c,'archived',{});save()}return json(200,{ok:true});
+    }
+    if(act==='amend'&&method==='POST'){
+      if(c.issuer_id!==user.id)return json(403,{error:'Only the issuing authority can amend this communication'});if(c.status!=='published')return json(409,{error:'Archived communications cannot be amended'});
+      const note=String(body.amendment_note||'').trim();if(note.length<3||note.length>1000)return json(400,{error:'Describe what was amended (3–1000 characters)'});
+      const title=String(body.title||'').trim(),sub=String(body.subject||'').trim(),html=cleanHtml(body.body_html),pri=String(body.priority||'normal');
+      if(title.length<3||sub.length<3||cText(html).length<3)return json(400,{error:'Title, subject and description are required'});if(!CPRI.includes(pri))return json(400,{error:'Invalid priority'});
+      if(SO.includes(user.role)&&CPRI.indexOf(pri)>1)return json(403,{error:'Your role may issue communications only up to "Important" priority'});
+      db.circ.versions[c.id].unshift({version:c.version,title:c.title,subject:c.subject,body_html:c.body_html,priority:c.priority,effective_date:c.effective_date,amendment_note:note,created_at:new Date().toISOString(),edited_by:user.id});
+      const from=c.version;Object.assign(c,{title,subject:sub,body_html:html,priority:pri,effective_date:String(body.effective_date||'')||null,requires_ack:body.requires_ack!==false,version:c.version+1,updated_at:new Date().toISOString()});
+      cAudit(db,user,c,'amended',{from_version:from,to_version:c.version,note});save();return json(200,{ok:true,version:c.version});
+    }
+    if(act==='tracking'&&method==='GET'){
+      if(!canTrack(user,c))return json(404,{error:'Communication not found'});
+      let rows=db.circ.recips[c.id]||[];const uOf=id=>db.users.find(x=>x.id===id)||{},restrict=user.role==='AREA_SAFETY_OFFICER'&&c.issuer_id!==user.id&&c.scope_type==='ALL';
+      const areaOf=u=>u.assigned_area_id||mineArea(db,u.assigned_mine_id);if(restrict)rows=rows.filter(r=>areaOf(uOf(r.user_id))===user.assigned_area_id);
+      const by=new Map();rows.forEach(r=>{const u=uOf(r.user_id),mn=db.mines.find(x=>x.id===u.assigned_mine_id),key=u.assigned_mine_id||(u.assigned_area_id?'area:'+u.assigned_area_id:'hq'),g=by.get(key)||{mine_id:u.assigned_mine_id||null,name:mn?mn.name:u.assigned_area_id?'Area office':'HQ',total:0,viewed:0,acknowledged:0};g.total++;if(r.viewed_version>=c.version)g.viewed++;if(r.ack_version>=c.version)g.acknowledged++;by.set(key,g)});
+      const pending=rows.filter(r=>c.requires_ack?!(r.ack_version>=c.version):!(r.viewed_version>=c.version)).slice(0,300).map(r=>{const u=uOf(r.user_id),mn=db.mines.find(x=>x.id===u.assigned_mine_id);return {user_id:r.user_id,name:u.name||'—',role:u.role||null,mine:mn?mn.name:null,viewed:r.viewed_version>=c.version}});
+      return json(200,{stats:trackStats(c,rows),by_mine:[...by.values()].sort((a,b)=>a.name.localeCompare(b.name)),pending,area_restricted:restrict});
+    }
+    if(act==='audit'&&method==='GET'){
+      if(!(c.issuer_id===user.id||user.role==='HQ_SAFETY_HEAD'))return json(404,{error:'Communication not found'});
+      return json(200,{events:(db.circ.audit[c.id]||[]).slice(0,300).map(e=>({...e,actor_name:(db.users.find(x=>x.id===e.actor_id)||{}).name||'—'}))});
+    }
+  }
+  if((m=p.match(/^\/api\/safety\/circulars\/([\w-]+)$/))&&method==='GET'){
+    const c=cv(m[1]);if(!c)return json(404,{error:'Communication not found'});
+    const r=(db.circ.recips[c.id]||[]).find(x=>x.user_id===user.id);
+    if(r&&(r.viewed_version==null||r.viewed_version<c.version)){r.viewed_at=new Date().toISOString();r.viewed_version=c.version;cAudit(db,user,c,'viewed',{version:c.version});save()}
+    const area=db.areas.find(a=>a.id===c.area_id),mine=db.mines.find(x=>x.id===c.mine_id);
+    return json(200,{circular:{...cDecor(db,user,c),body_html:c.body_html,area_name:area?area.name:null,mine_name:mine?mine.name:null},attachments:(db.circ.att[c.id]||[]).map(({data_base64,...a})=>a),versions:db.circ.versions[c.id]||[],can_amend:c.issuer_id===user.id&&c.status==='published',can_archive:c.status==='published'&&(c.issuer_id===user.id||user.role==='HQ_SAFETY_HEAD'),can_track:canTrack(user,c)});
+  }
+  return null;
+}
 
 /* ----------------------------- workflow application (shared by seed and live actions) ----------------------------- */
 function actorFor(ctx,inc,step){
@@ -198,7 +360,7 @@ function apply(ctx,inc,actor,step,fields,level,ts){
 let DB=null;
 function load(){
   if(DB)return DB;
-  try{const s=localStorage.getItem(DBK);if(s){DB=JSON.parse(s);if(DB&&DB.v===3&&DB.rev===4)return DB}}catch{}
+  try{const s=localStorage.getItem(DBK);if(s){DB=JSON.parse(s);if(DB&&DB.v===3&&DB.rev===5)return DB}}catch{}
   DB=build();save();return DB;
 }
 function save(){try{localStorage.setItem(DBK,JSON.stringify(DB))}catch(e){console.warn('Demo data could not be saved in this browser',e)}}
@@ -256,6 +418,7 @@ async function handle(url,opts){
     db.incidents.unshift(inc);db.history[inc.id]=[{id:inc.id+'-h0',incident_id:inc.id,action:'FORWARD',from_role:user.role,to_role:'MINE_MANAGER',from_user_id:user.id,to_user_id:mm.id,actor_id:user.id,comments:'Submitted for Mine Manager review',context:{kind:'report_submitted',stage:'reported',actor_name:user.name,to_name:mm.name},created_at:inc.created_at}];
     save();return json(201,{incident:{id:inc.id,incident_ref:inc.incident_ref,area_id:inc.area_id,mine_id:inc.mine_id,category:inc.category,discipline:disc,status:'open',created_at:inc.created_at},routed_to:{id:mm.id,name:mm.name,role:mm.role}});
   }
+  if(p.startsWith('/api/safety/circulars')){const rc=circApi(db,user,p,q,method,body());if(rc)return rc}
   let m;
   if((m=p.match(/^\/api\/safety\/incidents\/(?:mine\/)?([\w-]+)\/workflow$/))&&method==='POST'){
     const i=db.incidents.find(x=>x.id===m[1]);if(!i||!canRead(user,i))return json(404,{error:'Incident not found'});

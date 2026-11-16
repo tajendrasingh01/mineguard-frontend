@@ -4,7 +4,7 @@
 (function(){
 const MG=window.MG,S=MG.state,D=MG.data,UI=MG.ui,esc=MG.esc,V=MG.views;
 const EXPECTED_API='secl-safety-v1';
-const TITLES={dashboard:'Safety Dashboard',incidents:'Incidents',incident:'Incident',analytics:'Analytics',report:'Report Incident',myreports:'My Reports',sops:'SOP Library'};
+const TITLES={dashboard:'Safety Dashboard',incidents:'Incidents',incident:'Incident',analytics:'Analytics',report:'Report Incident',myreports:'My Reports',sops:'SOP Library',circulars:'Circulars & Guidelines',circularNew:'Issue communication',circular:'Communication'};
 const WITH_RANGE=new Set(['dashboard','incidents','analytics','myreports']);
 let cur=null,lastHash=null,pending=0;
 
@@ -15,10 +15,11 @@ const parse=hash=>{
   if(a==='dashboard')return {name:'dashboard',params:{areaId:b==='area'?c||null:null,mineId:b==='mine'?c||null:null,query}};
   if(a==='incidents')return b?{name:'incident',params:{id:b,mine:false,query}}:{name:'incidents',params:{query}};
   if(a==='my-reports')return b?{name:'incident',params:{id:b,mine:true,query}}:{name:'myreports',params:{query}};
+  if(a==='circulars')return b==='new'?{name:'circularNew',params:{query}}:b?{name:'circular',params:{id:b,query}}:{name:'circulars',params:{query}};
   if(a==='analytics'||a==='report'||a==='sops')return {name:a,params:{query}};
   return null;
 };
-const allowed=name=>name==='report'?MG.can.report():name==='myreports'?MG.can.isMineSO():name==='sops'?MG.can.viewNCPHSops():true;
+const allowed=name=>name==='circularNew'?MG.circ.canPublish():name==='report'?MG.can.report():name==='myreports'?MG.can.isMineSO():name==='sops'?MG.can.viewNCPHSops():true;
 MG.go=path=>{if(location.hash==='#'+path)route();else location.hash=path};
 MG.back=fallback=>{if(lastHash&&history.length>1)history.back();else MG.go(fallback||'/dashboard')};
 MG.refresh=()=>{S.loadedKey=null;S.detail.clear();route()};
@@ -28,11 +29,12 @@ const NAV=[
   {name:'dashboard',href:'/dashboard',icon:'dashboard',label:'Dashboard',show:()=>true},
   {name:'incidents',href:'/incidents',icon:'list',label:'Incidents',show:()=>true},
   {name:'analytics',href:'/analytics',icon:'chart',label:'Analytics',show:()=>true},
+  {name:'circulars',href:'/circulars',icon:'msg',label:'Circulars',show:()=>true},
   {name:'report',href:'/report',icon:'plus',label:'Report',show:()=>MG.can.report()},
   {name:'myreports',href:'/my-reports',icon:'file',label:'My Reports',show:()=>MG.can.isMineSO()},
   {name:'sops',href:'/sops',icon:'book',label:'SOP Library',show:()=>MG.can.viewNCPHSops()}
 ];
-const navFor=r=>r.name==='incident'?(r.params.mine?'myreports':'incidents'):r.name;
+const navFor=r=>r.name==='circular'||r.name==='circularNew'?'circulars':r.name==='incident'?(r.params.mine?'myreports':'incidents'):r.name;
 const initials=n=>String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
 const homeScope=()=>MG.can.isHQ()?'Corporate HQ':MG.can.isArea()?(S.areas[0]?.name||'Area'):(S.mines[0]?.name||'');
 
@@ -75,6 +77,7 @@ MG.updateChrome=()=>{
   if(!cur)return;
   if(cur.name==='dashboard'||cur.name==='incidents')paintCrumbs(drillChain(cur.name));
   else if(cur.name==='incident')paintCrumbs(cur.crumbs||[{label:'Incidents',href:cur.params.mine?'/my-reports':'/incidents'},{label:'Incident'}]);
+  else if(cur.name==='circular'||cur.name==='circularNew')paintCrumbs(cur.crumbs||[{label:'Circulars & Guidelines',href:'/circulars'},{label:cur.name==='circularNew'?'Issue communication':'Communication'}]);
   else paintCrumbs([{label:TITLES[cur.name]||''}]);
   /* the narrowing scope on list screens: let people clear it in one click */
   const sc=MG.$('scopeTag');if(sc)sc.remove();
@@ -125,7 +128,7 @@ async function boot(){
   catch(e){if(e.status===401){MG.logout();return}fatal('Unable to reach the portal',e.message||'Please check your connection and try again.',true);return}
   if(!MG.ROLE[S.user.role]){fatal('No safety role assigned','Your account ('+(S.user.worker_id||'')+') is not assigned a SECL safety-management role. Ask the system administrator to assign your Mine or Area safety role.',false);return}
   await D.loadOrg();
-  buildShell();if(window.MGDemo)MGDemo.mount(MG.$('banner'));else versionCheck();MG.notify.start();
+  buildShell();if(window.MGDemo)MGDemo.mount(MG.$('banner'));else versionCheck();MG.notify.start();MG.circ.start();
   window.addEventListener('hashchange',route);route();
 }
 document.addEventListener('DOMContentLoaded',boot);
