@@ -33,7 +33,7 @@ N.fetch=async()=>{
 };
 N.refresh=()=>N.fetch();
 N.start=()=>{N.fetch();clearInterval(N.timer);N.timer=setInterval(()=>{if(document.visibilityState==='visible')N.fetch()},45000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')N.fetch()})};
-N.paintBadge=()=>{const b=document.getElementById('bellN');if(!b)return;const n=need().length,u=unseen().length;b.textContent=n>99?'99+':String(n);b.classList.toggle('on',n>0);b.classList.toggle('new',u>0);
+N.paintBadge=()=>{const b=document.getElementById('bellN');if(!b)return;const cu=(MG.circ&&MG.circ.counts.unread)||0,n=need().length+cu,u=unseen().length+cu;b.textContent=n>99?'99+':String(n);b.classList.toggle('on',n>0);b.classList.toggle('new',u>0);
   const bt=document.getElementById('bell');if(bt)bt.setAttribute('aria-label',n?n+' incident'+(n>1?'s':'')+' need your action':'Notifications')};
 
 const row=(i,s)=>{const sev=MG.sevMeta(i.severity);
@@ -47,7 +47,8 @@ N.mountBell=host=>{
   const out=e=>{if(!pan.contains(e.target)&&!btn.contains(e.target))close()};
   const draw=()=>{const s=seen(),items=N.items;
     pan.innerHTML='<div class="bp-h"><b>Notifications</b>'+(unseen().length?'<button type="button" class="btn btn-ghost btn-sm" id="bpAll">Mark all read</button>':'')+'</div>'
-      +(items.length?'<div class="bp-list">'+items.map(i=>row(i,s)).join('')+'</div>':'<div class="bp-empty">'+MG.icon('check')+'<p>You\'re all caught up.</p><small>New incidents and requests will appear here.</small></div>');
+      +((items.length||(MG.circ&&MG.circ.bellRows()))?'<div class="bp-list">'+(MG.circ?MG.circ.bellRows():'')+items.map(i=>row(i,s)).join('')+'</div>':'<div class="bp-empty">'+MG.icon('check')+'<p>You\'re all caught up.</p><small>New incidents and requests will appear here.</small></div>');
+    pan.querySelectorAll('.cir-nt').forEach(b=>b.onclick=()=>{close();MG.go('/circulars/'+b.dataset.cir)});
     bind(pan,close);const all=pan.querySelector('#bpAll');if(all)all.onclick=()=>{N.markSeen();draw()}};
   btn.onclick=async()=>{if(!pan.classList.contains('hidden')){close();return}draw();pan.classList.remove('hidden');btn.setAttribute('aria-expanded','true');setTimeout(()=>document.addEventListener('click',out,true),0);await N.fetch();if(!pan.classList.contains('hidden'))draw()};
   N.paintBadge();
